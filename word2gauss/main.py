@@ -157,13 +157,16 @@ def main_script():
         if args.MWE == 2:
             data_list = data_list[:2]
 
-        print("LOADING TO STRING")
+        print("WRITING DATA TO TEXT FILE")
         lst = []
-        # data_list = data_list[:10]
         for item in tqdm(data_list):
-          # print(item)
           lst.append(listToString(item))
         corpus = listToString(lst)
+
+        text_file = open("wikipedia.txt", "w")
+        text_file.write(corpus)
+        text_file.close()
+
         data = tokenizer_MWE0(corpus)
 
     #print(corpus)
@@ -171,14 +174,6 @@ def main_script():
 
 
     ################################################################################
-
-
-
-
-
-
-
-
 
     entity_2_idx = defaultdict(lambda: len(entity_2_idx))
     counter = Counter()
@@ -245,11 +240,12 @@ def main_script():
         print("---------- EPOCH {} ----------".format(e+1))
         if args.MWE == 1:
             with open(filename, 'r') as corpus:
-                print(corpus)
+                print(corpus[:100])
+                print(dataset[:100])
                 epoch_losses.append(embed.train(iter_pairs(corpus, vocab,batch_size=batch_size, nsamples=neg_samples, window=window), n_workers=num_workers, report_interval=report_schedule))
         else:
-            print(corpus)
-            print(dataset)
+            print(corpus[:100])
+            print(dataset[:100])
             epoch_losses.append(embed.train(iter_pairs(dataset, vocab,batch_size=batch_size, nsamples=neg_samples, window=window), n_workers=num_workers, report_interval=report_schedule))
 
     print("EPOCH LOSSES : {}".format(epoch_losses))
