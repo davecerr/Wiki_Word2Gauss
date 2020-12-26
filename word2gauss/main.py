@@ -115,7 +115,7 @@ def main_script():
     if args.MWE == 1:
         report_schedule = 1000
     else:
-        report_schedule = 100
+        report_schedule = 1000
         max_list_length = 6203
 
 

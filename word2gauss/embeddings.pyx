@@ -833,7 +833,7 @@ cdef class GaussianEmbedding:
         '''
         Update the model with a single batch of pairs
         '''
-        cdef float x
+        cdef public float x
         with nogil:
             x = train_batch(&pairs[0, 0], pairs.shape[0],
                         self.energy_func, self.gradient_func,
