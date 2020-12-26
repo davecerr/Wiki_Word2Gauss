@@ -19,8 +19,8 @@ from utils import cosine
 
 save_on = False
 
-# War & Peace (MWE = 1) vs Wikipedia (MWE = 0)
-MWE = 0
+# War & Peace (MWE = 1) vs Wikipedia single file (MWE = 2) vs full Wikipedia (MWE = 0)
+MWE = 2
 
 # embedding properties
 dimension = 50
@@ -115,7 +115,10 @@ else:
         print("loading from gzip files")
         files = []
         for _, _, fs in os.walk("data/", topdown=False):
-            files += [f for f in fs if f.endswith(".gz")]
+            if MWE == 2:
+                files += [f for f in fs if f.endswith(".gz")]
+            else:
+                files += [f for f in fs if f.endswith(".gz")]
 
         files = [os.path.join("data/page_dist_training_data/", f) for f in files]
         data_list = []
@@ -139,7 +142,7 @@ else:
     corpus = listToString(lst)
     data = tokenizer(corpus)
 
-print(corpus)
+#print(corpus)
 print(data)
 
 
