@@ -41,7 +41,7 @@ sigma_max = 1.5
 # training properties
 
 num_epochs = 10
-neg_samples=3
+neg_samples=2
 window=5
 padding = 0
 verbose_pairs=1
@@ -177,6 +177,7 @@ def main_script():
             for i, file in tqdm(enumerate(files)):
                 if padding == 0:
                     sentences = list(_open_file(file))
+                    sentences.append("\n")
                     data_list += sentences
                 else:
                     sentences
@@ -190,7 +191,8 @@ def main_script():
         print("WRITING DATA")
         lst = []
         for item in tqdm(data_list):
-          lst.append(listToString(item))
+            lst.append(listToString(item))
+        print(lst[:400])
         data_string = listToString(lst, args.MWE)
         print("STRING CREATED")
         text_file = open("wikipedia.txt", "w")
