@@ -44,7 +44,7 @@ num_epochs = 10
 neg_samples=2
 window=5
 padding = 0
-verbose_pairs=1
+verbose_pairs=0
 
 
 eta = 0.1 # learning rate : pass float for global learning rate (no min) or dict with keys mu,sigma,mu_min,sigma_min (local learning rate for each)
@@ -184,8 +184,8 @@ def main_script():
             # pkl.dump(data_list, pickle_out)
             # pickle_out.close()
 
-        if args.MWE == 2:
-            data_list = data_list[:4]
+        #if args.MWE == 2:
+            #data_list = data_list[:4]
 
 
         print("WRITING DATA")
