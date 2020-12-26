@@ -5,7 +5,7 @@ import pickle as pkl
 import time
 import gzip
 import json
-
+import sys
 import logging
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
@@ -17,7 +17,7 @@ from words import Vocabulary, iter_pairs
 from utils import cosine
 
 ######################### SETTINGS ############################################
-
+sys.settrace
 save_on = False
 
 # War & Peace (MWE = 1) vs Wikipedia single file (MWE = 2) vs full Wikipedia (MWE = 0)
@@ -240,7 +240,6 @@ def main_script():
         print("---------- EPOCH {} ----------".format(e+1))
         if args.MWE == 1:
             with open(filename, 'r') as corpus:
-                print(dataset[:100])
                 epoch_losses.append(embed.train(iter_pairs(corpus, vocab,batch_size=batch_size, nsamples=neg_samples, window=window), n_workers=num_workers, report_interval=report_schedule))
         else:
             with open('wikipedia.txt', 'r') as corpus:
