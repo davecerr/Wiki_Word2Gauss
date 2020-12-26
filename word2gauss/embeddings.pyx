@@ -790,6 +790,10 @@ cdef class GaussianEmbedding:
                 if pairs is None:
                     # no more data
                     break
+                if pairs.shape[0] == 0:
+                    LOGGER.info("TERMINATING. Pairs shape =")
+                    print pairs.shape
+                    break
                 if verbose_pairs:
                     if i == 1:
                         print(pairs.shape)
