@@ -116,7 +116,7 @@ else:
         files = []
         for _, _, fs in os.walk("data/", topdown=False):
             if MWE == 2:
-                files += [f for f in fs if f.endswith(".gz")]
+                files += [f for f in fs if f.endswith("00000.gz")]
             else:
                 files += [f for f in fs if f.endswith(".gz")]
 
