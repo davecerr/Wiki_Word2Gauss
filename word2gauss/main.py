@@ -129,7 +129,7 @@ def main_script():
     if args.MWE == 1:
         filename = 'war_and_peace.txt'
         with open(filename, 'r') as file:
-            lst = tokenizer_MWE1(file.read().replace('\n', ' '))
+            lst = file.read().replace('\n', ' ')
             print(lst[:10])
             data_string = listToString(lst)
             print("STRING CREATED")
