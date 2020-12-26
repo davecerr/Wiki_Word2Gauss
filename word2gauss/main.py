@@ -158,18 +158,19 @@ def main_script():
         if args.MWE == 2:
             data_list = data_list[:20000]
 
-        print("WRITING DATA TO TEXT FILE")
+        print("WRITING DATA")
         lst = []
         for item in tqdm(data_list):
           lst.append(listToString(item))
         data_string = listToString(lst)
-
+        print("STRING CREATED")
         text_file = open("wikipedia.txt", "w")
         text_file.write(data_string)
         text_file.close()
-
+        print("STRING WRITTENT TO TEXT FILE")
         data = tokenizer_MWE0(data_string)
-
+        print("STRING TOKENIZED")
+        
     #print(corpus)
     #print(data)
 
