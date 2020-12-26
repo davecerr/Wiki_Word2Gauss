@@ -110,7 +110,7 @@ def parse_args():
     return args
 
 def main_script():
-
+    print("HELLO")
     args = parse_args()
 
     ######################### LOAD DATA ###########################################
