@@ -185,7 +185,7 @@ def main_script():
             # pickle_out.close()
 
         if args.MWE == 2:
-            data_list = data_list[:2]
+            data_list = data_list[:4]
 
 
         print("WRITING DATA")
