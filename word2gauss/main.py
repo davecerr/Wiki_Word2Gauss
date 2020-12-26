@@ -116,7 +116,7 @@ def main_script():
     if args.MWE == 1:
         report_schedule = 1000
     else:
-        report_schedule = 1000
+        report_schedule = 100
         max_list_length = 6203
 
 
@@ -155,8 +155,8 @@ def main_script():
             # pkl.dump(data_list, pickle_out)
             # pickle_out.close()
 
-        if args.MWE == 2:
-            data_list = data_list[:20000]
+        #if args.MWE == 2:
+        #    data_list = data_list[:20000]
 
         print("WRITING DATA")
         lst = []
@@ -170,7 +170,7 @@ def main_script():
         print("STRING WRITTENT TO TEXT FILE")
         data = tokenizer_MWE0(data_string)
         print("STRING TOKENIZED")
-        
+
     #print(corpus)
     #print(data)
 
