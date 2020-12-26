@@ -44,7 +44,7 @@ num_epochs = 10
 neg_samples=2
 window=5
 padding = 0
-verbose_pairs=0
+verbose_pairs=1
 
 
 eta = 0.1 # learning rate : pass float for global learning rate (no min) or dict with keys mu,sigma,mu_min,sigma_min (local learning rate for each)
@@ -340,3 +340,14 @@ def main_script():
 
 if __name__ == '__main__':
     main_script()
+
+### NOTES ###
+
+# batch size is used in words.py - we can turn on print statements to see it controls how many entity lists are processed at once
+# this has no effect on the output since negative samples can be drawn from anywhere in vocab rather than just that batch
+# therefore the report_schedule is what the output calls "batch" since we report at the end of each report_schedule/batch
+# for this reason batch_size is a default argparser and report_schedule is a required argparser
+
+# if we make verbose_pairs=1 then we can see the actual pairs being generated. observe that there are window * neg_samples * 2
+# examples for each entity. The reason is that if 2 indices appear in the same window then we can use a 0/1 flag (5th element of the pair list)
+# to consider it when it
