@@ -76,7 +76,7 @@ def tokenizer_MWE1(s):
     '''
     Whitespace tokenizer
     '''
-    return s.lower().replace(".", "").replace(",", "").replace(":", "").replace("--"," ").replace("-"," ").replace(";", "").replace("'s","").replace("'","").replace("!","").replace('"','').replace("?","").replace("(","").replace(")","").strip().split()
+    return s.lower().replace(".", "").replace(",", "").replace(":", "").replace("--"," ").replace("-"," ").replace(";", "").replace("'s","").replace("'","").replace("!","").replace('"','').replace("?","").replace("(","").replace(")","").replace("\n","").strip().split()
 
 def tokenizer_MWE0(s):
     '''
