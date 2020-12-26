@@ -74,11 +74,11 @@ def _open_file(filename):
             yield json.loads(line)
     #print("Maximum list length = {}".format(max_len))
     #print("Maximum list = {}".format(max_list))
-def tokenizer(s):
+def tokenizer(s, MWE):
     '''
     Whitespace tokenizer
     '''
-    if args.MWE == 1:
+    if MWE == 1:
         return s.lower().replace(".", "").replace(",", "").replace(":", "").replace("--"," ").replace("-"," ").replace(";", "").replace("'s","").replace("'","").replace("!","").replace('"','').replace("?","").replace("(","").replace(")","").strip().split()
     else:
         return s.lower().replace(".", "").replace(",", "").replace(":", "").replace(";", "").strip().split()
@@ -120,7 +120,7 @@ def main_script():
     if args.MWE == 1:
         filename = 'war_and_peace.txt'
         with open(filename, 'r') as file:
-            data = tokenizer(file.read().replace('\n', ' '))
+            data = tokenizer(file.read().replace('\n', ' '), args.MWE)
     else:
         print("\n\n----------- LOADING DATA ----------")
         if os.path.exists("data_list.pkl"):
@@ -161,7 +161,7 @@ def main_script():
           # print(item)
           lst.append(listToString(item))
         corpus = listToString(lst)
-        data = tokenizer(corpus)
+        data = tokenizer(corpus, ars.MWE)
 
     #print(corpus)
     #print(data)
