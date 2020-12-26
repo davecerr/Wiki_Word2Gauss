@@ -42,8 +42,8 @@ num_workers = 1
 num_epochs = 10
 iteration_verbose_flag = False
 batch_size=10
-nsamples=2
-window=7
+nsamples=3
+window=5
 
 
 
