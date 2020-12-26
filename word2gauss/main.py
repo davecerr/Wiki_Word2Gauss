@@ -174,7 +174,7 @@ print("num_tokens = {}".format(num_tokens))
 #print("\n\n")
 #print(counter)
 #print("\n\n")
-print(dataset)
+#print(dataset)
 dataset_length = len(dataset)
 print("Dataset length = {}".format(dataset_length))
 
@@ -218,11 +218,8 @@ for e in range(num_epochs):
     print("---------- EPOCH {} ----------".format(e+1))
     if MWE == 1:
         with open(filename, 'r') as corpus:
-            print(corpus)
             epoch_losses.append(embed.train(iter_pairs(corpus, vocab,batch_size=batch_size, nsamples=neg_samples, window=window), n_workers=num_workers, report_interval=report_schedule))
     else:
-        print(corpus)
-        print(dataset)
         epoch_losses.append(embed.train(iter_pairs(dataset, vocab,batch_size=batch_size, nsamples=neg_samples, window=window), n_workers=num_workers, report_interval=report_schedule))
 
 print("EPOCH LOSSES : {}".format(epoch_losses))
