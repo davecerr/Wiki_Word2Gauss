@@ -302,4 +302,5 @@ def main_script():
         # print("rank {}: word = {}, sigma = {}, id = {}, similarity = {}".format(i,neighbours[i][word],neighbours[i][sigma],neighbours[i][id],neighbours[i][similarity]))
 
 if __name__ == '__main__':
+    print("GOODBYE")
     main_script()
