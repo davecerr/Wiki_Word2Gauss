@@ -110,6 +110,7 @@ def parse_args():
     return args
 
 def main():
+
     args = parse_args()
 
     ######################### LOAD DATA ###########################################
@@ -299,3 +300,6 @@ def main():
     for i in range(1,num+1):
         print("{}: {}".format(i,neighbours[i]))
         # print("rank {}: word = {}, sigma = {}, id = {}, similarity = {}".format(i,neighbours[i][word],neighbours[i][sigma],neighbours[i][id],neighbours[i][similarity]))
+
+if __name__ == '__main__':
+    main()
