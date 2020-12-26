@@ -92,13 +92,13 @@ def iter_pairs(fin, vocab, batch_size=10, nsamples=2, window=5):
     documents = iter(fin)
     batch = list(islice(documents, batch_size))
     while len(batch) > 0:
-        for doc in batch:
-            print("\n {}".format(doc))
+        #for related_entity_lists in batch:
+            #print("\n {}".format(related_entity_lists))
         text = [
-            vocab.tokenize_ids(doc, remove_oov=False)
-            for doc in batch
+            vocab.tokenize_ids(related_entity_lists, remove_oov=False)
+            for related_entity_lists in batch
         ]
-        #print("\n {}".format(text))
+        print("\n {}".format(text))
         pairs = text_to_pairs(text, vocab.random_ids,
             nsamples_per_word=nsamples,
             half_window_size=window)
