@@ -200,6 +200,14 @@ embed = GaussianEmbedding(N=num_tokens, size=dimension,
 # the corpus is just an iterator of documents, here a new line separated
 # gzip file for example
 
+
+print("---------- INITIAL EMBEDDING MEANS ----------")
+print(embed.mu)
+print("---------- INITIAL EMBEDDING COVS ----------")
+print(embed.sigma)
+
+
+
 epoch_losses = []
 for e in range(num_epochs):
     print("---------- EPOCH {} ----------".format(e+1))
@@ -212,10 +220,7 @@ for e in range(num_epochs):
 print("EPOCH LOSSES : {}".format(epoch_losses))
 
 
-print("---------- INITIAL EMBEDDING MEANS ----------")
-print(embed.mu)
-print("---------- INITIAL EMBEDDING COVS ----------")
-print(embed.sigma)
+
 
 print("---------- FINAL EMBEDDING MEANS ----------")
 print(embed.mu)
