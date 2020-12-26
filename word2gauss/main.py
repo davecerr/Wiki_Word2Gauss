@@ -244,7 +244,7 @@ def main_script():
                 epoch_losses.append(embed.train(iter_pairs(corpus, vocab,batch_size=batch_size, nsamples=neg_samples, window=window), n_workers=args.num_threads, verbose_pairs=verbose_pairs, report_interval=report_schedule))
         else:
             #with open('wikipedia.txt', 'r') as corpus:
-                epoch_losses.append(embed.train(iter_pairs(corpus, vocab,batch_size=batch_size, nsamples=neg_samples, window=window), n_workers=args.num_threads, verbose_pairs=verbose_pairs, report_interval=report_schedule))
+                epoch_losses.append(embed.train(iter_pairs(dataset, vocab,batch_size=batch_size, nsamples=neg_samples, window=window), n_workers=args.num_threads, verbose_pairs=verbose_pairs, report_interval=report_schedule))
 
     print("EPOCH LOSSES : {}".format(epoch_losses))
 
