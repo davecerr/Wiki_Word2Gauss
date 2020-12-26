@@ -132,8 +132,8 @@ def main_script():
     if args.MWE == 1:
         filename = 'war_and_peace.txt'
         #with open(filename, 'r') as file:
-    #        data = tokenizer_MWE1(file.read().replace('\n', ' '))
-#            print(data)
+            #data = tokenizer_MWE1(file.read().replace('\n', ' '))
+            #print(data)
         lst = []
         f = open(filename, "r")
         for line in f:
@@ -147,7 +147,7 @@ def main_script():
         print("STRING WRITTEN TO TEXT FILE")
         data = tokenizer_MWE1(data_string)
         print("STRING TOKENIZED")
-        print(data)
+        #print(data)
 
     else:
         print("\n\n----------- LOADING DATA ----------")
