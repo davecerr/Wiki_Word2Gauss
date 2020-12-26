@@ -189,7 +189,7 @@ def main_script():
 
 
         print("WRITING DATA")
-        lst = [["CHAPTER","ONE","\n"]]
+        lst = []
         for entities in tqdm(data_list):
             lst.append(listToString(entities, args.MWE))
             lst.append("\n")
