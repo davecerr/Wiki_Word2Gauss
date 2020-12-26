@@ -218,6 +218,7 @@ for e in range(num_epochs):
     print("---------- EPOCH {} ----------".format(e+1))
     if MWE == 1:
         with open(filename, 'r') as corpus:
+            print(corpus)
             epoch_losses.append(embed.train(iter_pairs(corpus, vocab,batch_size=batch_size, nsamples=neg_samples, window=window), n_workers=num_workers, report_interval=report_schedule))
     else:
         print(corpus)
