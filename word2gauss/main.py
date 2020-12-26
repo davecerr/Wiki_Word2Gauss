@@ -140,7 +140,8 @@ def main_script():
             for word in line.split(" "):
                 if word == "\n":
                     continue
-                elif word[-2:] == "\n":
+                elif "\n" in word:
+                    print(word)
                     lst.append(word[:-2])
                 else:
                     lst.append(word)
