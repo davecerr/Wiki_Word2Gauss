@@ -98,11 +98,11 @@ def iter_pairs(fin, vocab, batch_size=10, nsamples=2, window=5):
             vocab.tokenize_ids(related_entity_lists, remove_oov=False)
             for related_entity_lists in batch
         ]
-        print("\n {}".format(text))
+        #print("\n {}".format(text))
         pairs = text_to_pairs(text, vocab.random_ids,
             nsamples_per_word=nsamples,
             half_window_size=window)
-        #print(pairs)
+        print(pairs.shape)
         yield pairs
         batch = list(islice(documents, batch_size))
         #print(batch)
