@@ -141,7 +141,7 @@ def main_script():
                 lst.append(word)
         data_string = listToString(lst, args.MWE)
         print("STRING CREATED")
-        text_file = open("wikipedia.txt", "w")
+        text_file = open("w&p.txt", "w")
         text_file.write(data_string)
         text_file.close()
         print("STRING WRITTEN TO TEXT FILE")
@@ -266,7 +266,7 @@ def main_script():
     for e in range(num_epochs):
         print("---------- EPOCH {} ----------".format(e+1))
         if args.MWE == 1:
-            with open(filename, 'r') as corpus:
+            with open('w&p.txt', 'r') as corpus:
                 epoch_losses.append(embed.train(iter_pairs(corpus, vocab,batch_size=args.batch_size, nsamples=neg_samples, window=window), n_workers=args.num_threads, verbose_pairs=verbose_pairs, report_interval=args.report_schedule))
         else:
             with open('wikipedia.txt', 'r') as corpus:
