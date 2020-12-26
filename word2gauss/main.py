@@ -191,7 +191,7 @@ def main_script():
         print("WRITING DATA")
         lst = []
         for item in tqdm(data_list):
-            lst.append(listToString(item))
+            lst.append(listToString(item, args.MWE))
         print(lst[:400])
         data_string = listToString(lst, args.MWE)
         print("STRING CREATED")
