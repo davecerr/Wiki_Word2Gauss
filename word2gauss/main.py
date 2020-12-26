@@ -167,7 +167,7 @@ def main_script():
         text_file.write(data_string)
         text_file.close()
 
-        data = tokenizer_MWE0(corpus)
+        data = tokenizer_MWE0(data_string)
 
     #print(corpus)
     #print(data)
