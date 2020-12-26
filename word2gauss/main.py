@@ -189,7 +189,7 @@ def main_script():
 
 
         print("WRITING DATA")
-        lst = []
+        lst = [["CHAPTER","ONE","\n"]]
         for entities in tqdm(data_list):
             lst.append(listToString(entities, args.MWE))
             lst.append("\n")
@@ -202,7 +202,7 @@ def main_script():
         data = tokenizer_MWE0(data_string)
         print("STRING TOKENIZED")
         print(data)
-        
+
     #print(corpus)
     #print(data)
 
