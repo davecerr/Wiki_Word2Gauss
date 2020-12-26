@@ -128,7 +128,7 @@ else:
         # pickle_out = open("data_list.pkl","wb")
         # pkl.dump(data_list, pickle_out)
         # pickle_out.close()
-    
+
     data_list = data_list[:2]
     print("LOADING TO STRING")
     lst = []
@@ -140,7 +140,7 @@ else:
     data = tokenizer(corpus)
 
 
-# print(data)
+print(data)
 
 
 ################################################################################
