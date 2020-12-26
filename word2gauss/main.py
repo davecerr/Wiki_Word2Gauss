@@ -141,7 +141,6 @@ def main_script():
                 if word == "\n":
                     continue
                 elif "\n" in word:
-                    print(word)
                     lst.append(word[:-2])
                 else:
                     lst.append(word)
