@@ -38,7 +38,7 @@ sigma_min = 0.7
 sigma_max = 1.5
 
 # training properties
-num_workers = 6
+num_workers = 1
 num_epochs = 10
 iteration_verbose_flag = False
 
