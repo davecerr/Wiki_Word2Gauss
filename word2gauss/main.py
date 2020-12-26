@@ -41,7 +41,6 @@ sigma_max = 1.5
 # training properties
 
 num_epochs = 10
-batch_size=10
 neg_samples=3
 window=5
 padding = 0
@@ -107,6 +106,8 @@ def parse_args():
                         help='Number of training threads (integer >= 1)')
     parser.add_argument('--report_schedule', type=int, required=True,
                         help='Frequency of logging (integer >= 1)')
+    parser.add_argument('--batch_size', type=int, default=10,
+                    help='Number of examples processed at once (integer >= 1)')
     parser.add_argument('--iteration_verbose_flag', type=bool, default=False,
                         help='Verbose losses')
 
@@ -247,10 +248,10 @@ def main_script():
         print("---------- EPOCH {} ----------".format(e+1))
         if args.MWE == 1:
             with open(filename, 'r') as corpus:
-                epoch_losses.append(embed.train(iter_pairs(corpus, vocab,batch_size=batch_size, nsamples=neg_samples, window=window), n_workers=args.num_threads, verbose_pairs=verbose_pairs, report_interval=args.report_schedule))
+                epoch_losses.append(embed.train(iter_pairs(corpus, vocab,batch_size=args.batch_size, nsamples=neg_samples, window=window), n_workers=args.num_threads, verbose_pairs=verbose_pairs, report_interval=args.report_schedule))
         else:
             with open('wikipedia.txt', 'r') as corpus:
-                epoch_losses.append(embed.train(iter_pairs(corpus, vocab,batch_size=batch_size, nsamples=neg_samples, window=window), n_workers=args.num_threads, verbose_pairs=verbose_pairs, report_interval=args.report_schedule))
+                epoch_losses.append(embed.train(iter_pairs(corpus, vocab,batch_size=args.batch_size, nsamples=neg_samples, window=window), n_workers=args.num_threads, verbose_pairs=verbose_pairs, report_interval=args.report_schedule))
 
     print("EPOCH LOSSES : {}".format(epoch_losses))
 
