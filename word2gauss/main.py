@@ -186,12 +186,13 @@ def main_script():
 
         if args.MWE == 2:
             data_list = data_list[:2]
-            print(data_list)
+
 
         print("WRITING DATA")
         lst = []
-        for item in tqdm(data_list):
-            lst.append(listToString(item, args.MWE))
+        for entities in tqdm(data_list):
+            lst.append(listToString(entities, args.MWE))
+            lst.append("\n")
         data_string = listToString(lst, args.MWE)
         print("STRING CREATED")
         text_file = open("wikipedia.txt", "w")
