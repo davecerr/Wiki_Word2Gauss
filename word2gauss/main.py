@@ -20,7 +20,7 @@ from utils import cosine
 save_on = False
 
 # War & Peace (MWE = 1) vs Wikipedia single file (MWE = 2) vs full Wikipedia (MWE = 0)
-MWE = 1
+MWE = 2
 
 # embedding properties
 dimension = 50
@@ -90,7 +90,7 @@ def listToString(s):
     # initialize an empty string
     str1 = " "
     # return string
-    return (str1.join(s))
+    return (str1.join(s.encode('ascii', 'ignore')))
 
 
 
