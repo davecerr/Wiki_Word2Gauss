@@ -41,6 +41,12 @@ sigma_max = 1.5
 num_workers = 1
 num_epochs = 10
 iteration_verbose_flag = False
+batch_size=10
+nsamples=2
+window=7
+
+
+
 
 eta = 0.1 # learning rate : pass float for global learning rate (no min) or dict with keys mu,sigma,mu_min,sigma_min (local learning rate for each)
 Closs = 0.1 # regularization parameter in max-margin loss
@@ -198,9 +204,9 @@ for e in range(num_epochs):
     print("---------- EPOCH {} ----------".format(e+1))
     if MWE == 1:
         with open(filename, 'r') as corpus:
-            epoch_losses.append(embed.train(iter_pairs(corpus, vocab), n_workers=num_workers, report_interval=report_schedule))
+            epoch_losses.append(embed.train(iter_pairs(corpus, vocab,batch_size=batch_size, nsamples=nsamples, window=window), n_workers=num_workers, report_interval=report_schedule))
     else:
-        epoch_losses.append(embed.train(iter_pairs(corpus, vocab), n_workers=num_workers, report_interval=report_schedule))
+        epoch_losses.append(embed.train(iter_pairs(corpus, vocab,batch_size=batch_size, nsamples=nsamples, window=window), n_workers=num_workers, report_interval=report_schedule))
 
 print("EPOCH LOSSES : {}".format(epoch_losses))
 
