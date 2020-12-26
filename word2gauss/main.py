@@ -130,6 +130,7 @@ def main_script():
         filename = 'war_and_peace.txt'
         with open(filename, 'r') as file:
             data = tokenizer_MWE1(file.read().replace('\n', ' '))
+            print(data)
     else:
         print("\n\n----------- LOADING DATA ----------")
         if os.path.exists("data_list.pkl"):
