@@ -144,9 +144,9 @@ def main_script():
                     lst.append(word[:-1])
                 else:
                     lst.append(word)
-        print(lst[:100])
         data_string = listToString(lst, args.MWE)
         print("STRING CREATED")
+        print(data_string[:1000])
         text_file = open("w_and_p.txt", "w")
         text_file.write(data_string)
         text_file.close()
