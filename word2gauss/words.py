@@ -96,7 +96,7 @@ def iter_pairs(fin, vocab, batch_size=10, nsamples=2, window=5):
             vocab.tokenize_ids(doc, remove_oov=False)
             for doc in batch
         ]
-        print(text)
+        print("\n {}".format(text))
         pairs = text_to_pairs(text, vocab.random_ids,
             nsamples_per_word=nsamples,
             half_window_size=window)
