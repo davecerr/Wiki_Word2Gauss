@@ -204,7 +204,7 @@ def main_script():
     if args.MWE == 1:
         vocab = Vocabulary(entity_2_idx,tokenizer_MWE1)
     else:
-        vocab = Vocabulary(entity_2_idx,tokenizer_MWE1)
+        vocab = Vocabulary(entity_2_idx,tokenizer_MWE0)
 
 
 
