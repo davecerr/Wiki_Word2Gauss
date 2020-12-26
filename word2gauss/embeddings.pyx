@@ -829,20 +829,20 @@ cdef class GaussianEmbedding:
         LOGGER.info("\n\nEpoch Loss %f" % self.epoch_loss)
         return self.epoch_loss
 
-    def train_batch(self, np.ndarray[uint32_t, ndim=2, mode='c'] pairs):
+    cdef float train_batch(self, np.ndarray[uint32_t, ndim=2, mode='c'] pairs):
         '''
         Update the model with a single batch of pairs
         '''
-        cdef public float x
+        cdef float x
         with nogil:
-            x = train_batch(&pairs[0, 0], pairs.shape[0],
+            return train_batch(&pairs[0, 0], pairs.shape[0],
                         self.energy_func, self.gradient_func,
                         self.mu_ptr, self.sigma_ptr, self.covariance_type,
                         self.N, self.K,
                         &self.eta, self.Closs,
                         self.mu_max, self.sigma_min, self.sigma_max,
                         self.acc_grad_mu_ptr, self.acc_grad_sigma_ptr, self.iteration_verbose_flag)
-        return x
+        
     def energy(self, i, j, func=None):
         '''
         Compute the energy between i and j
