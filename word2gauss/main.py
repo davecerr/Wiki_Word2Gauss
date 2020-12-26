@@ -109,7 +109,7 @@ def parse_args():
     args = parser.parse_args()
     return args
 
-def main():
+def main_script():
 
     args = parse_args()
 
@@ -302,4 +302,4 @@ def main():
         # print("rank {}: word = {}, sigma = {}, id = {}, similarity = {}".format(i,neighbours[i][word],neighbours[i][sigma],neighbours[i][id],neighbours[i][similarity]))
 
 if __name__ == '__main__':
-    main()
+    main_script()
