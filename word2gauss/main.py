@@ -179,7 +179,11 @@ print("Dataset length = {}".format(dataset_length))
 
 # load the vocabulary
 vocab = Vocabulary(entity_2_idx,tokenizer)
-# print(vocab)
+print(vocab)
+pairings = iter_pairs(corpus, vocab,batch_size=batch_size, nsamples=neg_samples, window=window)
+print(pairings)
+
+
 # create the embedding to train
 # use 100 dimensional spherical Gaussian with KL-divergence as energy function
 
