@@ -138,7 +138,10 @@ def main_script():
         f = open(filename, "r")
         for line in f:
             for word in line.split(" "):
-                word.replace("\n","")
+                if word == "\n":
+                    continue
+                elif "\n" in word:
+                    word.replace("\n","")
                 lst.append(word)
         print(lst[:100])
         data_string = listToString(lst, args.MWE)
