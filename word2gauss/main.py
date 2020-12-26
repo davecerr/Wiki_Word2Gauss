@@ -201,7 +201,7 @@ def main_script():
         print("STRING WRITTEN TO TEXT FILE")
         data = tokenizer_MWE0(data_string)
         print("STRING TOKENIZED")
-        print(data)
+        #print(data)
 
     #print(corpus)
     #print(data)
