@@ -134,7 +134,7 @@ def main_script():
 
         f = open(filename, "r")
         for line in f:
-            for word in line:
+            for word in line.split(" "):
                 print(word)
 
     else:
