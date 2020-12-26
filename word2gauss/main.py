@@ -84,11 +84,14 @@ def tokenizer_MWE0(s):
     '''
     return s.lower().replace(".", "").replace(",", "").replace(":", "").replace(";", "").strip().split()
 
-def listToString(s):
+def listToString(s,MWE):
     # initialize an empty string
     str1 = " "
     # return string
-    return str1.join(s).encode('ascii', 'ignore')
+    if MWE == 1:
+        return str1.join(s)
+    else:
+        return str1.join(s).encode('ascii', 'ignore')
 
 
 
@@ -136,13 +139,13 @@ def main_script():
         for line in f:
             for word in line.split(" "):
                 lst.append(word)
-        data_string = listToString(lst)
+        data_string = listToString(lst, args.MWE)
         print("STRING CREATED")
         text_file = open("wikipedia.txt", "w")
         text_file.write(data_string)
         text_file.close()
         print("STRING WRITTEN TO TEXT FILE")
-        data = tokenizer_MWE0(data_string)
+        data = tokenizer_MWE1(data_string)
         print("STRING TOKENIZED")
         print(data)
 
@@ -183,7 +186,7 @@ def main_script():
         lst = []
         for item in tqdm(data_list):
           lst.append(listToString(item))
-        data_string = listToString(lst)
+        data_string = listToString(lst, args.MWE)
         print("STRING CREATED")
         text_file = open("wikipedia.txt", "w")
         text_file.write(data_string)
