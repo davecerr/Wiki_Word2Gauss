@@ -128,18 +128,14 @@ def main_script():
     ######################### LOAD DATA ###########################################
     if args.MWE == 1:
         filename = 'war_and_peace.txt'
-        with open(filename, 'r') as file:
-            lst = file.read().replace('\n', ' ')
-            print(lst[:10])
-            data_string = listToString(lst)
-            print("STRING CREATED")
-            text_file = open("war_and_peace_mod.txt", "w")
-            text_file.write(data_string)
-            text_file.close()
-            print("STRING WRITTEN TO TEXT FILE")
-            data = tokenizer_MWE0(data_string)
-            print("STRING TOKENIZED")
-            print(data[:10])
+        #with open(filename, 'r') as file:
+    #        data = tokenizer_MWE1(file.read().replace('\n', ' '))
+#            print(data)
+
+        f = open(filename, "r")
+        for line in a_file:
+            for word in line:
+                print(word)
 
     else:
         print("\n\n----------- LOADING DATA ----------")
