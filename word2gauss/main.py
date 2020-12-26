@@ -20,7 +20,7 @@ from utils import cosine
 save_on = False
 
 # War & Peace (MWE = 1) vs Wikipedia (MWE = 0)
-MWE = 1
+MWE = 0
 
 # embedding properties
 dimension = 50
@@ -42,7 +42,7 @@ num_workers = 1
 num_epochs = 10
 iteration_verbose_flag = False
 batch_size=10
-nsamples=3
+neg_samples=3
 window=5
 
 
@@ -204,9 +204,9 @@ for e in range(num_epochs):
     print("---------- EPOCH {} ----------".format(e+1))
     if MWE == 1:
         with open(filename, 'r') as corpus:
-            epoch_losses.append(embed.train(iter_pairs(corpus, vocab,batch_size=batch_size, nsamples=nsamples, window=window), n_workers=num_workers, report_interval=report_schedule))
+            epoch_losses.append(embed.train(iter_pairs(corpus, vocab,batch_size=batch_size, nsamples=neg_samples, window=window), n_workers=num_workers, report_interval=report_schedule))
     else:
-        epoch_losses.append(embed.train(iter_pairs(corpus, vocab,batch_size=batch_size, nsamples=nsamples, window=window), n_workers=num_workers, report_interval=report_schedule))
+        epoch_losses.append(embed.train(iter_pairs(corpus, vocab,batch_size=batch_size, nsamples=neg_samples, window=window), n_workers=num_workers, report_interval=report_schedule))
 
 print("EPOCH LOSSES : {}".format(epoch_losses))
 
