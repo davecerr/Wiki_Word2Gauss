@@ -224,7 +224,7 @@ def main_script():
     print("num_tokens = {}".format(num_tokens))
 
 
-    #print(entity_2_idx)
+    print(entity_2_idx)
     #print("\n\n")
     #print(counter)
     #print("\n\n")
