@@ -129,8 +129,18 @@ def main_script():
     if args.MWE == 1:
         filename = 'war_and_peace.txt'
         with open(filename, 'r') as file:
-            data = tokenizer_MWE1(file.read().replace('\n', ' '))
-            print(data)
+            lst = tokenizer_MWE1(file.read().replace('\n', ' '))
+            print(lst[:10])
+            data_string = listToString(lst)
+            print("STRING CREATED")
+            text_file = open("war_and_peace_mod.txt", "w")
+            text_file.write(data_string)
+            text_file.close()
+            print("STRING WRITTEN TO TEXT FILE")
+            data = tokenizer_MWE0(data_string)
+            print("STRING TOKENIZED")
+            print(data[:10])
+
     else:
         print("\n\n----------- LOADING DATA ----------")
         if os.path.exists("data_list.pkl"):
