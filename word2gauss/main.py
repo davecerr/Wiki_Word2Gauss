@@ -161,7 +161,7 @@ def main_script():
           # print(item)
           lst.append(listToString(item))
         corpus = listToString(lst)
-        data = tokenizer(corpus, ars.MWE)
+        data = tokenizer(corpus, args.MWE)
 
     #print(corpus)
     #print(data)
