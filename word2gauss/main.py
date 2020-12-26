@@ -161,10 +161,10 @@ def main_script():
         lst = []
         for item in tqdm(data_list):
           lst.append(listToString(item))
-        corpus = listToString(lst)
+        data_string = listToString(lst)
 
         text_file = open("wikipedia.txt", "w")
-        text_file.write(corpus)
+        text_file.write(data_string)
         text_file.close()
 
         data = tokenizer_MWE0(corpus)
@@ -243,9 +243,8 @@ def main_script():
                 print(dataset[:100])
                 epoch_losses.append(embed.train(iter_pairs(corpus, vocab,batch_size=batch_size, nsamples=neg_samples, window=window), n_workers=num_workers, report_interval=report_schedule))
         else:
-            print(corpus[:100])
-            print(dataset[:100])
-            epoch_losses.append(embed.train(iter_pairs(dataset, vocab,batch_size=batch_size, nsamples=neg_samples, window=window), n_workers=num_workers, report_interval=report_schedule))
+            with open('wikipedia.txt', 'r') as corpus:
+            epoch_losses.append(embed.train(iter_pairs(corpus, vocab,batch_size=batch_size, nsamples=neg_samples, window=window), n_workers=num_workers, report_interval=report_schedule))
 
     print("EPOCH LOSSES : {}".format(epoch_losses))
 
