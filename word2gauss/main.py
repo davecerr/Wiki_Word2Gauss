@@ -177,7 +177,6 @@ def main_script():
             for i, file in tqdm(enumerate(files)):
                 if padding == 0:
                     sentences = list(_open_file(file))
-                    print(sentences)
                     data_list += sentences
                 else:
                     sentences
@@ -187,6 +186,7 @@ def main_script():
 
         if args.MWE == 2:
             data_list = data_list[:2]
+            print(data_list)
 
         print("WRITING DATA")
         lst = []
