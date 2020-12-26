@@ -93,8 +93,8 @@ def iter_pairs(fin, vocab, batch_size=10, nsamples=2, window=5):
     batch = list(islice(documents, batch_size))
     while len(batch) > 0:
         for doc in batch:
-            #print("\n {}".format(doc))
-            text = [
+            print("\n {}".format(doc))
+        text = [
             vocab.tokenize_ids(doc, remove_oov=False)
             for doc in batch
         ]
