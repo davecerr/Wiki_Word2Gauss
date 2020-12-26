@@ -81,7 +81,7 @@ def tokenizer(s):
     '''
     Whitespace tokenizer
     '''
-    if MWE:
+    if MWE == 1:
         return s.lower().replace(".", "").replace(",", "").replace(":", "").replace("--"," ").replace("-"," ").replace(";", "").replace("'s","").replace("'","").replace("!","").replace('"','').replace("?","").replace("(","").replace(")","").strip().split()
     else:
         return s.lower().replace(".", "").replace(",", "").replace(":", "").replace(";", "").strip().split()
