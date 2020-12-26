@@ -791,7 +791,7 @@ cdef class GaussianEmbedding:
                     # no more data
                     break
                 if verbose_pairs:
-                    i == 1:
+                    if i == 1:
                         print(pairs.shape)
                         for j in range(pairs.shape[0]):
                             print pairs[j,:]
