@@ -185,15 +185,14 @@ def main_script():
             # pkl.dump(data_list, pickle_out)
             # pickle_out.close()
 
-        #if args.MWE == 2:
-        #    data_list = data_list[:20000]
+        if args.MWE == 2:
+            data_list = data_list[:200]
 
         print("WRITING DATA")
         lst = []
         for item in tqdm(data_list):
             lst.append(listToString(item, args.MWE))
         data_string = listToString(lst, args.MWE)
-        print(data_string)
         print("STRING CREATED")
         text_file = open("wikipedia.txt", "w")
         text_file.write(data_string)
