@@ -44,7 +44,7 @@ iteration_verbose_flag = False
 batch_size=10
 neg_samples=3
 window=5
-
+padding = 0
 
 
 
@@ -120,11 +120,11 @@ else:
         files = [os.path.join("data/page_dist_training_data/", f) for f in files]
         data_list = []
         for i, file in tqdm(enumerate(files)):
-            if MWE == 1:
+            if padding == 0:
                 sentences = list(_open_file(file))
                 data_list += sentences
             else:
-                sentence
+                sentences
         # pickle_out = open("data_list.pkl","wb")
         # pkl.dump(data_list, pickle_out)
         # pickle_out.close()
