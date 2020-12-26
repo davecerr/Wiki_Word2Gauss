@@ -41,7 +41,6 @@ sigma_max = 1.5
 # training properties
 
 num_epochs = 10
-iteration_verbose_flag = False
 batch_size=10
 neg_samples=3
 window=5
@@ -108,6 +107,9 @@ def parse_args():
                         help='Number of training threads (integer >= 1)')
     parser.add_argument('--report_schedule', type=int, required=True,
                         help='Frequency of logging (integer >= 1)')
+    parser.add_argument('--iteration_verbose_flag', type=bool, default=False,
+                        help='Verbose losses')
+
     args = parser.parse_args()
     return args
 
@@ -225,7 +227,7 @@ def main_script():
                   'sigma_mean0': sigma_mean0,
                   'sigma_std0': sigma_std0},
               eta=eta, Closs=Closs,
-              iteration_verbose_flag=iteration_verbose_flag)
+              iteration_verbose_flag=args.iteration_verbose_flag)
 
 
     # open the corpus and train with 8 threads
