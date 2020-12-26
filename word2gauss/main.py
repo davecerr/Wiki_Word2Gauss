@@ -140,9 +140,10 @@ def main_script():
             for word in line.split(" "):
                 if word == "\n":
                     continue
-                elif "\n" in word:
-                    word.replace("\n","")
-                lst.append(word)
+                elif word[-2:] == "\n":
+                    lst.append(word[:-2])
+                else:
+                    lst.append(word)
         print(lst[:100])
         data_string = listToString(lst, args.MWE)
         print("STRING CREATED")
