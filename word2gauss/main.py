@@ -138,10 +138,10 @@ def main_script():
         f = open(filename, "r")
         for line in f:
             for word in line.split(" "):
-                lst.append(tokenizer_MWE1(word))
+                lst.append(word)
         data_string = listToString(lst, args.MWE)
         print("STRING CREATED")
-        text_file = open("w&p.txt", "w")
+        text_file = open("w_and_p.txt", "w")
         text_file.write(data_string)
         text_file.close()
         print("STRING WRITTEN TO TEXT FILE")
