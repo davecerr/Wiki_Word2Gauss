@@ -192,8 +192,8 @@ def main_script():
         lst = []
         for item in tqdm(data_list):
             lst.append(listToString(item, args.MWE))
-        print(lst[:400])
         data_string = listToString(lst, args.MWE)
+        print(data_string)
         print("STRING CREATED")
         text_file = open("wikipedia.txt", "w")
         text_file.write(data_string)
