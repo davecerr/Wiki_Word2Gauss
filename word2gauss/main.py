@@ -138,7 +138,7 @@ def main_script():
         f = open(filename, "r")
         for line in f:
             for word in line.split(" "):
-                lst.append(word)
+                lst.append(tokenizer_MWE1(word))
         data_string = listToString(lst, args.MWE)
         print("STRING CREATED")
         text_file = open("w&p.txt", "w")
