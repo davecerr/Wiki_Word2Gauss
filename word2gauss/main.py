@@ -100,7 +100,7 @@ def listToString(s):
 
 
 def parse_args():
-
+    print("ENGAGED")
     parser = argparse.ArgumentParser(description='Gaussian embedding')
 
     parser.add_argument('--MWE', type=int, required=True,
