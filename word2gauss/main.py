@@ -96,7 +96,7 @@ def listToString(s):
 
 
 def parse_args():
-    print("ENGAGED")
+
     parser = argparse.ArgumentParser(description='Gaussian embedding')
 
     parser.add_argument('--MWE', type=int, required=True,
@@ -105,7 +105,7 @@ def parse_args():
     args = parser.parse_args()
     return args
 
-
+def main_script():
     args = parse_args()
 
     # set report schedule based on MWE case
@@ -115,7 +115,7 @@ def parse_args():
         report_schedule = 1000000
         max_list_length = 6203
 
-    
+
     ######################### LOAD DATA ###########################################
     if args.MWE == 1:
         filename = 'war_and_peace.txt'
