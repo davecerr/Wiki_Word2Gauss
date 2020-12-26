@@ -346,8 +346,10 @@ if __name__ == '__main__':
 # batch size is used in words.py - we can turn on print statements to see it controls how many entity lists are processed at once
 # this has no effect on the output since negative samples can be drawn from anywhere in vocab rather than just that batch
 # therefore the report_schedule is what the output calls "batch" since we report at the end of each report_schedule/batch
-# for this reason batch_size is a default argparser and report_schedule is a required argparser
+# for this reason batch_size is a default argparser and report_schedule is a required argparser.
 
 # if we make verbose_pairs=1 then we can see the actual pairs being generated. observe that there are window * neg_samples * 2
 # examples for each entity. The reason is that if 2 indices appear in the same window then we can use a 0/1 flag (5th element of the pair list)
-# to consider it when it
+# to generate window * neg_samples examples when it is the centre word and window * neg_samples examples when it is just part of another window.
+# This is clever as it allows us to slide a window left to right and always work left to right rather than having to consider words on either side
+# of the current word.
