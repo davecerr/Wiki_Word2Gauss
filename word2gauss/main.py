@@ -20,7 +20,7 @@ from utils import cosine
 save_on = False
 
 # War & Peace (MWE = 1) vs Wikipedia single file (MWE = 2) vs full Wikipedia (MWE = 0)
-MWE = 2
+MWE = 1
 
 # embedding properties
 dimension = 50
@@ -143,7 +143,7 @@ else:
     data = tokenizer(corpus)
 
 #print(corpus)
-print(data)
+#print(data)
 
 
 ################################################################################
@@ -170,10 +170,10 @@ num_tokens = len(entity_2_idx)
 print("num_tokens = {}".format(num_tokens))
 
 
-print(entity_2_idx)
-print("\n\n")
-print(counter)
-print("\n\n")
+#print(entity_2_idx)
+#print("\n\n")
+#print(counter)
+#print("\n\n")
 print(dataset)
 dataset_length = len(dataset)
 print("Dataset length = {}".format(dataset_length))
@@ -218,6 +218,7 @@ for e in range(num_epochs):
     print("---------- EPOCH {} ----------".format(e+1))
     if MWE == 1:
         with open(filename, 'r') as corpus:
+            print(corpus)
             epoch_losses.append(embed.train(iter_pairs(corpus, vocab,batch_size=batch_size, nsamples=neg_samples, window=window), n_workers=num_workers, report_interval=report_schedule))
     else:
         epoch_losses.append(embed.train(iter_pairs(corpus, vocab,batch_size=batch_size, nsamples=neg_samples, window=window), n_workers=num_workers, report_interval=report_schedule))
