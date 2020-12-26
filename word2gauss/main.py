@@ -131,11 +131,20 @@ def main_script():
         #with open(filename, 'r') as file:
     #        data = tokenizer_MWE1(file.read().replace('\n', ' '))
 #            print(data)
-
+        lst = []
         f = open(filename, "r")
         for line in f:
             for word in line.split(" "):
-                print(word)
+                lst.append(word)
+        data_string = listToString(lst)
+        print("STRING CREATED")
+        text_file = open("wikipedia.txt", "w")
+        text_file.write(data_string)
+        text_file.close()
+        print("STRING WRITTEN TO TEXT FILE")
+        data = tokenizer_MWE0(data_string)
+        print("STRING TOKENIZED")
+        print(data)
 
     else:
         print("\n\n----------- LOADING DATA ----------")
