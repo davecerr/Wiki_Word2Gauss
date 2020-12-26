@@ -46,7 +46,7 @@ batch_size=10
 neg_samples=3
 window=5
 padding = 0
-verbose_pairs=1
+verbose_pairs=0
 
 
 eta = 0.1 # learning rate : pass float for global learning rate (no min) or dict with keys mu,sigma,mu_min,sigma_min (local learning rate for each)
@@ -243,7 +243,7 @@ def main_script():
             with open(filename, 'r') as corpus:
                 epoch_losses.append(embed.train(iter_pairs(corpus, vocab,batch_size=batch_size, nsamples=neg_samples, window=window), n_workers=args.num_threads, verbose_pairs=verbose_pairs, report_interval=report_schedule))
         else:
-            with open('wikipedia.txt', 'r') as corpus:
+            #with open('wikipedia.txt', 'r') as corpus:
                 epoch_losses.append(embed.train(iter_pairs(corpus, vocab,batch_size=batch_size, nsamples=neg_samples, window=window), n_workers=args.num_threads, verbose_pairs=verbose_pairs, report_interval=report_schedule))
 
     print("EPOCH LOSSES : {}".format(epoch_losses))
