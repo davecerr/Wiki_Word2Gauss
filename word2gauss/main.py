@@ -220,6 +220,8 @@ for e in range(num_epochs):
         with open(filename, 'r') as corpus:
             epoch_losses.append(embed.train(iter_pairs(corpus, vocab,batch_size=batch_size, nsamples=neg_samples, window=window), n_workers=num_workers, report_interval=report_schedule))
     else:
+        print(corpus)
+        print(dataset)
         epoch_losses.append(embed.train(iter_pairs(dataset, vocab,batch_size=batch_size, nsamples=neg_samples, window=window), n_workers=num_workers, report_interval=report_schedule))
 
 print("EPOCH LOSSES : {}".format(epoch_losses))
