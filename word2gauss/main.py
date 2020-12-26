@@ -133,7 +133,7 @@ def main_script():
 #            print(data)
 
         f = open(filename, "r")
-        for line in a_file:
+        for line in f:
             for word in line:
                 print(word)
 
