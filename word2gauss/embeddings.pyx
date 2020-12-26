@@ -754,7 +754,7 @@ cdef class GaussianEmbedding:
         else:
             raise AttributeError
 
-    def train(self, iter_pairs, n_workers, report_interval, reporter=None):
+    def train(self, iter_pairs, n_workers, verbose_pairs, report_interval, reporter=None):
         '''
         Train the model from an iterator of many batches of pairs.
 
@@ -783,17 +783,18 @@ cdef class GaussianEmbedding:
         t1 = time.time()
         lock = Lock()
         def _worker():
-            #i=0
+            i=0
             while True:
-                #i += 1
+                i += 1
                 pairs = jobs.get()
                 if pairs is None:
                     # no more data
                     break
-                #if i == 1:
-                    #print(pairs.shape)
-                    #for j in range(pairs.shape[0]):
-                        #print pairs[j,:]
+                if verbose_pairs:
+                    i == 1:
+                        print(pairs.shape)
+                        for j in range(pairs.shape[0]):
+                            print pairs[j,:]
                 batch_loss = self.train_batch(pairs)
                 with lock:
                     processed[0] += 1
@@ -842,7 +843,7 @@ cdef class GaussianEmbedding:
                         &self.eta, self.Closs,
                         self.mu_max, self.sigma_min, self.sigma_max,
                         self.acc_grad_mu_ptr, self.acc_grad_sigma_ptr, self.iteration_verbose_flag)
-        
+
     def energy(self, i, j, func=None):
         '''
         Compute the energy between i and j
