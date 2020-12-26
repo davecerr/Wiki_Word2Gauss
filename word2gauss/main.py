@@ -139,7 +139,7 @@ else:
     corpus = listToString(lst)
     data = tokenizer(corpus)
 
-
+print(corpus)
 print(data)
 
 
