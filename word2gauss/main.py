@@ -139,6 +139,7 @@ def main_script():
         for line in f:
             for word in line.split(" "):
                 lst.append(word)
+        print(data_string)
         data_string = listToString(lst, args.MWE)
         print("STRING CREATED")
         text_file = open("w_and_p.txt", "w")
