@@ -74,14 +74,17 @@ def _open_file(filename):
             yield json.loads(line)
     #print("Maximum list length = {}".format(max_len))
     #print("Maximum list = {}".format(max_list))
-def tokenizer(s, MWE):
+def tokenizer_MWE1(s):
     '''
     Whitespace tokenizer
     '''
-    if MWE == 1:
-        return s.lower().replace(".", "").replace(",", "").replace(":", "").replace("--"," ").replace("-"," ").replace(";", "").replace("'s","").replace("'","").replace("!","").replace('"','').replace("?","").replace("(","").replace(")","").strip().split()
-    else:
-        return s.lower().replace(".", "").replace(",", "").replace(":", "").replace(";", "").strip().split()
+    return s.lower().replace(".", "").replace(",", "").replace(":", "").replace("--"," ").replace("-"," ").replace(";", "").replace("'s","").replace("'","").replace("!","").replace('"','').replace("?","").replace("(","").replace(")","").strip().split()
+
+def tokenizer_MWE0(s):
+    '''
+    Whitespace tokenizer
+    '''
+    return s.lower().replace(".", "").replace(",", "").replace(":", "").replace(";", "").strip().split()
 
 def listToString(s):
     # initialize an empty string
@@ -120,7 +123,7 @@ def main_script():
     if args.MWE == 1:
         filename = 'war_and_peace.txt'
         with open(filename, 'r') as file:
-            data = tokenizer(file.read().replace('\n', ' '), args.MWE)
+            data = tokenizer_MWE1(file.read().replace('\n', ' '))
     else:
         print("\n\n----------- LOADING DATA ----------")
         if os.path.exists("data_list.pkl"):
@@ -161,7 +164,7 @@ def main_script():
           # print(item)
           lst.append(listToString(item))
         corpus = listToString(lst)
-        data = tokenizer(corpus, args.MWE)
+        data = tokenizer_MWE0(corpus)
 
     #print(corpus)
     #print(data)
@@ -202,7 +205,10 @@ def main_script():
     #### OLD ####
 
     # load the vocabulary
-    vocab = Vocabulary(entity_2_idx,tokenizer)
+    if args.MWE == 1:
+        vocab = Vocabulary(entity_2_idx,tokenizer_MWE1)
+    else:
+        vocab = Vocabulary(entity_2_idx,tokenizer_MWE1)
 
 
 
