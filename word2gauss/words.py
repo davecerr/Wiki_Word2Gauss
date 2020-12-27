@@ -110,7 +110,7 @@ def iter_pairs(fin, vocab, batch_size=1, nsamples=2, window=5):
     if batch_size == 1:
         while len(batch) > 0:
             print(batch)
-            text = vocab.tokenize_ids(batch, remove_oov=False)
+            text = vocab.tokenize_ids(batch[0], remove_oov=False)
             print(text)
             pairs = text_to_pairs(text, vocab.random_ids,
                 nsamples_per_word=nsamples,
