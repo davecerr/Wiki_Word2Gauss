@@ -199,7 +199,6 @@ def main_script():
         for entities in tqdm(data_list):
             lst.append(listToString(entities, args.MWE))
             lst.append("\n")
-        print(len(lst))
         data_string = listToString(lst, args.MWE)
         print("STRING CREATED")
         text_file = open("wikipedia.txt", "w")
@@ -400,6 +399,8 @@ def main_script():
 
 
     ###########################################################################
+
+    print("MEASURING EMBEDDING PERFORMANCE ON VALIDATION DATA")
     actual, pred_KL_fwd, pred_KL_rev, pred_cos = get_predictions(validation_path, embed, vocab, is_round=False)
 
     ### forward KL predictions ###
