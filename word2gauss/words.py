@@ -73,7 +73,7 @@ class Vocabulary(object):
         return np.random.randint(0, self._ntokens, size=num).astype(np.uint32)
 
 
-def iter_pairs(fin, vocab, batch_size=10, nsamples=2, window=5):
+def iter_pairs(fin, vocab, batch_size=1, nsamples=2, window=5):
     '''
     Convert a document stream to batches of pairs used for training embeddings.
 
@@ -91,18 +91,28 @@ def iter_pairs(fin, vocab, batch_size=10, nsamples=2, window=5):
     '''
     documents = iter(fin)
     batch = list(islice(documents, batch_size))
-    while len(batch) > 0:
-        #for related_entity_lists in batch:
-            #print("\n {}".format(related_entity_lists))
-        text = [
-            vocab.tokenize_ids(related_entity_lists, remove_oov=False)
-            for related_entity_lists in batch
-        ]
-        #print("\n {}".format(text))
-        pairs = text_to_pairs(text, vocab.random_ids,
-            nsamples_per_word=nsamples,
-            half_window_size=window)
-        #print(pairs.shape)
-        yield pairs
-        batch = list(islice(documents, batch_size))
-        #print(batch)
+    if batch_size > 1:
+        while len(batch) > 0:
+            #for related_entity_lists in batch:
+                #print("\n {}".format(related_entity_lists))
+            text = [
+                vocab.tokenize_ids(related_entity_lists, remove_oov=False)
+                for related_entity_lists in batch
+            ]
+            #print("\n {}".format(text))
+            pairs = text_to_pairs(text, vocab.random_ids,
+                nsamples_per_word=nsamples,
+                half_window_size=window)
+            #print(pairs.shape)
+            yield pairs
+            batch = list(islice(documents, batch_size))
+            #print(batch)
+    if batch_size == 1:
+        while len(batch) > 0:
+            text = [vocab.tokenize_ids(batch, remove_oov=False)]
+            pairs = text_to_pairs(text, vocab.random_ids,
+                nsamples_per_word=nsamples,
+                half_window_size=len(batch))
+            print(pairs.shape)
+            yield pairs
+            batch = list(islice(documents, batch_size))
