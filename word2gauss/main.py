@@ -337,19 +337,21 @@ def main_script():
     idx1 = vocab.word2id(entity1)
     idx2 = vocab.word2id(entity2)
     mu1 = embed.mu[idx1]
-    Sigma1 = embed.sigma[idx1]
+    Sigma1 = np.diag(embed.sigma[idx1])
     mu2 = embed.mu[idx2]
-    Sigma2 = embed.sigma[idx2]
+    Sigma2 = np.diag(embed.sigma[idx2])
     print("ENTITY 1 : {}".format(entity1))
-    print("mu1 = {}".format(mu1))
-    print("Sigma1 = {}".format(Sigma1))
+    #print("mu1 = {}".format(mu1))
+    #print("Sigma1 = {}".format(Sigma1))
     print("ENTITY 2 : {}".format(entity2))
-    print("mu2 = {}".format(mu2))
-    print("Sigma2 = {}".format(Sigma2))
+    #print("mu2 = {}".format(mu2))
+    #print("Sigma2 = {}".format(Sigma2))
     forward_KL_similarity = KL_Multivariate_Gaussians(mu1, Sigma1, mu2, Sigma2)
     reverse_KL_similarity = KL_Multivariate_Gaussians(mu2, Sigma2, mu1, Sigma1)
-    print("KL[entity1 || entity2] = {}".format(round(forward_KL_similarity,4)))
-    print("KL[entity2 || entity1] = {}".format(round(reverse_KL_similarity,4)))
+    print("KL[entity1 || entity2] similarity = {}".format(round(forward_KL_similarity,4)))
+    print("KL[entity2 || entity1] similarity = {}".format(round(reverse_KL_similarity,4)))
+    print("cosine similarity = {}".format(round(cosine(mu1,mu2),4)))
+
 
     print("FINDING NEAREST NEIGHBOURS")
 
