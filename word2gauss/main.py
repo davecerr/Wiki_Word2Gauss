@@ -137,7 +137,7 @@ def main_script():
     #    report_schedule = 100
     #    max_list_length = 6203
 
-    df_val = pd.read_csv(val_path) 
+    df_val = pd.read_csv(validation_path) 
     print("Validation data loaded successfully")
 
     for _, record in df_val.iterrows():
