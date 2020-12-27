@@ -20,7 +20,7 @@ from scipy.stats import pearsonr, spearmanr
 
 ######################### SETTINGS ############################################
 sys.settrace
-save_on = False
+save_on = True
 
 # War & Peace (MWE = 1) vs Wikipedia single file (MWE = 2) vs full Wikipedia (MWE = 0)
 
@@ -335,7 +335,7 @@ def main_script():
     # save the model for later
     if save_on:
         print("SAVING MODEL")
-        embed.save('model_file_location_{}'.format(dimension), vocab=vocab.id2word, full=True)
+        embed.save('model_MWE={}_d={}_e={}'.format(args.MWE,dimension,num_epochs), vocab=vocab.id2word, full=True)
 
 
     ###########################################################################
