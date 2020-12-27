@@ -51,7 +51,7 @@ eta = 0.1 # learning rate : pass float for global learning rate (no min) or dict
 Closs = 0.1 # regularization parameter in max-margin loss
 
 # validation dataset path
-validation_path = "~/Projects/X5gon/WiRe.csv"
+validation_path = "data/WiRe.csv"
 
 # calculation/printing controls
 print_init_embeddings = False
