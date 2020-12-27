@@ -136,6 +136,14 @@ def main_script():
     #    report_schedule = 100
     #    max_list_length = 6203
 
+    df_val = pandas.read_csv(val_path) 
+    print("Validation data loaded successfully")
+
+    for _, record in df_val.iterrows():
+        src = standardise_title(record["srcWikiTitle"])
+        dst = standardise_title(record["dstWikiTitle"])
+        act_sim = float(record["relatedness"])
+
 
     ######################### LOAD DATA ###########################################
     if args.MWE == 1:
