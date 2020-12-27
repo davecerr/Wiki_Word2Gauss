@@ -334,8 +334,8 @@ def main_script():
     print("TESTING KL SIMILARITY")
     entity1 = 'Copenhagen'
     entity2 = 'Denmark'
-    idx1 = vocab.word2id[entity1]
-    idx2 = vocab.word2id[entity2]
+    idx1 = vocab.word2id(entity1)
+    idx2 = vocab.word2id(entity2)
     mu1 = embed.mu[idx1]
     Sigma1 = embed.Sigma[idx1]
     mu2 = embed.mu[idx2]
