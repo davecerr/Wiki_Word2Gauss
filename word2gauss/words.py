@@ -122,7 +122,7 @@ def iter_pairs(fin, vocab, batch_size=1, nsamples=2, window=5):
             print("num_training_examples = {}".format(num_training_examples))
             pairs = text_to_pairs(text, vocab.random_ids,
                 nsamples_per_word=nsamples,
-                half_window_size=len(list(batch)))
+                half_window_size=dynamic_window_size)
             print("pairs shape = {}".format(pairs.shape))
 
             yield pairs
