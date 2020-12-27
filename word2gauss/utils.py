@@ -38,6 +38,4 @@ def KL_Multivariate_Gaussians(mu1, Sigma1, mu_2, Sigma2):
 
     Sigma2_inv = np.linalg.pinv(Sigma2)
 
-    return 0.5 * ( np.log(det_Sigma2/det_Sigma1) - n + np.trace(Sigma2_inv @ Sigma1) + (mu_2-mu_1).T @ Sigma2_inv @ (mu_2-mu_1) )
-
-    
+    return 0.5 * ( np.log(det_Sigma2/det_Sigma1) - n + np.trace( np.matmul(Sigma2_inv,Sigma1) ) + np.matmul((mu_2-mu_1).T,np.matmul(Sigma2_inv,(mu_2-mu_1))) )
