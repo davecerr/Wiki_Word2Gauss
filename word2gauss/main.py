@@ -138,10 +138,12 @@ def main_script():
 
 
     print("open file check")
-    file = open(validation_path,"r")
-    validation_data = csv.reader(file, delimiter=',')
-    for row in validation_data:
-        print(row)
+
+
+    with open(validation_path, 'r') as f_in:
+    for line in f_in:
+        print(line)
+
 
 
     ######################### LOAD DATA ###########################################
