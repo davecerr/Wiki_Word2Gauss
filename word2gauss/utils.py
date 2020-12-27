@@ -1,4 +1,5 @@
 import numpy as np
+import csv
 
 def cosine(a, b, normalize=True):
     '''
