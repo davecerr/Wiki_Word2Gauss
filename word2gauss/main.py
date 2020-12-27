@@ -137,6 +137,13 @@ def main_script():
     #    max_list_length = 6203
 
 
+    print("open file check")
+    file = open(validation_path,"r")
+    validation_data = csv.reader(file, delimiter=',')
+    for row in validation_data:
+        print(row)
+
+
     ######################### LOAD DATA ###########################################
     if args.MWE == 1:
         filename = 'war_and_peace.txt'
