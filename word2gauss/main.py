@@ -1,5 +1,6 @@
 import argparse
 import numpy as np
+import pandas as pd
 import os
 import pickle as pkl
 import time
@@ -136,7 +137,7 @@ def main_script():
     #    report_schedule = 100
     #    max_list_length = 6203
 
-    df_val = pandas.read_csv(val_path) 
+    df_val = pd.read_csv(val_path) 
     print("Validation data loaded successfully")
 
     for _, record in df_val.iterrows():
