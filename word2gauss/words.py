@@ -118,6 +118,7 @@ def iter_pairs(fin, vocab, dynamic_window_size=True, nsamples=2, batch_size=1, w
             pairs = text_to_pairs(text, vocab.random_ids,
                 nsamples_per_word=nsamples,
                 half_window_size=dynamic_window_size)
+            assert pairs.shape[0] == dynamic_window_size * (dynamic_window_size - 1) * nsamples
             #print("pairs shape = {}".format(pairs.shape))
             #for i in range(pairs.shape[0]):
                 #print(pairs[i,:])
