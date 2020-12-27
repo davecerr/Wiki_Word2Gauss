@@ -1,6 +1,5 @@
 import argparse
 import numpy as np
-import pandas as pd
 import os
 import pickle as pkl
 import time
@@ -137,16 +136,6 @@ def main_script():
     #else:
     #    report_schedule = 100
     #    max_list_length = 6203
-
-    df_val = pd.read_csv(validation_path)
-    print("Validation data loaded successfully")
-
-    for _, record in df_val.iterrows():
-        src = record["srcWikiTitle"]
-        dst = record["dstWikiTitle"]
-        act_sim = float(record["relatedness"])
-        print(src,dst,act_sim)
-
 
     ######################### LOAD DATA ###########################################
     if args.MWE == 1:

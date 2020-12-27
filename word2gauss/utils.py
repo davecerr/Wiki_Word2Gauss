@@ -83,8 +83,8 @@ def get_predictions(val_path, model, vocab, is_round=False):
     print("Validation data loaded successfully")
 
     for _, record in df_val.iterrows():
-        src = standardise_title(record["srcWikiTitle"])
-        dst = standardise_title(record["dstWikiTitle"])
+        src = record["srcWikiTitle"]
+        dst = record["dstWikiTitle"]
         act_sim = float(record["relatedness"])
 
         src_idx = vocab.word2id(src)
