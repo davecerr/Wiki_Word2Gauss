@@ -98,7 +98,7 @@ def iter_pairs(fin, vocab, dynamic_window_size=True, nsamples=2, batch_size=1, w
                  as positive pairs
 
     '''
-    count = len(open(thefilepath).readlines(  ))
+    count = len(open(fin).readlines(  ))
     print("NUMBER OF LINES = {}".format(count))
     documents = iter(fin)
 
