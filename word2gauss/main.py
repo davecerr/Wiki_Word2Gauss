@@ -45,7 +45,7 @@ neg_samples=2
 window=5
 padding = 0
 verbose_pairs=0
-
+batch_size=10
 
 eta = 0.1 # learning rate : pass float for global learning rate (no min) or dict with keys mu,sigma,mu_min,sigma_min (local learning rate for each)
 Closs = 0.1 # regularization parameter in max-margin loss
@@ -107,10 +107,10 @@ def parse_args():
                         help='MWE=0: full Wikipedia, MWE=1: War & Peace, MWE=2: single Wikipedia file')
     parser.add_argument('--num_threads', type=int, required=True,
                         help='Number of training threads (integer >= 1)')
+    parser.add_argument('--dynamic_window_size', type=bool, required=True,
+                        help='Should window adjust to list length (True) or retain a fixed size (False)')
     parser.add_argument('--report_schedule', type=int, required=True,
                         help='Frequency of logging (integer >= 1)')
-    parser.add_argument('--batch_size', type=int, default=10,
-                    help='Number of examples processed at once (integer >= 1)')
     parser.add_argument('--iteration_verbose_flag', type=bool, default=False,
                         help='Verbose losses')
 
@@ -275,10 +275,12 @@ def main_script():
         print("---------- EPOCH {} ----------".format(e+1))
         if args.MWE == 1:
             with open('w_and_p.txt', 'r') as corpus:
-                epoch_losses.append(embed.train(iter_pairs(corpus, vocab,batch_size=args.batch_size, nsamples=neg_samples, window=window), n_workers=args.num_threads, verbose_pairs=verbose_pairs, report_interval=args.report_schedule))
+                epoch_losses.append(embed.train(iter_pairs(corpus, vocab, dynamic_window_size=args.dynamic_window_size, batch_size=batch_size, nsamples=neg_samples, window=window),
+                                    n_workers=args.num_threads, verbose_pairs=verbose_pairs, report_interval=args.report_schedule))
         else:
             with open('wikipedia.txt', 'r') as corpus:
-                epoch_losses.append(embed.train(iter_pairs(corpus, vocab,batch_size=args.batch_size, nsamples=neg_samples, window=window), n_workers=args.num_threads, verbose_pairs=verbose_pairs, report_interval=args.report_schedule))
+                epoch_losses.append(embed.train(iter_pairs(corpus, vocab, dynamic_window_size=args.dynamic_window_size, batch_size=batch_size, nsamples=neg_samples, window=window),
+                                    n_workers=args.num_threads, verbose_pairs=verbose_pairs, report_interval=args.report_schedule))
 
     print("EPOCH LOSSES : {}".format(epoch_losses))
 
