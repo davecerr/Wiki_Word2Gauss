@@ -23,7 +23,7 @@ def cosine(a, b, normalize=True):
         # compute cosine measure and normalize
         return np.dot(a, b_normalized.reshape(-1, 1)).flatten() / norm_a
 
-def cosine(a, b, normalize=True):
+def cosine_between_vecs(a, b, normalize=True):
     '''
     Compute the cosine measure between a and b.
 
