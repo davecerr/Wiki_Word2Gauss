@@ -175,11 +175,8 @@ def main_script():
             files = [os.path.join("data/page_dist_training_data/", f) for f in files]
             data_list = []
             for i, file in tqdm(enumerate(files)):
-                if padding == 0:
-                    sentences = list(_open_file(file))
-                    data_list += sentences
-                else:
-                    sentences
+                sentences = list(_open_file(file))
+                data_list += sentences
             # pickle_out = open("data_list.pkl","wb")
             # pkl.dump(data_list, pickle_out)
             # pickle_out.close()
