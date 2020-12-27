@@ -337,9 +337,9 @@ def main_script():
     idx1 = vocab.word2id(entity1)
     idx2 = vocab.word2id(entity2)
     mu1 = embed.mu[idx1]
-    Sigma1 = embed.Sigma[idx1]
+    Sigma1 = embed.sigma[idx1]
     mu2 = embed.mu[idx2]
-    Sigma2 = embed.Sigma[idx2]
+    Sigma2 = embed.sigma[idx2]
     print("ENTITY 1 : {}".format(entity1))
     print("mu1 = {}".format(mu1))
     print("Sigma1 = {}".format(Sigma1))
