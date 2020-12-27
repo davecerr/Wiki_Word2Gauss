@@ -23,12 +23,41 @@ def cosine(a, b, normalize=True):
         # compute cosine measure and normalize
         return np.dot(a, b_normalized.reshape(-1, 1)).flatten() / norm_a
 
+def cosine(a, b, normalize=True):
+    '''
+    Compute the cosine measure between a and b.
+
+    a = vector
+    b = vector
+
+    Returns scalar with the cosine similarities
+    '''
+    if not normalize:
+        return np.dot(a, b)
+
+    else:
+        norm_a = np.sqrt(np.sum(a ** 2))
+        norm_b = np.sqrt(np.sum(b ** 2))
+
+        a_normalized = a / norm_a
+        b_normalized = b / norm_b
+
+        # compute cosine measure
+        return np.dot(a_normalized, b_normalized)
+
 
 
 def KL_Multivariate_Gaussians(mu1, Sigma1, mu2, Sigma2):
     '''
     Implement KL[P1||P2]using the formula from p13 of
     http://stanford.edu/~jduchi/projects/general_notes.pdf
+
+    mu1 = vector
+    Sigma1 = vector (of diagonal elements)
+    mu2 = vector
+    Sigma2 = vector (of diagonal elements)
+
+    Returns scalar with the KL divergence between the two Gaussian distributions
     '''
 
     n = len(mu1)
