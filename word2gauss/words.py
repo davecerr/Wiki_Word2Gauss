@@ -119,6 +119,6 @@ def iter_pairs(fin, vocab, batch_size=1, nsamples=2, window=5):
                 nsamples_per_word=nsamples,
                 half_window_size=len(list(batch)))
             print("pairs shape = {}".format(pairs.shape))
-            print("text shape = {}".format(text.shape))
+            print("text shape = {}".format(text[0].shape))
             yield pairs
             batch = list(islice(documents, batch_size))
