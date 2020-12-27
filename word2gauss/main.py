@@ -348,8 +348,11 @@ if __name__ == '__main__':
 # therefore the report_schedule is what the output calls "batch" since we report at the end of each report_schedule/batch
 # for this reason batch_size is a default argparser and report_schedule is a required argparser.
 
-# if we make verbose_pairs=1 then we can see the actual pairs being generated. observe that there are window * neg_samples * 2
-# examples for each entity. The reason is that if 2 indices appear in the same window then we can use a 0/1 flag (5th element of the pair list)
-# to generate window * neg_samples examples when it is the centre word and window * neg_samples examples when it is just part of another window.
-# This is clever as it allows us to slide a window left to right and always work left to right rather than having to consider words on either side
-# of the current word.
+# if we make verbose_pairs=1 then we can see the actual pairs being generated. observe that there are window * (window-1) * neg_samples
+# examples for each entity. This is because each of the N elements in a list can be paired with each of the N-1 other elements, and then we
+# can repeat this for each of the neg_samples. Note that for a list [1,2,3,4,5] these pairings would naturally be
+# 12,13,14,15,21,23,24,25,31,32,34,35,41,42,43,45,51,52,53,54 giving a total of 20.
+# However, if we print pairs we see that it generates them in the order
+# 12,21,13,31,14,41,15,51,23,32,24,42,25,52,34,43,35,53,45,54 giving a total of 20. The benefit of doing it this was is that we only need to make
+# a single forward pass through the list. In actual fact, they appear as 12, 12 etc but with a 0/1 flag (5th element of the pair list) to indicate
+# which is the focus word i.e. one corresponds to 12 and the other to 21
