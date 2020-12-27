@@ -14,7 +14,7 @@ from collections import defaultdict, Counter
 from tqdm import tqdm
 from embeddings import GaussianEmbedding #, iter_pairs
 from words import Vocabulary, iter_pairs
-from utils import cosine
+from utils import cosine, KL_Multivariate_Gaussians
 
 ######################### SETTINGS ############################################
 sys.settrace
@@ -39,12 +39,12 @@ sigma_min = 0.7
 sigma_max = 1.5
 
 # training properties
-
 num_epochs = 10
 neg_samples=2
-window=5
-padding = 0
 verbose_pairs=0
+
+# additional parameters if dynamic_window_size = False
+window=5
 batch_size=10
 
 eta = 0.1 # learning rate : pass float for global learning rate (no min) or dict with keys mu,sigma,mu_min,sigma_min (local learning rate for each)
@@ -333,6 +333,26 @@ def main_script():
     #
     # test.load('model_file_location')
 
+
+    print("TESTING KL SIMILARITY")
+    entity1 = 'Copenhagen'
+    entity2 = 'Denmark'
+    idx1 = vocab.word2id[entity1]
+    idx2 = vocab.word2id[entity2]
+    mu1 = embed.mu[idx1]
+    Sigma1 = embed.Sigma[idx1]
+    mu2 = embed.mu[idx2]
+    Sigma2 = embed.Sigma[idx2]
+    print("ENTITY 1 : {}".format(entity1))
+    print("mu1 = {}".format(mu1))
+    print("Sigma1 = {}".format(Sigma1))
+    print("ENTITY 2 : {}".format(entity2))
+    print("mu2 = {}".format(mu2))
+    print("Sigma2 = {}".format(Sigma2))
+    forward_KL_similarity = KL_Multivariate_Gaussians(mu1, Sigma1, mu2, Sigma2)
+    reverse_KL_similarity = KL_Multivariate_Gaussians(mu2, Sigma2, mu1, Sigma1)
+    print("KL[entity1 || entity2] = {}".format(round(forward_KL_similarity,4)))
+    print("KL[entity2 || entity1] = {}".format(round(reverse_KL_similarity,4)))
 
     print("FINDING NEAREST NEIGHBOURS")
 

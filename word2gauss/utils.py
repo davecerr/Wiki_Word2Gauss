@@ -23,3 +23,21 @@ def cosine(a, b, normalize=True):
         # compute cosine measure and normalize
         return np.dot(a, b_normalized.reshape(-1, 1)).flatten() / norm_a
 
+
+
+def KL_Multivariate_Gaussians(mu1, Sigma1, mu_2, Sigma2):
+    '''
+    Implement KL[P1||P2]using the formula from p13 of
+    http://stanford.edu/~jduchi/projects/general_notes.pdf
+    '''
+
+    n = mu1.shape[0]
+
+    det_Sigma1 = np.linalg.det(Sigma1)
+    det_Sigma2 = np.linalg.det(Sigma2)
+
+    Sigma2_inv = np.linalg.pinv(Sigma2)
+
+    return 0.5 * ( np.log(det_Sigma2/det_Sigma1) - n + np.trace(Sigma2_inv @ Sigma1) + (mu_2-mu_1).T @ Sigma2_inv @ (mu_2-mu_1) )
+
+    
