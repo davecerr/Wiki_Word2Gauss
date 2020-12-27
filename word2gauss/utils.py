@@ -31,7 +31,7 @@ def KL_Multivariate_Gaussians(mu1, Sigma1, mu_2, Sigma2):
     http://stanford.edu/~jduchi/projects/general_notes.pdf
     '''
 
-    n = mu1.shape[0]
+    n = len(mu1)
 
     det_Sigma1 = np.linalg.det(Sigma1)
     det_Sigma2 = np.linalg.det(Sigma2)
