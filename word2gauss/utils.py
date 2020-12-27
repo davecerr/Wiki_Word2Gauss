@@ -25,7 +25,7 @@ def cosine(a, b, normalize=True):
 
 
 
-def KL_Multivariate_Gaussians(mu1, Sigma1, mu_2, Sigma2):
+def KL_Multivariate_Gaussians(mu1, Sigma1, mu2, Sigma2):
     '''
     Implement KL[P1||P2]using the formula from p13 of
     http://stanford.edu/~jduchi/projects/general_notes.pdf
