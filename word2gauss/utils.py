@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 
 def cosine(a, b, normalize=True):
     '''
@@ -78,7 +79,7 @@ def get_predictions(val_path, model, vocab, is_round=False):
     pred_cos = []
 
     # iterate over full dataset
-    df_val = pandas.read_csv(val_path) 
+    df_val = pd.read_csv(val_path)
     print("Validation data loaded successfully")
 
     for _, record in df_val.iterrows():
