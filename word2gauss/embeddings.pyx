@@ -834,6 +834,87 @@ cdef class GaussianEmbedding:
         LOGGER.info("\n\nEpoch Loss %f" % self.epoch_loss)
         return self.epoch_loss
 
+
+    def train_dynamic(self, iter_pairs, n_workers, total_num_examples, verbose_pairs, report_interval, reporter=None):
+        '''
+        Train the model from an iterator of many batches of pairs.
+
+        use n_workers many workers
+        report_interval: report progress every this many batches,
+            if None then never report
+        if reporter is not None then it is called reporter(self, batch_number)
+            every time the report is run
+        '''
+        # threadpool implementation of training
+
+        from threading import Thread, Lock
+
+        # each job is a batch of pairs from the iterator
+        # add jobs to a queue, workers pop from the queue
+        # None means no more jobs
+        jobs = Queue(maxsize=2 * n_workers)
+
+        # number processed, next time to log, logging interval
+        # make it a list so we can modify it in the thread w/o a local var
+
+        # reset the loss for this epoch
+        self.epoch_loss = 0.0
+
+        processed = [0, report_interval, report_interval]
+        t1 = time.time()
+        lock = Lock()
+        def _worker():
+            i=0
+            while True:
+                i += 1
+                pairs = jobs.get()
+                if pairs is None:
+                    # no more data
+                    break
+                if pairs.shape[0] == 0:
+                    LOGGER.info("TERMINATING. Pairs shape =")
+                    print pairs.shape
+                    break
+                if verbose_pairs:
+                    if i == 1:
+                        print(pairs.shape)
+                        for j in range(pairs.shape[0]):
+                            print pairs[j,:]
+                batch_loss = self.train_batch(pairs)
+                with lock:
+                    processed[0] += 1
+                    if processed[1] and processed[0] >= processed[1]:
+                        t2 = time.time()
+                        self.epoch_loss += batch_loss
+                        LOGGER.info(">>>>>>>>>> Batch %s/%s, Batch Loss %f, Epoch Loss %f, elapsed time: %s <<<<<<<<<<"
+                                    % (processed[0], total_num_examples, batch_loss, self.epoch_loss, t2 - t1))
+                        processed[1] = processed[0] + processed[2]
+                        if reporter:
+                            reporter(self, processed[0])
+
+        # start threads
+        threads = []
+        for k in range(n_workers):
+            thread = Thread(target=_worker)
+            thread.daemon = True
+            thread.start()
+            threads.append(thread)
+
+        # put data on the queue!
+        for batch_pairs in iter_pairs:
+            jobs.put(batch_pairs)
+
+        # no more data, tell the threads to stop
+        for i in range(len(threads)):
+            jobs.put(None)
+
+        # now join the threads
+        for thread in threads:
+            thread.join()
+
+        LOGGER.info("\n\nEpoch Loss %f" % self.epoch_loss)
+        return self.epoch_loss
+
     cdef float train_batch(self, np.ndarray[uint32_t, ndim=2, mode='c'] pairs):
         '''
         Update the model with a single batch of pairs
