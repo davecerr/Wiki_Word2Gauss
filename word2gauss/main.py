@@ -137,15 +137,6 @@ def main_script():
     #    max_list_length = 6203
 
 
-    print("open file check")
-
-
-    with open(validation_path, 'r') as f_in:
-        for line in f_in:
-            print(line.split(' '))
-
-
-
     ######################### LOAD DATA ###########################################
     if args.MWE == 1:
         filename = 'war_and_peace.txt'
