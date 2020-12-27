@@ -350,7 +350,7 @@ def main_script():
     reverse_KL_similarity = KL_Multivariate_Gaussians(mu2, Sigma2, mu1, Sigma1)
     print("KL[entity1 || entity2] similarity = {}".format(round(forward_KL_similarity,4)))
     print("KL[entity2 || entity1] similarity = {}".format(round(reverse_KL_similarity,4)))
-    print("cosine similarity = {}".format(round(cosine(mu1,mu2),4)))
+    print("cosine similarity = {}".format(round(cosine(mu1[:,np.newaxis],mu2),4)))
 
 
     print("FINDING NEAREST NEIGHBOURS")
