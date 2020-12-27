@@ -141,8 +141,8 @@ def main_script():
 
 
     with open(validation_path, 'r') as f_in:
-    for line in f_in:
-        print(line)
+        for line in f_in:
+            print(line)
 
 
 
