@@ -17,7 +17,7 @@ from embeddings import GaussianEmbedding #, iter_pairs
 from words import Vocabulary, iter_pairs
 from utils import cosine, cosine_between_vecs, KL_Multivariate_Gaussians, get_predictions
 from scipy.stats import pearsonr, spearmanr
-from lib.wikipedia import standardise_title
+#from lib.wikipedia import standardise_title
 
 ######################### SETTINGS ############################################
 sys.settrace
@@ -142,9 +142,10 @@ def main_script():
     print("Validation data loaded successfully")
 
     for _, record in df_val.iterrows():
-        src = standardise_title(record["srcWikiTitle"])
-        dst = standardise_title(record["dstWikiTitle"])
+        src = record["srcWikiTitle"]
+        dst = record["dstWikiTitle"]
         act_sim = float(record["relatedness"])
+        print(src,dst,act_sim)
 
 
     ######################### LOAD DATA ###########################################
