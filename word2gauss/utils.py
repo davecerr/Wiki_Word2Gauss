@@ -82,6 +82,9 @@ def get_predictions(val_path, model, vocab, is_round=False):
     df_val = pd.read_csv(val_path)
     print("Validation data loaded successfully")
 
+    total_records = len(df_val.index)
+    missing_records_count = 0
+
     for _, record in df_val.iterrows():
         src = record["srcWikiTitle"]
         dst = record["dstWikiTitle"]
@@ -106,6 +109,7 @@ def get_predictions(val_path, model, vocab, is_round=False):
                 pred_rev_KL_sim = np.round(pred_rev_KL_sim)
                 pred_cos_sim = np.round(pred_cos_sim)
         except KeyError:
+            missing_records_count += 1
             continue
 
         # add records
@@ -114,4 +118,5 @@ def get_predictions(val_path, model, vocab, is_round=False):
         pred_KL_rev.append(pred_rev_KL_sim)
         pred_cos.append(pred_cos_sim)
 
+    print("Missing records = {}/{}".format(missing_records_count,total_records))
     return np.array(actual), np.array(pred_KL_fwd), np.array(pred_KL_rev), np.array(pred_cos)
