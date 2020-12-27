@@ -39,7 +39,7 @@ sigma_min = 0.7
 sigma_max = 1.5
 
 # training properties
-num_epochs = 10
+num_epochs = 1
 neg_samples=2
 verbose_pairs=0
 
