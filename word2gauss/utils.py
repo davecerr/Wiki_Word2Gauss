@@ -68,3 +68,46 @@ def KL_Multivariate_Gaussians(mu1, Sigma1, mu2, Sigma2):
     Sigma2_inv = np.linalg.pinv(Sigma2)
 
     return 0.5 * ( np.log(det_Sigma2/det_Sigma1) - n + np.trace( np.matmul(Sigma2_inv,Sigma1) ) + np.matmul((mu2-mu1).T,np.matmul(Sigma2_inv,(mu2-mu1))) )
+
+
+
+def get_predictions(validation_data, model, vocab, is_round=False):
+    actual = []
+    pred_KL_fwd = []
+    pred_KL_rev = []
+    pred_cos = []
+
+    # iterate over full dataset
+    for _, record in validation_data.iterrows():
+        src = standardise_title(record["srcWikiTitle"])
+        dst = standardise_title(record["dstWikiTitle"])
+        act_sim = float(record["relatedness"])
+
+        src_idx = vocab.word2id(src)
+        dst_idx = vocab.word2id(dst)
+
+        mu_src = model.mu[src_idx]
+        Sigma_src = np.diag(model.sigma[src_idx])
+        mu_dst = model.mu[dst_idx]
+        Sigma_dst = np.diag(model.sigma[dst_idx])
+
+        # predict similarity
+        try:
+            pred_fwd_KL_sim = float(KL_Multivariate_Gaussians(mu_src, Sigma_src, mu_dst, Sigma_dst))
+            pred_rev_KL_sim = float(KL_Multivariate_Gaussians(mu_dst, Sigma_dst, mu_src, Sigma_src))
+            pred_cos_sim = float(cosine_between_vecs(mu_src,mu_dst))
+
+            if is_round:
+                pred_fwd_KL_sim = np.round(pred_fwd_KL_sim)
+                pred_rev_KL_sim = np.round(pred_rev_KL_sim)
+                pred_cos_sim = np.round(pred_cos_sim)
+        except KeyError:
+            continue
+
+        # add records
+        actual.append(act_sim)
+        pred_KL_fwd.append(pred_fwd_KL_sim)
+        pred_KL_rev.append(pred_rev_KL_sim)
+        pred_cos.append(pred_cos_sim)
+
+    return np.array(actual), np.array(pred_KL_fwd), np.array(pred_KL_rev), np.array(pred_cos)

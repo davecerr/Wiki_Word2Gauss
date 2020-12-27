@@ -14,14 +14,14 @@ from collections import defaultdict, Counter
 from tqdm import tqdm
 from embeddings import GaussianEmbedding #, iter_pairs
 from words import Vocabulary, iter_pairs
-from utils import cosine, cosine_between_vecs, KL_Multivariate_Gaussians
+from utils import cosine, cosine_between_vecs, KL_Multivariate_Gaussians, get_predictions
+from scipy.stats import pearsonr, spearmanr
 
 ######################### SETTINGS ############################################
 sys.settrace
 save_on = False
 
 # War & Peace (MWE = 1) vs Wikipedia single file (MWE = 2) vs full Wikipedia (MWE = 0)
-#MWE = 2
 
 # embedding properties
 dimension = 50
@@ -50,6 +50,15 @@ batch_size=10
 eta = 0.1 # learning rate : pass float for global learning rate (no min) or dict with keys mu,sigma,mu_min,sigma_min (local learning rate for each)
 Closs = 0.1 # regularization parameter in max-margin loss
 
+# validation dataset path
+validation_path = "~/Projects/X5gon/WiRe.csv"
+
+# calculation/printing controls
+print_init_embeddings = False
+print_final_embeddings = False
+calc_general_and_specific = False
+calc_similarity_example = True
+calc_nearest_neighbours = True
 
 
 ###############################################################################
@@ -230,7 +239,6 @@ def main_script():
     dataset_length = len(dataset)
     print("Dataset length = {}".format(dataset_length))
 
-    #### OLD ####
 
     # load the vocabulary
     if args.MWE == 1:
@@ -238,7 +246,7 @@ def main_script():
     else:
         vocab = Vocabulary(entity_2_idx,tokenizer_MWE0)
 
-
+    ############################################################################
 
     # create the embedding to train
     # use 100 dimensional spherical Gaussian with KL-divergence as energy function
@@ -256,15 +264,19 @@ def main_script():
               iteration_verbose_flag=args.iteration_verbose_flag)
 
 
+
+    ###########################################################################
+
+
     # open the corpus and train with 8 threads
     # the corpus is just an iterator of documents, here a new line separated
     # gzip file for example
 
-
-    print("---------- INITIAL EMBEDDING MEANS ----------")
-    print(embed.mu)
-    print("---------- INITIAL EMBEDDING COVS ----------")
-    print(embed.sigma)
+    if print_init_embeddings:
+        print("---------- INITIAL EMBEDDING MEANS ----------")
+        print(embed.mu)
+        print("---------- INITIAL EMBEDDING COVS ----------")
+        print(embed.sigma)
 
 
 
@@ -294,30 +306,40 @@ def main_script():
 
 
 
+    if print_final_embeddings:
+        print("---------- FINAL EMBEDDING MEANS ----------")
+        print(embed.mu)
+        print("---------- FINAL EMBEDDING COVS ----------")
+        print(embed.sigma)
 
-    print("---------- FINAL EMBEDDING MEANS ----------")
-    print(embed.mu)
-    print("---------- FINAL EMBEDDING COVS ----------")
-    print(embed.sigma)
 
-    sigma_norms = np.linalg.norm(embed.sigma, axis=1)
-    most_general_indices = np.split(sigma_norms,2)[0].argsort()[-10:][::-1]
-    most_specific_indices = np.split(sigma_norms,2)[0].argsort()[:10]
 
-    idx_2_entity = {v: k for k, v in entity_2_idx.items()}
+    ############################################################################
 
-    print("MOST GENERAL ENTITIES")
-    for idx in most_general_indices:
-        print(idx_2_entity[idx])
+    if calc_general_and_specific:
+        sigma_norms = np.linalg.norm(embed.sigma, axis=1)
+        most_general_indices = np.split(sigma_norms,2)[0].argsort()[-10:][::-1]
+        most_specific_indices = np.split(sigma_norms,2)[0].argsort()[:10]
 
-    print("MOST SPECIFIC ENTITIES")
-    for idx in most_specific_indices:
-        print(idx_2_entity[idx])
+        idx_2_entity = {v: k for k, v in entity_2_idx.items()}
+
+        print("MOST GENERAL ENTITIES")
+        for idx in most_general_indices:
+            print(idx_2_entity[idx])
+
+        print("MOST SPECIFIC ENTITIES")
+        for idx in most_specific_indices:
+            print(idx_2_entity[idx])
+
+    ###########################################################################
 
     # save the model for later
     if save_on:
         print("SAVING MODEL")
         embed.save('model_file_location_{}'.format(dimension), vocab=vocab.id2word, full=True)
+
+
+    ###########################################################################
 
     # print("LOADING MODEL")
     # test = GaussianEmbedding(N=num_tokens, size=dimension,
@@ -331,44 +353,75 @@ def main_script():
     # test.load('model_file_location')
 
 
-    print("TESTING KL SIMILARITY")
-    entity1 = 'Copenhagen'
-    entity2 = 'Denmark'
-    idx1 = vocab.word2id(entity1)
-    idx2 = vocab.word2id(entity2)
-    mu1 = embed.mu[idx1]
-    Sigma1 = np.diag(embed.sigma[idx1])
-    mu2 = embed.mu[idx2]
-    Sigma2 = np.diag(embed.sigma[idx2])
-    print("ENTITY 1 : {}".format(entity1))
-    #print("mu1 = {}".format(mu1))
-    #print("Sigma1 = {}".format(Sigma1))
-    print("ENTITY 2 : {}".format(entity2))
-    #print("mu2 = {}".format(mu2))
-    #print("Sigma2 = {}".format(Sigma2))
-    forward_KL_similarity = KL_Multivariate_Gaussians(mu1, Sigma1, mu2, Sigma2)
-    reverse_KL_similarity = KL_Multivariate_Gaussians(mu2, Sigma2, mu1, Sigma1)
-    print("KL[entity1 || entity2] similarity = {}".format(round(forward_KL_similarity,4)))
-    print("KL[entity2 || entity1] similarity = {}".format(round(reverse_KL_similarity,4)))
-    print("cosine similarity = {}".format(round(cosine_between_vecs(mu1,mu2),4)))
+    ###########################################################################
+
+    if calc_similarity_example:
+        print("TESTING KL SIMILARITY")
+        entity1 = 'Copenhagen'
+        entity2 = 'Denmark'
+        idx1 = vocab.word2id(entity1)
+        idx2 = vocab.word2id(entity2)
+        mu1 = embed.mu[idx1]
+        Sigma1 = np.diag(embed.sigma[idx1])
+        mu2 = embed.mu[idx2]
+        Sigma2 = np.diag(embed.sigma[idx2])
+        print("ENTITY 1 : {}".format(entity1))
+        #print("mu1 = {}".format(mu1))
+        #print("Sigma1 = {}".format(Sigma1))
+        print("ENTITY 2 : {}".format(entity2))
+        #print("mu2 = {}".format(mu2))
+        #print("Sigma2 = {}".format(Sigma2))
+        forward_KL_similarity = KL_Multivariate_Gaussians(mu1, Sigma1, mu2, Sigma2)
+        reverse_KL_similarity = KL_Multivariate_Gaussians(mu2, Sigma2, mu1, Sigma1)
+        print("KL[entity1 || entity2] similarity = {}".format(round(forward_KL_similarity,4)))
+        print("KL[entity2 || entity1] similarity = {}".format(round(reverse_KL_similarity,4)))
+        print("cosine similarity = {}".format(round(cosine_between_vecs(mu1,mu2),4)))
 
 
-    print("FINDING NEAREST NEIGHBOURS")
+    ############################################################################
 
-    target = "war"
-    metric = cosine
-    num = 10
+    if calc_nearest_neighbours:
+        print("FINDING NEAREST NEIGHBOURS")
 
-    target_idx = entity_2_idx[target]
-    neighbours = embed.nearest_neighbors(target=target_idx, metric=metric, num=num+1, vocab=vocab,
-                      sort_order='similarity')
+        target = "war"
+        metric = cosine
+        num = 10
 
-    print("\n\n")
-    print("Target = {}".format(target))
-    print("Similarity metric = {}".format(metric))
-    for i in range(1,num+1):
-        print("{}: {}".format(i,neighbours[i]))
-        # print("rank {}: word = {}, sigma = {}, id = {}, similarity = {}".format(i,neighbours[i][word],neighbours[i][sigma],neighbours[i][id],neighbours[i][similarity]))
+        target_idx = entity_2_idx[target]
+        neighbours = embed.nearest_neighbors(target=target_idx, metric=metric, num=num+1, vocab=vocab,
+                          sort_order='similarity')
+
+        print("\n\n")
+        print("Target = {}".format(target))
+        print("Similarity metric = {}".format(metric))
+        for i in range(1,num+1):
+            print("{}: {}".format(i,neighbours[i]))
+            # print("rank {}: word = {}, sigma = {}, id = {}, similarity = {}".format(i,neighbours[i][word],neighbours[i][sigma],neighbours[i][id],neighbours[i][similarity]))
+
+
+    ###########################################################################
+    actual, pred_KL_fwd, pred_KL_rev, pred_cos = get_predictions(validation_path, embed, vocab, is_round=False)
+
+    ### forward KL predictions ###
+    pear_r_fwd, _ = pearsonr(actual, pred_KL_fwd)
+    spear_r_fwd, _ = spearmanr(actual, pred_KL_fwd)
+    print("------ FORWARD KL SIMILARITY KL[src||dst] ------")
+    print("Pearson R: {},  Spearman R: {}".format(pear_r_fwd, spear_r_fwd))
+
+    ### reverse KL predictions ###
+    pear_r_rev, _ = pearsonr(actual, pred_KL_rev)
+    spear_r_rev, _ = spearmanr(actual, pred_KL_rev)
+    print("------ REVERSE KL SIMILARITY KL[dst||src] ------")
+    print("Pearson R: {},  Spearman R: {}".format(pear_r_rev, spear_r_rev))
+
+    ### cosine predictions ###
+    pear_r_cos, _ = pearsonr(actual, pred_cos)
+    spear_r_cos, _ = spearmanr(actual, pred_cos)
+    print("------ COSINE SIMILARITY OF MEANS ------")
+    print("Pearson R: {},  Spearman R: {}".format(pear_r_cos, spear_r_cos))
+
+
+
 
 if __name__ == '__main__':
     main_script()
