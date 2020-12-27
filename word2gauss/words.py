@@ -116,7 +116,7 @@ def iter_pairs(fin, vocab, batch_size=1, nsamples=2, window=5):
             print(text)
             pairs = text_to_pairs(text, vocab.random_ids,
                 nsamples_per_word=nsamples,
-                half_window_size=len(list(batch))
+                half_window_size=len(list(batch)))
             print(pairs.shape)
             yield pairs
             batch = list(islice(documents, batch_size))
