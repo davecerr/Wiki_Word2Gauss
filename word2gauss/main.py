@@ -17,6 +17,7 @@ from embeddings import GaussianEmbedding #, iter_pairs
 from words import Vocabulary, iter_pairs
 from utils import cosine, cosine_between_vecs, KL_Multivariate_Gaussians, get_predictions
 from scipy.stats import pearsonr, spearmanr
+from lib.wikipedia import standardise_title
 
 ######################### SETTINGS ############################################
 sys.settrace
@@ -137,7 +138,7 @@ def main_script():
     #    report_schedule = 100
     #    max_list_length = 6203
 
-    df_val = pd.read_csv(validation_path) 
+    df_val = pd.read_csv(validation_path)
     print("Validation data loaded successfully")
 
     for _, record in df_val.iterrows():
