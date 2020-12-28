@@ -373,14 +373,6 @@ def main_script():
 
     ###########################################################################
 
-    # save the model for later
-    if args.save:
-        print("SAVING MODEL")
-        embed.save('model_MWE={}_d={}_e={}_neg={}'.format(args.MWE,args.dim,args.num_epochs,args.neg_samples), vocab=vocab.id2word, full=True)
-
-
-    ###########################################################################
-
     # print("LOADING MODEL")
     # test = GaussianEmbedding(N=num_tokens, size=dimension,
     #           covariance_type=cov_type, energy_type=E_type,
