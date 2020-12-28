@@ -126,14 +126,15 @@ def parse_args():
                         help='Number of negative samples for each positive examples (integer >= 1)')
     parser.add_argument('--iteration_verbose_flag', type=bool, default=False,
                         help='Verbose losses')
-    if parser.MWE not in [0,1,2]:
-        raise self.error('MWE must be 0,1 or 2')
-
     args = parser.parse_args()
     return args
 
 def main_script():
     args = parse_args()
+
+    if args.MWE not in [0,1,2]:
+        raise self.error('MWE must be 0,1 or 2')
+
 
     # set report schedule based on MWE case
     #if args.MWE == 1:
