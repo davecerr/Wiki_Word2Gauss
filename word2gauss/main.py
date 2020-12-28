@@ -324,11 +324,7 @@ def main_script():
                 else:
                     epoch_losses.append(embed.train(iter_pairs(corpus, vocab, dynamic_window_size=args.dynamic_window_size, batch_size=batch_size, nsamples=args.neg_samples, window=window),
                                     n_workers=args.num_threads, verbose_pairs=verbose_pairs, report_interval=args.report_schedule))
-            if args.save==True:
-                print("Epoch {} complete. Saving model.".format(e+1))
-                os.chdir("Models/")
-                embed.save('model_MWE={}_d={}_e={}_neg={}_eta={}_C={}_epoch={}'.format(args.MWE,args.dim,args.num_epochs,args.neg_samples,args.eta,args.Closs,e+1), vocab=vocab.id2word, full=True)
-                os.chdir('..')
+
         else:
             with open('wikipedia.txt', 'r') as corpus:
                 total_num_examples = len(open('wikipedia.txt').readlines(  ))
@@ -338,11 +334,12 @@ def main_script():
                 else:
                     epoch_losses.append(embed.train(iter_pairs(corpus, vocab, dynamic_window_size=args.dynamic_window_size, batch_size=batch_size, nsamples=args.neg_samples, window=window),
                                     n_workers=args.num_threads, verbose_pairs=verbose_pairs, report_interval=args.report_schedule))
-            if args.save==True:
-                print("Epoch {} complete. Saving model.".format(e+1))
-                os.chdir("Models/")
-                embed.save('model_MWE={}_d={}_e={}_neg={}_eta={}_C={}_epoch={}'.format(args.MWE,args.dim,args.num_epochs,args.neg_samples,args.eta,args.Closs,e+1), vocab=vocab.id2word, full=True)
-                os.chdir('..')
+
+        if args.save==True:
+            print("Epoch {} complete. Saving model.".format(e+1))
+            os.chdir("Models/")
+            embed.save('model_MWE={}_d={}_e={}_neg={}_eta={}_C={}_epoch={}'.format(args.MWE,args.dim,args.num_epochs,args.neg_samples,args.eta,args.Closs,e+1), vocab=vocab.id2word, full=True)
+            os.chdir('..')
 
     print("EPOCH LOSSES : {}".format(epoch_losses))
 
