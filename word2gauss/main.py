@@ -328,7 +328,7 @@ def main_script():
                 print("Epoch {} complete. Saving model.".format(e+1))
                 os.chdir("Models/")
                 embed.save('model_MWE={}_d={}_e={}_neg={}_eta={}_C={}_epoch={}'.format(args.MWE,args.dim,args.num_epochs,args.neg_samples,args.eta,args.Closs,e+1), vocab=vocab.id2word, full=True)
-
+                os.chdir('..')
     print("EPOCH LOSSES : {}".format(epoch_losses))
 
 
