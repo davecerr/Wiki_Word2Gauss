@@ -332,7 +332,7 @@ def main_script():
                     os.chdir("/Models/model_MWE={}_d={}_e={}_neg={}_eta={}_C={}/".format(args.MWE,args.dim,args.num_epochs,args.neg_samples,args.eta,args.Closs))
                     embed.save('epoch={}'.format(e+1), vocab=vocab.id2word, full=True)
                 else:
-                    os.mkdir("/Models/model_MWE={}_d={}_e={}_neg={}_eta={}_C={}".format(args.MWE,args.dim,args.num_epochs,args.neg_samples,args.eta,args.Closs))
+                    os.makedirs("/Models/model_MWE={}_d={}_e={}_neg={}_eta={}_C={}".format(args.MWE,args.dim,args.num_epochs,args.neg_samples,args.eta,args.Closs))
                     os.chdir("/Models/model_MWE={}_d={}_e={}_neg={}_eta={}_C={}/".format(args.MWE,args.dim,args.num_epochs,args.neg_samples,args.eta,args.Closs))
                     embed.save('epoch={}'.format(e+1), vocab=vocab.id2word, full=True)
 
