@@ -1,13 +1,13 @@
 import argparse
 import numpy as np
-import os
+import os, os.path
 import pickle as pkl
 import time
 import gzip
 import json
 import sys
 import logging
-logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+import errno
 
 from gzip import GzipFile
 from collections import defaultdict, Counter
@@ -99,6 +99,21 @@ def listToString(s,MWE):
     else:
         return str1.join(s).encode('ascii', 'ignore')
 
+
+# Taken from https://stackoverflow.com/a/600612/119527
+def mkdir_p(path):
+    try:
+        os.makedirs(path)
+    except OSError as exc: # Python >2.5
+        if exc.errno == errno.EEXIST and os.path.isdir(path):
+            pass
+        else: raise
+
+def safe_open_w(path):
+    ''' Open "path" for writing, creating any parent directories as needed.
+    '''
+    mkdir_p(os.path.dirname(path))
+    return open(path, 'w')
 
 
 
@@ -314,7 +329,8 @@ def main_script():
                                     n_workers=args.num_threads, verbose_pairs=verbose_pairs, report_interval=args.report_schedule))
             if args.save:
                 print("Epoch {} complete. Saving model.".format(e+1))
-                embed.save('/Models/model_MWE={}_d={}_e={}_neg={}_eta={}_C={}/epoch={}'.format(args.MWE,args.dim,args.num_epochs,args.neg_samples,args.eta,args.Closs,e+1), vocab=vocab.id2word, full=True)
+                with safe_open_w('/Models/model_MWE={}_d={}_e={}_neg={}_eta={}_C={}/epoch={}'.format(args.MWE,args.dim,args.num_epochs,args.neg_samples,args.eta,args.Closs,e+1)) as f:
+                    embed.save(f, vocab=vocab.id2word, full=True)
         else:
             with open('wikipedia.txt', 'r') as corpus:
                 total_num_examples = len(open('wikipedia.txt').readlines(  ))
@@ -326,7 +342,8 @@ def main_script():
                                     n_workers=args.num_threads, verbose_pairs=verbose_pairs, report_interval=args.report_schedule))
             if args.save:
                 print("Epoch {} complete. Saving model.".format(e+1))
-                embed.save('/Models/model_MWE={}_d={}_e={}_neg={}_eta={}_C={}/epoch={}'.format(args.MWE,args.dim,args.num_epochs,args.neg_samples,args.eta,args.Closs,e+1), vocab=vocab.id2word, full=True)
+                with safe_open_w('/Models/model_MWE={}_d={}_e={}_neg={}_eta={}_C={}/epoch={}'.format(args.MWE,args.dim,args.num_epochs,args.neg_samples,args.eta,args.Closs,e+1)) as f:
+                    embed.save(f, vocab=vocab.id2word, full=True)
 
     print("EPOCH LOSSES : {}".format(epoch_losses))
 
