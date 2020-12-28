@@ -134,6 +134,16 @@ def main_script():
 
     if args.MWE not in [0,1,2]:
         sys.exit('MWE must be 0,1 or 2')
+    if args.num_threads <= 0:
+        sys.exit('num_threads must be a positive integer')
+    if args.num_epochs <= 0:
+        sys.exit('num_epochs must be a positive integer')
+    if args.dim <= 0:
+        sys.exit('dim must be a positive integer')
+    if args.neg_samples <= 0:
+        sys.exit('neg_samples must be a positive integer')
+    if args.report_schedule <= 0:
+        sys.exit('report_schedule must be a positive integer')
 
 
     # set report schedule based on MWE case
