@@ -124,6 +124,8 @@ def parse_args():
                         help='Dimension of embedding space (integer >= 1)')
     parser.add_argument('--neg_samples', type=int, required=True,
                         help='Number of negative samples for each positive examples (integer >= 1)')
+    parser.add_argument('--save', type=bool, required=True,
+                        help='Save the model (True) or not (False)')
     parser.add_argument('--iteration_verbose_flag', type=bool, default=False,
                         help='Verbose losses')
     args = parser.parse_args()
