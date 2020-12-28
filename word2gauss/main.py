@@ -211,8 +211,8 @@ def main_script():
             # pkl.dump(data_list, pickle_out)
             # pickle_out.close()
 
-        if args.MWE == 2:
-            data_list = data_list[:2]
+        #if args.MWE == 2:
+            #data_list = data_list[:2]
 
 
         print("WRITING DATA")
@@ -331,7 +331,7 @@ def main_script():
                 os.chdir("Models/")
                 embed.save('model_MWE={}_d={}_e={}_neg={}_eta={}_C={}_epoch={}'.format(args.MWE,args.dim,args.num_epochs,args.neg_samples,args.eta,args.Closs,e+1), vocab=vocab.id2word, full=True)
                 os.chdir('..')
-                
+
     print("EPOCH LOSSES : {}".format(epoch_losses))
 
 
@@ -341,7 +341,6 @@ def main_script():
         print(embed.mu)
         print("---------- FINAL EMBEDDING COVS ----------")
         print(embed.sigma)
-
 
 
     ############################################################################
@@ -451,6 +450,32 @@ def main_script():
     spear_r_cos, _ = spearmanr(actual, pred_cos)
     print("------ COSINE SIMILARITY OF MEANS ------")
     print("Pearson R: {},  Spearman R: {}".format(pear_r_cos, spear_r_cos))
+
+
+
+    ############################################################################
+    f_results = 'CSVs/grid_search_results_epochs={}.csv'.format(args.num_epochs)
+    
+    hyperparameter_list = ["Dimension","Neg samples", "Eta", "Closs"]
+    epoch_list = ['Epoch {} Loss'.format(i+1) for i in range(args.num_epochs)]
+    results_list = ["pear_r_fwd", "spear_r_fwd", "pear_r_rev", "spear_r_rev", "pear_r_cos", "spear_r_cos"]
+    header_list = hyperparameter_list + epoch_list + results_list
+
+    if os.path.exists(f_results):
+        append_write = 'a' # append if already exists
+    else:
+        # write header
+        with open(f_results, 'w') as file:
+            writer = csv.writer(file)
+            writer.writerow(header_list)
+        append_write = 'a' # make a new file if not
+
+    with open(f_results, append_write) as file:
+        writer = csv.writer(file)
+        hyperparameter_values = [args.dim, args.neg_samples, args.eta, args.Closs]
+        results_values = [pear_r_fwd, spear_r_fwd, pear_r_rev, spear_r_rev, pear_r_cos, spear_r_cos]
+        values_list = hyperparameter_values + epoch_losses + results_values
+        writer.writerow(values_list)
 
 
 
