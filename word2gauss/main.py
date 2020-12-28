@@ -20,12 +20,11 @@ from scipy.stats import pearsonr, spearmanr
 
 ######################### SETTINGS ############################################
 sys.settrace
-save_on = False
+save_on = True
 
 # War & Peace (MWE = 1) vs Wikipedia single file (MWE = 2) vs full Wikipedia (MWE = 0)
 
 # embedding properties
-dimension = 50
 cov_type = 'diagonal'
 E_type = 'KL'
 
@@ -40,8 +39,6 @@ sigma_min = 0.7
 sigma_max = 1.5
 
 # training properties
-num_epochs = 20
-neg_samples=10
 verbose_pairs=0
 
 # additional parameters if dynamic_window_size = False
@@ -121,8 +118,16 @@ def parse_args():
                         help='Should window adjust to list length (True) or retain a fixed size (False)')
     parser.add_argument('--report_schedule', type=int, required=True,
                         help='Frequency of logging (integer >= 1)')
+    parser.add_argument('--num_epochs', type=int, required=True,
+                        help='Number of epochs (integer >= 1)')
+    parser.add_argument('--dim', type=int, required=True,
+                        help='Dimension of embedding space (integer >= 1)')
+    parser.add_argument('--neg_samples', type=int, required=True,
+                        help='Number of negative samples for each positive examples (integer >= 1)')
     parser.add_argument('--iteration_verbose_flag', type=bool, default=False,
                         help='Verbose losses')
+    if parser.MWE not in [0,1,2]:
+        raise self.error('MWE must be 0,1 or 2')
 
     args = parser.parse_args()
     return args
@@ -253,7 +258,7 @@ def main_script():
     # embed = GaussianEmbedding(num_tokens, dimension,
     #     covariance_type=cov_type, energy_type=E_type)
 
-    embed = GaussianEmbedding(N=num_tokens, size=dimension,
+    embed = GaussianEmbedding(N=num_tokens, size=args.dim,
               covariance_type=cov_type, energy_type=E_type,
               mu_max=mu_max, sigma_min=sigma_min, sigma_max=sigma_max,
               init_params={'mu0': mu0,
@@ -280,25 +285,25 @@ def main_script():
 
 
     epoch_losses = []
-    for e in range(num_epochs):
+    for e in range(args.num_epochs):
         print("---------- EPOCH {} ----------".format(e+1))
         if args.MWE == 1:
             with open('w_and_p.txt', 'r') as corpus:
                 total_num_examples = len(open('w_and_p.txt').readlines(  ))
                 if args.dynamic_window_size:
-                    epoch_losses.append(embed.train_dynamic(iter_pairs(corpus, vocab, dynamic_window_size=args.dynamic_window_size, batch_size=batch_size, nsamples=neg_samples, window=window),
+                    epoch_losses.append(embed.train_dynamic(iter_pairs(corpus, vocab, dynamic_window_size=args.dynamic_window_size, batch_size=batch_size, nsamples=args.neg_samples, window=window),
                                     n_workers=args.num_threads, total_num_examples=total_num_examples, verbose_pairs=verbose_pairs, report_interval=args.report_schedule))
                 else:
-                    epoch_losses.append(embed.train(iter_pairs(corpus, vocab, dynamic_window_size=args.dynamic_window_size, batch_size=batch_size, nsamples=neg_samples, window=window),
+                    epoch_losses.append(embed.train(iter_pairs(corpus, vocab, dynamic_window_size=args.dynamic_window_size, batch_size=batch_size, nsamples=args.neg_samples, window=window),
                                     n_workers=args.num_threads, verbose_pairs=verbose_pairs, report_interval=args.report_schedule))
         else:
             with open('wikipedia.txt', 'r') as corpus:
                 total_num_examples = len(open('wikipedia.txt').readlines(  ))
                 if args.dynamic_window_size:
-                    epoch_losses.append(embed.train_dynamic(iter_pairs(corpus, vocab, dynamic_window_size=args.dynamic_window_size, batch_size=batch_size, nsamples=neg_samples, window=window),
+                    epoch_losses.append(embed.train_dynamic(iter_pairs(corpus, vocab, dynamic_window_size=args.dynamic_window_size, batch_size=batch_size, nsamples=args.neg_samples, window=window),
                                     n_workers=args.num_threads, total_num_examples=total_num_examples, verbose_pairs=verbose_pairs, report_interval=args.report_schedule))
                 else:
-                    epoch_losses.append(embed.train(iter_pairs(corpus, vocab, dynamic_window_size=args.dynamic_window_size, batch_size=batch_size, nsamples=neg_samples, window=window),
+                    epoch_losses.append(embed.train(iter_pairs(corpus, vocab, dynamic_window_size=args.dynamic_window_size, batch_size=batch_size, nsamples=args.neg_samples, window=window),
                                     n_workers=args.num_threads, verbose_pairs=verbose_pairs, report_interval=args.report_schedule))
 
     print("EPOCH LOSSES : {}".format(epoch_losses))
@@ -335,7 +340,7 @@ def main_script():
     # save the model for later
     if save_on:
         print("SAVING MODEL")
-        embed.save('model_MWE={}_d={}_e={}_neg={}'.format(args.MWE,dimension,num_epochs,neg_samples), vocab=vocab.id2word, full=True)
+        embed.save('model_MWE={}_d={}_e={}_neg={}'.format(args.MWE,args.dim,args.num_epochs,args.neg_samples), vocab=vocab.id2word, full=True)
 
 
     ###########################################################################
