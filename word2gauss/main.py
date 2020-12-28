@@ -211,8 +211,8 @@ def main_script():
             # pkl.dump(data_list, pickle_out)
             # pickle_out.close()
 
-        #if args.MWE == 2:
-            #data_list = data_list[:2]
+        if args.MWE == 2:
+            data_list = data_list[:2]
 
 
         print("WRITING DATA")
@@ -332,7 +332,8 @@ def main_script():
                     os.chdir("/Models/model_MWE={}_d={}_e={}_neg={}_eta={}_C={}/".format(args.MWE,args.dim,args.num_epochs,args.neg_samples,args.eta,args.Closs))
                     embed.save('epoch={}'.format(e+1), vocab=vocab.id2word, full=True)
                 else:
-                    os.mkdir("/Models/model_MWE={}_d={}_e={}_neg={}_eta={}_C={}/".format(args.MWE,args.dim,args.num_epochs,args.neg_samples,args.eta,args.Closs))
+                    os.mkdir("/Models/model_MWE={}_d={}_e={}_neg={}_eta={}_C={}".format(args.MWE,args.dim,args.num_epochs,args.neg_samples,args.eta,args.Closs))
+                    os.chdir("/Models/model_MWE={}_d={}_e={}_neg={}_eta={}_C={}/".format(args.MWE,args.dim,args.num_epochs,args.neg_samples,args.eta,args.Closs))
                     embed.save('epoch={}'.format(e+1), vocab=vocab.id2word, full=True)
 
     print("EPOCH LOSSES : {}".format(epoch_losses))
