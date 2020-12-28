@@ -340,10 +340,7 @@ def main_script():
                 else:
                     epoch_losses.append(embed.train(iter_pairs(corpus, vocab, dynamic_window_size=args.dynamic_window_size, batch_size=batch_size, nsamples=args.neg_samples, window=window),
                                     n_workers=args.num_threads, verbose_pairs=verbose_pairs, report_interval=args.report_schedule))
-            if args.save:
-                print("Epoch {} complete. Saving model.".format(e+1))
-                with safe_open_w('/Models/model_MWE={}_d={}_e={}_neg={}_eta={}_C={}/epoch={}'.format(args.MWE,args.dim,args.num_epochs,args.neg_samples,args.eta,args.Closs,e+1)) as f:
-                    embed.save(f, vocab=vocab.id2word, full=True)
+            
 
     print("EPOCH LOSSES : {}".format(epoch_losses))
 
