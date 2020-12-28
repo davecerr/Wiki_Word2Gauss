@@ -109,8 +109,11 @@ def parse_args():
 
     parser = argparse.ArgumentParser(description='Gaussian embedding')
 
+    # minimum working example or full Wikipedia
     parser.add_argument('--MWE', type=int, required=True,
                         help='MWE=0: full Wikipedia, MWE=1: War & Peace, MWE=2: single Wikipedia file')
+
+    # training details
     parser.add_argument('--num_threads', type=int, required=True,
                         help='Number of training threads (integer >= 1)')
     parser.add_argument('--dynamic_window_size', type=bool, required=True,
@@ -119,16 +122,24 @@ def parse_args():
                         help='Frequency of logging (integer >= 1)')
     parser.add_argument('--num_epochs', type=int, required=True,
                         help='Number of epochs (integer >= 1)')
+
+    # hyperparameters
     parser.add_argument('--dim', type=int, required=True,
                         help='Dimension of embedding space (integer >= 1)')
     parser.add_argument('--neg_samples', type=int, required=True,
                         help='Number of negative samples for each positive examples (integer >= 1)')
-    parser.add_argument('--save', type=bool, required=True,
-                        help='Save the model (True) or not (False)')
     parser.add_argument('--eta', type=float, required=True,
                         help='Learning rate')
     parser.add_argument('--Closs', type=float, required=True,
                         help='Margin size in Hinge Loss')
+
+    # saving model/results
+    parser.add_argument('--save', type=bool, required=True,
+                        help='Save the model (True) or not (False)')
+    parser.add_argument('--csv', type=bool, required=True,
+                        help='Record training results in csv file')
+
+    # debugging
     parser.add_argument('--iteration_verbose_flag', type=bool, default=False,
                         help='Verbose losses')
     args = parser.parse_args()
@@ -454,31 +465,30 @@ def main_script():
 
 
     ############################################################################
-    f_results = 'CSVs/grid_search_results_epochs={}.csv'.format(args.num_epochs)
-    
-    hyperparameter_list = ["Dimension","Neg samples", "Eta", "Closs"]
-    epoch_list = ['Epoch {} Loss'.format(i+1) for i in range(args.num_epochs)]
-    results_list = ["pear_r_fwd", "spear_r_fwd", "pear_r_rev", "spear_r_rev", "pear_r_cos", "spear_r_cos"]
-    header_list = hyperparameter_list + epoch_list + results_list
 
-    if os.path.exists(f_results):
-        append_write = 'a' # append if already exists
-    else:
-        # write header
-        with open(f_results, 'w') as file:
+    if args.csv:
+        f_results = 'CSVs/grid_search_results_epochs={}.csv'.format(args.num_epochs)
+
+        hyperparameter_list = ["Dimension","Neg samples", "Eta", "Closs"]
+        epoch_list = ['Epoch {} Loss'.format(i+1) for i in range(args.num_epochs)]
+        results_list = ["pear_r_fwd", "spear_r_fwd", "pear_r_rev", "spear_r_rev", "pear_r_cos", "spear_r_cos"]
+        header_list = hyperparameter_list + epoch_list + results_list
+
+        if os.path.exists(f_results):
+            append_write = 'a' # append if already exists
+        else:
+            # write header
+            with open(f_results, 'w') as file:
+                writer = csv.writer(file)
+                writer.writerow(header_list)
+            append_write = 'a' # make a new file if not
+
+        with open(f_results, append_write) as file:
             writer = csv.writer(file)
-            writer.writerow(header_list)
-        append_write = 'a' # make a new file if not
-
-    with open(f_results, append_write) as file:
-        writer = csv.writer(file)
-        hyperparameter_values = [args.dim, args.neg_samples, args.eta, args.Closs]
-        results_values = [pear_r_fwd, spear_r_fwd, pear_r_rev, spear_r_rev, pear_r_cos, spear_r_cos]
-        values_list = hyperparameter_values + epoch_losses + results_values
-        writer.writerow(values_list)
-
-
-
+            hyperparameter_values = [args.dim, args.neg_samples, args.eta, args.Closs]
+            results_values = [pear_r_fwd, spear_r_fwd, pear_r_rev, spear_r_rev, pear_r_cos, spear_r_cos]
+            values_list = hyperparameter_values + epoch_losses + results_values
+            writer.writerow(values_list)
 
 if __name__ == '__main__':
     main_script()
