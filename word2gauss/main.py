@@ -326,7 +326,14 @@ def main_script():
                                     n_workers=args.num_threads, verbose_pairs=verbose_pairs, report_interval=args.report_schedule))
             if args.save:
                 print("Epoch {} complete. Saving model.".format(e+1))
-                embed.save('/Models/model_MWE={}_d={}_e={}_neg={}_eta={}_C={}/epoch={}'.format(args.MWE,args.dim,args.num_epochs,args.neg_samples,args.eta,args.Closs,e+1), vocab=vocab.id2word, full=True)
+                # Check if New path exists
+                if os.path.exists("/Models/model_MWE={}_d={}_e={}_neg={}_eta={}_C={}".format(args.MWE,args.dim,args.num_epochs,args.neg_samples,args.eta,args.Closs)) :
+                    # Change the current working Directory
+                    os.chdir("/Models/model_MWE={}_d={}_e={}_neg={}_eta={}_C={}/".format(args.MWE,args.dim,args.num_epochs,args.neg_samples,args.eta,args.Closs))
+                    embed.save('epoch={}'.format(e+1), vocab=vocab.id2word, full=True)
+                else:
+                    os.mkdir("/Models/model_MWE={}_d={}_e={}_neg={}_eta={}_C={}/".format(args.MWE,args.dim,args.num_epochs,args.neg_samples,args.eta,args.Closs))
+                    embed.save('epoch={}'.format(e+1), vocab=vocab.id2word, full=True)
 
     print("EPOCH LOSSES : {}".format(epoch_losses))
 
