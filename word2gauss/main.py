@@ -133,7 +133,7 @@ def main_script():
     args = parse_args()
 
     if args.MWE not in [0,1,2]:
-        rsys.exit('MWE must be 0,1 or 2')
+        sys.exit('MWE must be 0,1 or 2')
 
 
     # set report schedule based on MWE case
