@@ -135,7 +135,7 @@ def parse_args():
                         help='Margin size in Hinge Loss')
 
     # saving model/results
-    parser.add_argument('--save', type=bool, required=True,
+    parser.add_argument('--save', type=str2bool, required=True,
                         help='Save the model (True) or not (False)')
     parser.add_argument('--csv', type=bool, required=True,
                         help='Record training results in csv file')
@@ -151,7 +151,7 @@ def main_script():
 
     print("save = {}".format(args.save))
     print("csv = {}".format(args.csv))
-    
+
     if args.MWE not in [0,1,2]:
         sys.exit('MWE must be 0,1 or 2')
     if args.num_threads <= 0:
