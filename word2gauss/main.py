@@ -6,6 +6,7 @@ import time
 import gzip
 import json
 import sys
+import csv
 import logging
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
