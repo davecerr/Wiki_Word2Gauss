@@ -44,8 +44,8 @@ verbose_pairs=0
 window=5
 batch_size=10
 
-eta = 0.1 # learning rate : pass float for global learning rate (no min) or dict with keys mu,sigma,mu_min,sigma_min (local learning rate for each)
-Closs = 0.1 # regularization parameter in max-margin loss
+#eta = 0.1 # learning rate : pass float for global learning rate (no min) or dict with keys mu,sigma,mu_min,sigma_min (local learning rate for each)
+#Closs = 0.1 # regularization parameter in max-margin loss
 
 # validation dataset path
 validation_path = "data/WiRe.csv"
@@ -125,6 +125,10 @@ def parse_args():
                         help='Number of negative samples for each positive examples (integer >= 1)')
     parser.add_argument('--save', type=bool, required=True,
                         help='Save the model (True) or not (False)')
+    parser.add_argument('--eta', type=float, required=True,
+                        help='Learning rate')
+    parser.add_argument('--Closs', type=float, required=True,
+                        help='Margin size in Hinge Loss')
     parser.add_argument('--iteration_verbose_flag', type=bool, default=False,
                         help='Verbose losses')
     args = parser.parse_args()
@@ -276,7 +280,7 @@ def main_script():
               init_params={'mu0': mu0,
                   'sigma_mean0': sigma_mean0,
                   'sigma_std0': sigma_std0},
-              eta=eta, Closs=Closs,
+              eta=args.eta, Closs=args.Closs,
               iteration_verbose_flag=args.iteration_verbose_flag)
 
 
@@ -308,6 +312,9 @@ def main_script():
                 else:
                     epoch_losses.append(embed.train(iter_pairs(corpus, vocab, dynamic_window_size=args.dynamic_window_size, batch_size=batch_size, nsamples=args.neg_samples, window=window),
                                     n_workers=args.num_threads, verbose_pairs=verbose_pairs, report_interval=args.report_schedule))
+            if args.save:
+                print("Epoch {} complete. Saving model.".format(e+1))
+                embed.save('/Models/model_MWE={}_d={}_e={}_neg={}_eta={}_C={}/epoch={}'.format(args.MWE,args.dim,args.num_epochs,args.neg_samples,args.eta,args.Closs,e+1), vocab=vocab.id2word, full=True)
         else:
             with open('wikipedia.txt', 'r') as corpus:
                 total_num_examples = len(open('wikipedia.txt').readlines(  ))
@@ -317,6 +324,9 @@ def main_script():
                 else:
                     epoch_losses.append(embed.train(iter_pairs(corpus, vocab, dynamic_window_size=args.dynamic_window_size, batch_size=batch_size, nsamples=args.neg_samples, window=window),
                                     n_workers=args.num_threads, verbose_pairs=verbose_pairs, report_interval=args.report_schedule))
+            if args.save:
+                print("Epoch {} complete. Saving model.".format(e+1))
+                embed.save('/Models/model_MWE={}_d={}_e={}_neg={}_eta={}_C={}/epoch={}'.format(args.MWE,args.dim,args.num_epochs,args.neg_samples,args.eta,args.Closs,e+1), vocab=vocab.id2word, full=True)
 
     print("EPOCH LOSSES : {}".format(epoch_losses))
 
