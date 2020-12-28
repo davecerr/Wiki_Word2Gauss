@@ -125,7 +125,7 @@ def parse_args():
     # training details
     parser.add_argument('--num_threads', type=int, required=True,
                         help='Number of training threads (integer >= 1)')
-    parser.add_argument('--dynamic_window_size', type=bool, required=True,
+    parser.add_argument('--dynamic_window_size', type=str2bool, required=True,
                         help='Should window adjust to list length (True) or retain a fixed size (False)')
     parser.add_argument('--report_schedule', type=int, required=True,
                         help='Frequency of logging (integer >= 1)')
@@ -145,11 +145,11 @@ def parse_args():
     # saving model/results
     parser.add_argument('--save', type=str2bool, required=True,
                         help='Save the model (True) or not (False)')
-    parser.add_argument('--csv', type=bool, required=True,
+    parser.add_argument('--csv', type=str2bool, required=True,
                         help='Record training results in csv file')
 
     # debugging
-    parser.add_argument('--iteration_verbose_flag', type=bool, default=False,
+    parser.add_argument('--iteration_verbose_flag', type=str2bool, default=False,
                         help='Verbose losses')
     args = parser.parse_args()
     return args
