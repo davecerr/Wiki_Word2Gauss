@@ -324,6 +324,13 @@ def main_script():
 
 
     epoch_losses = []
+    epoch_fwd_KL_pears = []
+    epoch_fwd_KL_spears = []
+    epoch_rev_KL_pears = []
+    epoch_rev_KL_spears = []
+    epoch_cos_pears = []
+    epoch_cos_spears = []
+
     for e in range(args.num_epochs):
         print("---------- EPOCH {} ----------".format(e+1))
         if args.MWE == 1:
@@ -347,15 +354,47 @@ def main_script():
                                     n_workers=args.num_threads, verbose_pairs=verbose_pairs, report_interval=args.report_schedule))
 
         if args.save==True:
-            print("CAN YOU READ ME?")
             print("Epoch {} complete. Saving model.".format(e+1))
             os.chdir("Models/")
             embed.save('model_MWE={}_d={}_e={}_neg={}_eta={}_C={}_epoch={}'.format(args.MWE,args.dim,args.num_epochs,args.neg_samples,args.eta,args.Closs,e+1), vocab=vocab.id2word, full=True)
             os.chdir('..')
 
+
+        print("MEASURING EMBEDDING PERFORMANCE ON VALIDATION DATA")
+        actual, pred_KL_fwd, pred_KL_rev, pred_cos = get_predictions(validation_path, embed, vocab, is_round=False)
+
+        ### forward KL predictions ###
+        pear_r_fwd, _ = pearsonr(actual, pred_KL_fwd)
+        spear_r_fwd, _ = spearmanr(actual, pred_KL_fwd)
+        print("------ FORWARD KL SIMILARITY KL[src||dst] ------")
+        print("Epoch: {}, Pearson R: {},  Spearman R: {}".format(e+1, pear_r_fwd, spear_r_fwd))
+
+        ### reverse KL predictions ###
+        pear_r_rev, _ = pearsonr(actual, pred_KL_rev)
+        spear_r_rev, _ = spearmanr(actual, pred_KL_rev)
+        print("------ REVERSE KL SIMILARITY KL[dst||src] ------")
+        print("Epoch: {}, Pearson R: {},  Spearman R: {}".format(e+1, pear_r_rev, spear_r_rev))
+
+        ### cosine predictions ###
+        pear_r_cos, _ = pearsonr(actual, pred_cos)
+        spear_r_cos, _ = spearmanr(actual, pred_cos)
+        print("------ COSINE SIMILARITY OF MEANS ------")
+        print("Epoch: {}, Pearson R: {},  Spearman R: {}".format(e+1, pear_r_cos, spear_r_cos))
+
+        epoch_fwd_KL_pears.append(pear_r_fwd)
+        epoch_fwd_KL_spears.append(spear_r_fwd)
+        epoch_rev_KL_pears.append(pear_r_rev)
+        epoch_rev_KL_spears.append(spear_r_rev)
+        epoch_cos_pears.append(pear_r_cos)
+        epoch_cos_spears.append(spear_r_cos)
+
     print("EPOCH LOSSES : {}".format(epoch_losses))
-
-
+    print("EPOCH fwd KL Pearson R : {}".format(epoch_fwd_KL_pears))
+    print("EPOCH fwd KL Spearman R : {}".format(epoch_fwd_KL_spears))
+    print("EPOCH rev KL Pearson R : {}".format(epoch_rev_KL_pears))
+    print("EPOCH rev KL Spearman R : {}".format(epoch_rev_KL_spears))
+    print("EPOCH cosine Pearson R : {}".format(epoch_cos_pears))
+    print("EPOCH cosine Spearman R : {}".format(epoch_cos_spears))
 
     if print_final_embeddings:
         print("---------- FINAL EMBEDDING MEANS ----------")
@@ -441,30 +480,6 @@ def main_script():
             # print("rank {}: word = {}, sigma = {}, id = {}, similarity = {}".format(i,neighbours[i][word],neighbours[i][sigma],neighbours[i][id],neighbours[i][similarity]))
 
 
-    ###########################################################################
-
-    print("MEASURING EMBEDDING PERFORMANCE ON VALIDATION DATA")
-    actual, pred_KL_fwd, pred_KL_rev, pred_cos = get_predictions(validation_path, embed, vocab, is_round=False)
-
-    ### forward KL predictions ###
-    pear_r_fwd, _ = pearsonr(actual, pred_KL_fwd)
-    spear_r_fwd, _ = spearmanr(actual, pred_KL_fwd)
-    print("------ FORWARD KL SIMILARITY KL[src||dst] ------")
-    print("Pearson R: {},  Spearman R: {}".format(pear_r_fwd, spear_r_fwd))
-
-    ### reverse KL predictions ###
-    pear_r_rev, _ = pearsonr(actual, pred_KL_rev)
-    spear_r_rev, _ = spearmanr(actual, pred_KL_rev)
-    print("------ REVERSE KL SIMILARITY KL[dst||src] ------")
-    print("Pearson R: {},  Spearman R: {}".format(pear_r_rev, spear_r_rev))
-
-    ### cosine predictions ###
-    pear_r_cos, _ = pearsonr(actual, pred_cos)
-    spear_r_cos, _ = spearmanr(actual, pred_cos)
-    print("------ COSINE SIMILARITY OF MEANS ------")
-    print("Pearson R: {},  Spearman R: {}".format(pear_r_cos, spear_r_cos))
-
-
 
     ############################################################################
 
@@ -473,8 +488,16 @@ def main_script():
 
         hyperparameter_list = ["Dimension","Neg samples", "Eta", "Closs"]
         epoch_list = ['Epoch {} Loss'.format(i+1) for i in range(args.num_epochs)]
-        results_list = ["pear_r_fwd", "spear_r_fwd", "pear_r_rev", "spear_r_rev", "pear_r_cos", "spear_r_cos"]
-        header_list = hyperparameter_list + epoch_list + results_list
+        pear_r_fwd_list = ['Epoch {} fwd KL Pearson R'.format(i+1) for i in range(args.num_epochs)]
+        spear_r_fwd_list = ['Epoch {} fwd KL Spearman R'.format(i+1) for i in range(args.num_epochs)]
+        pear_r_rev_list = ['Epoch {} rev KL Pearson R'.format(i+1) for i in range(args.num_epochs)]
+        spear_r_rev_list = ['Epoch {} rev KL Spearman R'.format(i+1) for i in range(args.num_epochs)]
+        pear_r_cos_list = ['Epoch {} cosine Pearson R'.format(i+1) for i in range(args.num_epochs)]
+        spear_r_cos_list = ['Epoch {} cosine Spearman R'.format(i+1) for i in range(args.num_epochs)]
+
+
+        header_list = hyperparameter_list + epoch_list + pear_r_fwd_list + spear_r_fwd_list +
+                        pear_r_rev_list + spear_r_rev_list + pear_r_cos_list + spear_r_cos_list
 
         if os.path.exists(f_results):
             append_write = 'a' # append if already exists
@@ -488,8 +511,8 @@ def main_script():
         with open(f_results, append_write) as file:
             writer = csv.writer(file)
             hyperparameter_values = [args.dim, args.neg_samples, args.eta, args.Closs]
-            results_values = [pear_r_fwd, spear_r_fwd, pear_r_rev, spear_r_rev, pear_r_cos, spear_r_cos]
-            values_list = hyperparameter_values + epoch_losses + results_values
+            values_list = hyperparameter_values + epoch_losses + epoch_fwd_KL_pears + epoch_fwd_KL_spears +
+                            epoch_rev_KL_pears + epoch_rev_KL_spears + epoch_cos_pears + epoch_cos_spears
             writer.writerow(values_list)
 
 if __name__ == '__main__':
