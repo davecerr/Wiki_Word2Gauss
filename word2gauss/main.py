@@ -462,6 +462,7 @@ def main_script():
     ############################################################################
 
     if calc_nearest_neighbours:
+        print("\n\n")
         print("FINDING NEAREST NEIGHBOURS")
 
         target = "war"
@@ -472,7 +473,6 @@ def main_script():
         neighbours = embed.nearest_neighbors(target=target_idx, metric=metric, num=num+1, vocab=vocab,
                           sort_order='similarity')
 
-        print("\n\n")
         print("Target = {}".format(target))
         print("Similarity metric = {}".format(metric))
         for i in range(1,num+1):
