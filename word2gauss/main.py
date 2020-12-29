@@ -496,8 +496,7 @@ def main_script():
         spear_r_cos_list = ['Epoch {} cosine Spearman R'.format(i+1) for i in range(args.num_epochs)]
 
 
-        header_list = hyperparameter_list + epoch_list + pear_r_fwd_list + spear_r_fwd_list +
-                        pear_r_rev_list + spear_r_rev_list + pear_r_cos_list + spear_r_cos_list
+        header_list = hyperparameter_list + epoch_list + pear_r_fwd_list + spear_r_fwd_list + pear_r_rev_list + spear_r_rev_list + pear_r_cos_list + spear_r_cos_list
 
         if os.path.exists(f_results):
             append_write = 'a' # append if already exists
@@ -511,8 +510,7 @@ def main_script():
         with open(f_results, append_write) as file:
             writer = csv.writer(file)
             hyperparameter_values = [args.dim, args.neg_samples, args.eta, args.Closs]
-            values_list = hyperparameter_values + epoch_losses + epoch_fwd_KL_pears + epoch_fwd_KL_spears +
-                            epoch_rev_KL_pears + epoch_rev_KL_spears + epoch_cos_pears + epoch_cos_spears
+            values_list = hyperparameter_values + epoch_losses + epoch_fwd_KL_pears + epoch_fwd_KL_spears + epoch_rev_KL_pears + epoch_rev_KL_spears + epoch_cos_pears + epoch_cos_spears
             writer.writerow(values_list)
 
 if __name__ == '__main__':
