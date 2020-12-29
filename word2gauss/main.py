@@ -366,20 +366,20 @@ def main_script():
         ### forward KL predictions ###
         pear_r_fwd, _ = pearsonr(actual, pred_KL_fwd)
         spear_r_fwd, _ = spearmanr(actual, pred_KL_fwd)
-        print("------ FORWARD KL SIMILARITY KL[src||dst] ------")
-        print("Epoch: {}, Pearson R: {},  Spearman R: {}".format(e+1, pear_r_fwd, spear_r_fwd))
+        print("------ Epoch: {} FORWARD KL SIMILARITY KL[src||dst] ------".format(e+1))
+        print("Pearson R: {},  Spearman R: {}".format(pear_r_fwd, spear_r_fwd))
 
         ### reverse KL predictions ###
         pear_r_rev, _ = pearsonr(actual, pred_KL_rev)
         spear_r_rev, _ = spearmanr(actual, pred_KL_rev)
-        print("------ REVERSE KL SIMILARITY KL[dst||src] ------")
-        print("Epoch: {}, Pearson R: {},  Spearman R: {}".format(e+1, pear_r_rev, spear_r_rev))
+        print("------ Epoch: {} REVERSE KL SIMILARITY KL[dst||src] ------".format(e+1))
+        print("Pearson R: {},  Spearman R: {}".format(pear_r_rev, spear_r_rev))
 
         ### cosine predictions ###
         pear_r_cos, _ = pearsonr(actual, pred_cos)
         spear_r_cos, _ = spearmanr(actual, pred_cos)
-        print("------ COSINE SIMILARITY OF MEANS ------")
-        print("Epoch: {}, Pearson R: {},  Spearman R: {}".format(e+1, pear_r_cos, spear_r_cos))
+        print("------ Epoch: {} COSINE SIMILARITY OF MEANS ------".format(e+1))
+        print("Pearson R: {},  Spearman R: {}".format(pear_r_cos, spear_r_cos))
 
         epoch_fwd_KL_pears.append(pear_r_fwd)
         epoch_fwd_KL_spears.append(spear_r_fwd)
@@ -388,7 +388,7 @@ def main_script():
         epoch_cos_pears.append(pear_r_cos)
         epoch_cos_spears.append(spear_r_cos)
 
-    print("EPOCH LOSSES : {}".format(epoch_losses))
+    print("\n\n\nEPOCH LOSSES : {}".format(epoch_losses))
     print("EPOCH fwd KL Pearson R : {}".format(epoch_fwd_KL_pears))
     print("EPOCH fwd KL Spearman R : {}".format(epoch_fwd_KL_spears))
     print("EPOCH rev KL Pearson R : {}".format(epoch_rev_KL_pears))

@@ -118,5 +118,6 @@ def get_predictions(val_path, model, vocab, is_round=False):
         pred_KL_rev.append(pred_rev_KL_sim)
         pred_cos.append(pred_cos_sim)
 
-    print("Missing records = {}/{}".format(missing_records_count,total_records))
+    assert missing_records_count == 0
+    #print("Missing records = {}/{}".format(missing_records_count,total_records))
     return np.array(actual), np.array(pred_KL_fwd), np.array(pred_KL_rev), np.array(pred_cos)
