@@ -813,13 +813,11 @@ cdef class GaussianEmbedding:
 
         # start threads
         threads = []
-        lock = Lock()
         for k in range(n_workers):
-            with lock:
-                thread = Thread(target=_worker)
-                thread.daemon = True
-                thread.start()
-                threads.append(thread)
+            thread = Thread(target=_worker)
+            thread.daemon = True
+            thread.start()
+            threads.append(thread)
 
         # put data on the queue!
         for batch_pairs in iter_pairs:
