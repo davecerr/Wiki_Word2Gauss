@@ -786,6 +786,7 @@ cdef class GaussianEmbedding:
             i=0
             while True:
                 i += 1
+                np.random.seed(2019+i)
                 pairs = jobs.get()
                 if pairs is None:
                     # no more data
