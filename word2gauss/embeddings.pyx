@@ -40,7 +40,7 @@ cimport cython
 cimport numpy as np
 
 np.import_array()
-
+np.random.seed(0)
 from libc.math cimport log, sqrt
 from libc.stdlib cimport malloc, free
 from libcpp.vector cimport vector
