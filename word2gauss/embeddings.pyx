@@ -868,7 +868,8 @@ cdef class GaussianEmbedding:
             i=0
             while True:
                 i += 1
-                pairs = jobs.get()
+                with lock:
+                    pairs = jobs.get()
                 if pairs is None:
                     # no more data
                     break
@@ -892,6 +893,7 @@ cdef class GaussianEmbedding:
                         processed[1] = processed[0] + processed[2]
                         if reporter:
                             reporter(self, processed[0])
+
 
         # start threads
         threads = []
