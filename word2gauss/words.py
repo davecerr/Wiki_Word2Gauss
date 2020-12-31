@@ -72,6 +72,7 @@ class Vocabulary(object):
             return ret
 
     def random_ids(self, num):
+        np.random.seed(0)
         return np.random.randint(0, self._ntokens, size=num).astype(np.uint32)
 
 

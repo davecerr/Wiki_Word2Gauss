@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-np.random.seed(0)
+
 
 def cosine(a, b, normalize=True):
     '''
