@@ -7,6 +7,8 @@ from embeddings import text_to_pairs
 
 LARGEST_UINT32 = 4294967295
 
+np.random.seed(0)
+
 def tokenizer(s):
     '''
     Whitespace tokenizer

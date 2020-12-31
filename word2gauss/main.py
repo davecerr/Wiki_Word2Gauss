@@ -21,6 +21,7 @@ from scipy.stats import pearsonr, spearmanr
 
 ######################### SETTINGS ############################################
 sys.settrace
+np.random.seed(0)
 
 # War & Peace (MWE = 1) vs Wikipedia single file (MWE = 2) vs full Wikipedia (MWE = 0)
 
