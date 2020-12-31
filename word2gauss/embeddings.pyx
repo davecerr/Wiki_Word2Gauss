@@ -782,11 +782,11 @@ cdef class GaussianEmbedding:
         processed = [0, report_interval, report_interval]
         t1 = time.time()
         lock = Lock()
-        def _worker(j):
+        def _worker(k):
             i=0
             while True:
                 i += 1
-                np.random.seed(2019+j)
+                np.random.seed(2019+k)
                 pairs = jobs.get()
                 if pairs is None:
                     # no more data
