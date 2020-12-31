@@ -125,7 +125,7 @@ def iter_pairs(fin, vocab, dynamic_window_size=True, nsamples=2, batch_size=1, w
             #print("pairs shape = {}".format(pairs.shape))
             #for i in range(pairs.shape[0]):
                 #print(pairs[i,:])
-            yield np.flipud(pairs)
+            yield pairs
             batch = list(islice(documents, batch_size))
 
     elif dynamic_window_size == False:
