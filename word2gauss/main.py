@@ -244,10 +244,7 @@ def main_script():
         for entities in tqdm(data_list):
             lst.append(listToString(entities, args.MWE))
             lst.append("\n")
-        lst.reverse()
-        print(lst[:10])
         data_string = listToString(lst, args.MWE)
-        print(data_string[:10])
         print("STRING CREATED")
         text_file = open("wikipedia.txt", "w")
         text_file.write(data_string)
