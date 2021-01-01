@@ -40,7 +40,7 @@ sigma_min = 0.7
 sigma_max = 1.5
 
 # training properties
-verbose_pairs=1
+verbose_pairs=0
 
 # additional parameters if dynamic_window_size = False
 window=5
