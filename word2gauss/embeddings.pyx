@@ -876,17 +876,13 @@ cdef class GaussianEmbedding:
                     LOGGER.info("TERMINATING. Pairs shape =")
                     print pairs.shape
                     break
-                if verbose_pairs:
-                    if i == 1:
-                        print(pairs.shape)
-                        for j in range(pairs.shape[0]):
-                            print pairs[j,:]
 
                 with lock:
-                    for j in range(pairs.shape[0]):
-                        print "thread: %s pairs: [%s, %s, %s, %s, %s]" % (k, pairs[j,0], pairs[j,1], pairs[j,2], pairs[j,3], pairs[j,4])
-                    print ""
-                    print ""
+                    if verbose_pairs:
+                        for j in range(pairs.shape[0]):
+                            print "thread: %s pairs: [%s, %s, %s, %s, %s]" % (k, pairs[j,0], pairs[j,1], pairs[j,2], pairs[j,3], pairs[j,4])
+                        print ""
+                        print ""
                     batch_loss = self.train_batch(pairs)
                 with lock:
                     processed[0] += 1
