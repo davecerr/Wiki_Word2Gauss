@@ -865,30 +865,30 @@ cdef class GaussianEmbedding:
         lock = Lock()
         pqueue = PriorityQueue()
         def threading_work(c,pairs):
-            while True:
-                if pairs is None:
-                    # no more data
-                    break
-                if pairs.shape[0] == 0:
-                    LOGGER.info("TERMINATING. Pairs shape =")
-                    print pairs.shape
-                    break
-                if verbose_pairs:
-                    if c == 1:
-                        print(pairs.shape)
-                        for j in range(pairs.shape[0]):
-                            print pairs[j,:]
-                batch_loss = self.train_batch(pairs)
-                with lock:
-                    processed[0] += 1
-                    if processed[1] and processed[0] >= processed[1]:
-                        t2 = time.time()
-                        self.epoch_loss += batch_loss
-                        LOGGER.info(">>>>>>>>>> Batch %s, Batch Loss %f, Epoch Loss %f, elapsed time: %s <<<<<<<<<<"
-                                    % (processed[0], batch_loss, self.epoch_loss, t2 - t1))
-                        processed[1] = processed[0] + processed[2]
-                        if reporter:
-                            reporter(self, processed[0])
+            print(c)
+            if pairs is None:
+                # no more data
+                break
+            if pairs.shape[0] == 0:
+                LOGGER.info("TERMINATING. Pairs shape =")
+                print pairs.shape
+                break
+            if verbose_pairs:
+                if c == 1:
+                    print(pairs.shape)
+                    for j in range(pairs.shape[0]):
+                        print pairs[j,:]
+            batch_loss = self.train_batch(pairs)
+            with lock:
+                processed[0] += 1
+                if processed[1] and processed[0] >= processed[1]:
+                    t2 = time.time()
+                    self.epoch_loss += batch_loss
+                    LOGGER.info(">>>>>>>>>> Batch %s, Batch Loss %f, Epoch Loss %f, elapsed time: %s <<<<<<<<<<"
+                                % (processed[0], batch_loss, self.epoch_loss, t2 - t1))
+                    processed[1] = processed[0] + processed[2]
+                    if reporter:
+                        reporter(self, processed[0])
 
 
         # start threads
