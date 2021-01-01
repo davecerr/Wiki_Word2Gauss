@@ -920,26 +920,9 @@ cdef class GaussianEmbedding:
 
 
     def train_dynamic(self, iter_pairs, n_workers, total_num_examples, verbose_pairs, report_interval, reporter=None):
-        '''
-        Train the model from an iterator of many batches of pairs.
 
-        use n_workers many workers
-        report_interval: report progress every this many batches,
-            if None then never report
-        if reporter is not None then it is called reporter(self, batch_number)
-            every time the report is run
-        '''
-        # threadpool implementation of training
 
         from threading import Thread, Lock
-
-        # each job is a batch of pairs from the iterator
-        # add jobs to a queue, workers pop from the queue
-        # None means no more jobs
-        #jobs = Queue(maxsize=2 * n_workers)
-
-        # number processed, next time to log, logging interval
-        # make it a list so we can modify it in the thread w/o a local var
 
         # reset the loss for this epoch
         self.epoch_loss = 0.0
@@ -947,14 +930,14 @@ cdef class GaussianEmbedding:
         processed = [0, report_interval, report_interval]
         t1 = time.time()
         lock = Lock()
-        pqueue = PriorityQueue()
-        def threading_work(c,pairs):
-            #print c
-            if verbose_pairs:
-                if c == 1:
-                    print(pairs.shape)
-                    for j in range(pairs.shape[0]):
-                        print pairs[j,:]
+
+        pair_queue = Queue()
+
+        def threading_work(i, q):
+
+            while True:
+                pairs = q.get()
+
             batch_loss = self.train_batch(pairs)
             with lock:
                 processed[0] += 1
@@ -966,27 +949,20 @@ cdef class GaussianEmbedding:
                     processed[1] = processed[0] + processed[2]
                     if reporter:
                         reporter(self, processed[0])
+            q.task_done()
 
 
         # start threads
-        threadsPool = []
-        data = []
+        for i in range(num_threads):
+            worker = Thread(target=threading_work, args=(i, pair_queue))
+            worker.setDaemon(True)
+            worker.start()
 
-        for c, batch_pairs in enumerate(iter_pairs):
-            t = Thread(target=threading_work, args=(c, batch_pairs))
-            threadsPool.append(t)
+        for batch_pairs in iter_pairs:
+            pair_queue.put(batch_pairs)
 
-        print(len(threadsPool))
-        for thread in threadsPool:
-            thread.start()
-
-        for thread in threadsPool:
-            thread.join()
-
-        while not pqueue.empty():
-            data.append(pqueue.get())
-
-        print(len(data))
+        print("MAIN THREAD WAITING")
+        pair_queue.join()
 
         LOGGER.info("\n\nEpoch Loss %f" % self.epoch_loss)
         return self.epoch_loss
