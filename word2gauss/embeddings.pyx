@@ -877,7 +877,7 @@ cdef class GaussianEmbedding:
                     print pairs.shape
                     break
 
-                batch_loss = self.train_batch(pairs)
+                batch_loss = self.train_batch(k,pairs)
 
                 if verbose_pairs:
                     for j in range(pairs.shape[0]):
@@ -921,13 +921,13 @@ cdef class GaussianEmbedding:
         LOGGER.info("\n\nEpoch Loss %f" % self.epoch_loss)
         return self.epoch_loss
 
-    cdef float train_batch(self, np.ndarray[uint32_t, ndim=2, mode='c'] pairs):
+    cdef float train_batch(self, uint32 k, np.ndarray[uint32_t, ndim=2, mode='c'] pairs):
         '''
         Update the model with a single batch of pairs
         '''
         cdef float x
         with nogil:
-            return train_batch(&pairs[0, 0], pairs.shape[0],
+            return train_batch(k, &pairs[0, 0], pairs.shape[0],
                         self.energy_func, self.gradient_func,
                         self.mu_ptr, self.sigma_ptr, self.covariance_type,
                         self.N, self.K,
@@ -1315,7 +1315,7 @@ cdef void ip_gradient(size_t i, size_t j, size_t center_index,
             dEdsigmai_ptr[k] = dEdsigma
             dEdsigmaj_ptr[k] = dEdsigma
 
-cdef float train_batch(
+cdef float train_batch(thread,
         uint32_t*pairs, size_t Npairs,
         energy_t energy_func, gradient_t gradient_func,
         DTYPE_t*mu_ptr, DTYPE_t*sigma_ptr, uint32_t covariance_type,
@@ -1370,8 +1370,8 @@ cdef float train_batch(
             # loss for this sample is 0, nothing to update
             if iteration_verbose_flag and k%1000==0:
                 with gil:
-                    LOGGER.info("k = %d, loss = 0, actual loss = %f, total loss = %f"
-                        % (k, loss, total_loss))
+                    LOGGER.info("thread = %s, k = %d, loss = 0, actual loss = %f, total loss = %f"
+                        % (thread, k, loss, total_loss))
             continue
         else:
             total_loss += loss
