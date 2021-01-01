@@ -904,7 +904,7 @@ cdef class GaussianEmbedding:
             thread.daemon = True
             thread.start()
             threads.append(thread)
-            time.sleep(2)
+            #time.sleep(2)
 
         # put data on the queue!
         for batch_pairs in iter_pairs:
