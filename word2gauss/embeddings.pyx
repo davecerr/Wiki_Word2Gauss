@@ -878,7 +878,7 @@ cdef class GaussianEmbedding:
                     break
 
                 with lock:
-                    batch_loss, loss_list = self.train_batch(pairs)
+                    batch_loss = self.train_batch(pairs)
                     if verbose_pairs:
                         for j in range(pairs.shape[0]):
                             print "thread: %s pairs: [%s, %s, %s, %s, %s] loss %s" % (k, pairs[j,0], pairs[j,1], pairs[j,2], pairs[j,3], pairs[j,4], loss_list[j])
@@ -1349,7 +1349,6 @@ cdef float train_batch(
     cdef DTYPE_t *dsigmaj = work + 3 * K
 
     total_loss = 0.0
-    loss_list =  <int *>malloc(Npairs*cython.sizeof(int))
 
     for k in range(Npairs):
 
@@ -1366,7 +1365,7 @@ cdef float train_batch(
         neg_energy = energy_func(negi, negj, center_index,
                                  mu_ptr, sigma_ptr, covariance_type, N, K)
         loss = Closs - pos_energy + neg_energy
-        loss_list[k] = loss
+
         if loss < 1.0e-14:
             # loss for this sample is 0, nothing to update
             if iteration_verbose_flag:
