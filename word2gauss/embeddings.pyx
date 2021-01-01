@@ -878,12 +878,13 @@ cdef class GaussianEmbedding:
                     break
 
                 with lock:
+                    batch_loss, loss_list = self.train_batch(pairs)
                     if verbose_pairs:
                         for j in range(pairs.shape[0]):
-                            print "thread: %s pairs: [%s, %s, %s, %s, %s]" % (k, pairs[j,0], pairs[j,1], pairs[j,2], pairs[j,3], pairs[j,4])
+                            print "thread: %s pairs: [%s, %s, %s, %s, %s] loss %s" % (k, pairs[j,0], pairs[j,1], pairs[j,2], pairs[j,3], pairs[j,4], loss_list[j])
                         print ""
                         print ""
-                    batch_loss = self.train_batch(pairs)
+
                 with lock:
                     processed[0] += 1
                     if processed[1] and processed[0] >= processed[1]:
@@ -1348,6 +1349,7 @@ cdef float train_batch(
     cdef DTYPE_t *dsigmaj = work + 3 * K
 
     total_loss = 0.0
+    loss_list = []
 
     for k in range(Npairs):
 
@@ -1364,7 +1366,7 @@ cdef float train_batch(
         neg_energy = energy_func(negi, negj, center_index,
                                  mu_ptr, sigma_ptr, covariance_type, N, K)
         loss = Closs - pos_energy + neg_energy
-
+        loss_list.append(loss)
         if loss < 1.0e-14:
             # loss for this sample is 0, nothing to update
             if iteration_verbose_flag:
@@ -1415,7 +1417,7 @@ cdef float train_batch(
 
 
     free(work)
-    return total_loss
+    return total_loss, loss_list
 
 cdef void _accumulate_update(
         size_t k, DTYPE_t* dmu, DTYPE_t* dsigma,
