@@ -238,7 +238,7 @@ def main_script():
         #if args.MWE == 2:
             #data_list = data_list[:2]
 
-
+        data_list.reverse()
         print("WRITING DATA")
         lst = []
         for entities in tqdm(data_list):
@@ -249,13 +249,6 @@ def main_script():
         text_file = open("wikipedia.txt", "w")
         text_file.write(data_string)
         text_file.close()
-
-        rev_file = open('wikipedia_reversed.txt', 'w')
-        for line in reversed(open("wikipedia.txt").readlines()):
-            rev_file.write(line)
-        rev_file.close()
-        print("reversed file written")
-
         print("STRING WRITTEN TO TEXT FILE")
         data = tokenizer_MWE0(data_string)
         print("STRING TOKENIZED")
