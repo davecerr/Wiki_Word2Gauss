@@ -867,8 +867,8 @@ cdef class GaussianEmbedding:
             i=0
             while True:
                 i += 1
-                
-                pairs = jobs.get()
+                with lock:
+                    pairs = jobs.get()
                 if pairs is None:
                     # no more data
                     break
