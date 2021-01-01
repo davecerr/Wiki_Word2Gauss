@@ -858,11 +858,11 @@ cdef class GaussianEmbedding:
         for thread in threadsPool:
             thread.join()
 
-        while not pqueue.empty()
+        while not pqueue.empty():
             data.append(pqueue.get())
 
         print(len(data))
-        
+
         LOGGER.info("\n\nEpoch Loss %f" % self.epoch_loss)
         return self.epoch_loss
 
