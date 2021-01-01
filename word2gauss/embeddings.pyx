@@ -1377,8 +1377,8 @@ cdef float train_batch(
             total_loss += loss
             if iteration_verbose_flag and k%1000==0:
                 with gil:
-                    LOGGER.info("k = %d, loss = %f, total loss = %f"
-                        % (k, loss, total_loss))
+                    LOGGER.info("thread = %s, k = %d, loss = %f, total loss = %f"
+                        % (thread, k, loss, total_loss))
         # compute gradients and update
         # have almost identical calculations for postive and negative
         # except the sign of update
