@@ -865,7 +865,7 @@ cdef class GaussianEmbedding:
         lock = Lock()
         pqueue = PriorityQueue()
         def threading_work(c,pairs):
-            print c
+            #print c
             if verbose_pairs:
                 if c == 1:
                     print(pairs.shape)
