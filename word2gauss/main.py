@@ -235,8 +235,8 @@ def main_script():
             # pkl.dump(data_list, pickle_out)
             # pickle_out.close()
 
-        if args.MWE == 2:
-            data_list = data_list[20]
+        #if args.MWE == 2:
+            #data_list = data_list[20]
 
         print("WRITING DATA")
         lst = []
