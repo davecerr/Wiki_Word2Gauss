@@ -63,6 +63,7 @@ from cpython.version cimport PY_MAJOR_VERSION
 import six
 
 from six.moves.queue import Queue
+from queue import PriorityQueue
 
 LOGGER = logging.getLogger()
 
@@ -771,7 +772,7 @@ cdef class GaussianEmbedding:
         # each job is a batch of pairs from the iterator
         # add jobs to a queue, workers pop from the queue
         # None means no more jobs
-        jobs = Queue(maxsize=2 * n_workers)
+        #jobs = PriorityQueue(maxsize=2 * n_workers)
 
         # number processed, next time to log, logging interval
         # make it a list so we can modify it in the thread w/o a local var
