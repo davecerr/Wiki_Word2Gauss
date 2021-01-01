@@ -843,7 +843,7 @@ cdef class GaussianEmbedding:
         LOGGER.info("\n\nEpoch Loss %f" % self.epoch_loss)
         return self.epoch_loss
 
-    cdef float train_batch(self, uint32 k, np.ndarray[uint32_t, ndim=2, mode='c'] pairs):
+    cdef float train_batch(self, uint32_t k, np.ndarray[uint32_t, ndim=2, mode='c'] pairs):
         '''
         Update the model with a single batch of pairs
         '''
