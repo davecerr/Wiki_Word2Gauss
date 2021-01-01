@@ -238,7 +238,7 @@ def main_script():
         #if args.MWE == 2:
             #data_list = data_list[:2]
 
-        data_list.reverse()
+
         print("WRITING DATA")
         lst = []
         for entities in tqdm(data_list):
