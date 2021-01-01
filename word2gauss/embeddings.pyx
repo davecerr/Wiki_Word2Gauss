@@ -865,6 +865,7 @@ cdef class GaussianEmbedding:
         lock = Lock()
         def _worker(k):
             i=0
+            batch_loss = 0
             while True:
                 i += 1
                 pairs = jobs.get()
@@ -876,9 +877,9 @@ cdef class GaussianEmbedding:
                     print pairs.shape
                     break
 
-                #with lock:
-                batch_loss = self.train_batch(pairs)
-                self.epoch_loss += batch_loss
+                with lock:
+                    batch_loss = self.train_batch(pairs)
+
                 if verbose_pairs:
                     for j in range(pairs.shape[0]):
                         print "thread: %s pairs: [%s, %s, %s, %s, %s]" % (k, pairs[j,0], pairs[j,1], pairs[j,2], pairs[j,3], pairs[j,4])
@@ -889,7 +890,7 @@ cdef class GaussianEmbedding:
                     processed[0] += 1
                     if processed[1] and processed[0] >= processed[1]:
                         t2 = time.time()
-
+                        self.epoch_loss += batch_loss
                         LOGGER.info(">>>>>>>>>> Batch %s/%s, Batch Loss %f, Epoch Loss %f, elapsed time: %s <<<<<<<<<<"
                                     % (processed[0], total_num_examples, batch_loss, self.epoch_loss, t2 - t1))
                         processed[1] = processed[0] + processed[2]
