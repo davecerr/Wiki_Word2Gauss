@@ -867,7 +867,8 @@ cdef class GaussianEmbedding:
             i=0
             while True:
                 i += 1
-                pairs = jobs.get()
+                with lock:
+                    pairs = jobs.get()
                 if pairs is None:
                     # no more data
                     break
@@ -880,13 +881,13 @@ cdef class GaussianEmbedding:
                         print(pairs.shape)
                         for j in range(pairs.shape[0]):
                             print pairs[j,:]
+
+                with lock:
                 for j in range(pairs.shape[0]):
                     print "thread: %s pairs: [%s, %s, %s, %s, %s]" % (k, pairs[j,0], pairs[j,1], pairs[j,2], pairs[j,3], pairs[j,4])
-                print ""
-                print ""
-                print ""
-                print ""
-                batch_loss = self.train_batch(pairs)
+                    print ""
+                    print ""
+                    batch_loss = self.train_batch(pairs)
                 with lock:
                     processed[0] += 1
                     if processed[1] and processed[0] >= processed[1]:
