@@ -880,8 +880,10 @@ cdef class GaussianEmbedding:
                         print(pairs.shape)
                         for j in range(pairs.shape[0]):
                             print pairs[j,:]
-                for j in range(20):
+                for j in range(10):
                     print "thread: %s pairs: [%s, %s, %s, %s, %s]" % (k, pairs[j,0], pairs[j,1], pairs[j,2], pairs[j,3], pairs[j,4])
+                print ""
+                print ""
                 batch_loss = self.train_batch(pairs)
                 with lock:
                     processed[0] += 1
