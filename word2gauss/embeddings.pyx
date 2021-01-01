@@ -814,7 +814,9 @@ cdef class GaussianEmbedding:
                             reporter(self, processed[0])
         '''
 
-
+        processed = [0, report_interval, report_interval]
+        t1 = time.time()
+        lock = Lock()
         pqueue = PriorityQueue()
         def threading_work(c,pairs):
             while True:
