@@ -62,7 +62,7 @@ from utils import cosine
 from cpython.version cimport PY_MAJOR_VERSION
 import six
 
-from six.moves.queue import Queue
+from six.moves.queue import Queue, PriorityQueue
 
 LOGGER = logging.getLogger()
 
@@ -852,7 +852,7 @@ cdef class GaussianEmbedding:
         # each job is a batch of pairs from the iterator
         # add jobs to a queue, workers pop from the queue
         # None means no more jobs
-        jobs = Queue(maxsize=2 * n_workers)
+        #jobs = Queue(maxsize=2 * n_workers)
 
         # number processed, next time to log, logging interval
         # make it a list so we can modify it in the thread w/o a local var
@@ -863,11 +863,9 @@ cdef class GaussianEmbedding:
         processed = [0, report_interval, report_interval]
         t1 = time.time()
         lock = Lock()
-        def _worker():
-            i=0
+        pqueue = PriorityQueue()
+        def threading_work(c,pairs):
             while True:
-                i += 1
-                pairs = jobs.get()
                 if pairs is None:
                     # no more data
                     break
@@ -876,7 +874,7 @@ cdef class GaussianEmbedding:
                     print pairs.shape
                     break
                 if verbose_pairs:
-                    if i == 1:
+                    if c == 1:
                         print(pairs.shape)
                         for j in range(pairs.shape[0]):
                             print pairs[j,:]
@@ -886,35 +884,36 @@ cdef class GaussianEmbedding:
                     if processed[1] and processed[0] >= processed[1]:
                         t2 = time.time()
                         self.epoch_loss += batch_loss
-                        LOGGER.info(">>>>>>>>>> Batch %s/%s, Batch Loss %f, Epoch Loss %f, elapsed time: %s <<<<<<<<<<"
-                                    % (processed[0], total_num_examples, batch_loss, self.epoch_loss, t2 - t1))
+                        LOGGER.info(">>>>>>>>>> Batch %s, Batch Loss %f, Epoch Loss %f, elapsed time: %s <<<<<<<<<<"
+                                    % (processed[0], batch_loss, self.epoch_loss, t2 - t1))
                         processed[1] = processed[0] + processed[2]
                         if reporter:
                             reporter(self, processed[0])
 
 
         # start threads
-        threads = []
-        for k in range(n_workers):
-            thread = Thread(target=_worker)
-            thread.daemon = True
+        threadsPool = []
+        data = []
+
+        for c, batch_pairs in enumerate(iter_pairs):
+            t = Thread(target=threading_work, args=(c, batch_pairs))
+            threadsPool.append(t)
+
+        print(len(threadsPool))
+        for thread in threadsPool:
             thread.start()
-            threads.append(thread)
 
-        # put data on the queue!
-        for batch_pairs in iter_pairs:
-            jobs.put(batch_pairs)
-
-        # no more data, tell the threads to stop
-        for i in range(len(threads)):
-            jobs.put(None)
-
-        # now join the threads
-        for thread in threads:
+        for thread in threadsPool:
             thread.join()
+
+        while not pqueue.empty():
+            data.append(pqueue.get())
+
+        print(len(data))
 
         LOGGER.info("\n\nEpoch Loss %f" % self.epoch_loss)
         return self.epoch_loss
+
 
     cdef float train_batch(self, np.ndarray[uint32_t, ndim=2, mode='c'] pairs):
         '''
