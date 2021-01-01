@@ -1416,7 +1416,7 @@ cdef float train_batch(
 
 
     free(work)
-    return total_loss,
+    return total_loss
 
 cdef void _accumulate_update(
         size_t k, DTYPE_t* dmu, DTYPE_t* dsigma,
