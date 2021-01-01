@@ -864,12 +864,13 @@ cdef class GaussianEmbedding:
         t1 = time.time()
         lock = Lock()
         def _worker(k):
-            print "thread %s" %k
             i=0
             while True:
                 i += 1
                 pairs = jobs.get()
-                print(pairs)
+                for j in range(pairs.shape[0]):
+                    print "thread %s " %k
+                    print pairs[j,:]
                 if pairs is None:
                     # no more data
                     break
