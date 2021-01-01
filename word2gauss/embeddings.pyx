@@ -877,7 +877,8 @@ cdef class GaussianEmbedding:
                     print pairs.shape
                     break
 
-                batch_loss = self.train_batch(k, pairs)
+                with lock:
+                    batch_loss = self.train_batch(k, pairs)
 
                 if verbose_pairs:
                     for j in range(pairs.shape[0]):
