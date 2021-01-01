@@ -868,7 +868,7 @@ cdef class GaussianEmbedding:
 
 
         # start threads
-        for i in range(num_threads):
+        for i in range(n_workers):
             worker = Thread(target=threading_work, args=(i, pair_queue))
             worker.setDaemon(True)
             worker.start()
