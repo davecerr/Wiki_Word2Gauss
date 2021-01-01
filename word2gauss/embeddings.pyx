@@ -850,7 +850,7 @@ cdef class GaussianEmbedding:
         data = []
 
         for c, batch_pairs in enumerate(iter_pairs):
-            t = threading.Thread(target=threading_work, args=(c, batch_pairs))
+            t = Thread(target=threading_work, args=(c, batch_pairs))
             threadsPool.append(t)
 
         print(len(threadsPool))
