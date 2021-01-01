@@ -881,7 +881,7 @@ cdef class GaussianEmbedding:
                     batch_loss = self.train_batch(pairs)
                     if verbose_pairs:
                         for j in range(pairs.shape[0]):
-                            print "thread: %s pairs: [%s, %s, %s, %s, %s] loss %s" % (k, pairs[j,0], pairs[j,1], pairs[j,2], pairs[j,3], pairs[j,4], loss_list[j])
+                            print "thread: %s pairs: [%s, %s, %s, %s, %s] loss %s" % (k, pairs[j,0], pairs[j,1], pairs[j,2], pairs[j,3], pairs[j,4])
                         print ""
                         print ""
 
@@ -1416,7 +1416,7 @@ cdef float train_batch(
 
 
     free(work)
-    return total_loss, loss_list
+    return total_loss,
 
 cdef void _accumulate_update(
         size_t k, DTYPE_t* dmu, DTYPE_t* dsigma,
