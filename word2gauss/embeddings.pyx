@@ -62,8 +62,7 @@ from utils import cosine
 from cpython.version cimport PY_MAJOR_VERSION
 import six
 
-from six.moves.queue import Queue
-from queue import PriorityQueue
+from six.moves.queue import Queue, PriorityQueue
 
 LOGGER = logging.getLogger()
 
