@@ -183,6 +183,7 @@ cdef class GaussianEmbedding:
 
     # boolean for printing loss each batch or each iteration
     cdef bool iteration_verbose_flag
+    cdef bool verbose_gradients
 
     # energy and gradient functions
     cdef energy_t energy_func
@@ -261,6 +262,7 @@ cdef class GaussianEmbedding:
         self.epoch_loss = epoch_loss
         self.batch_loss = batch_loss
         self.iteration_verbose_flag = iteration_verbose_flag
+        self.verbose_gradients = verbose_gradients
 
         if isinstance(eta, dict):
             # NOTE: cython automatically converts from struct to dict
@@ -801,7 +803,7 @@ cdef class GaussianEmbedding:
                                 print(pairs.shape)
                                 for j in range(pairs.shape[0]):
                                     print pairs[j,:]
-                        batch_loss = self.train_batch(k,pairs)
+                        batch_loss = self.train_batch(k, pairs)
                         with lock:
                             processed[0] += 1
                             if processed[1] and processed[0] >= processed[1]:
@@ -939,7 +941,7 @@ cdef class GaussianEmbedding:
                         self.N, self.K,
                         &self.eta, self.Closs,
                         self.mu_max, self.sigma_min, self.sigma_max,
-                        self.acc_grad_mu_ptr, self.acc_grad_sigma_ptr, self.iteration_verbose_flag)
+                        self.acc_grad_mu_ptr, self.acc_grad_sigma_ptr, self.iteration_verbose_flag, self.verbose_gradients)
 
     def energy(self, i, j, func=None):
         '''
@@ -1327,7 +1329,7 @@ cdef float train_batch(
         DTYPE_t*mu_ptr, DTYPE_t*sigma_ptr, uint32_t covariance_type,
         size_t N, size_t K,
         LearningRates*eta, DTYPE_t Closs, DTYPE_t C, DTYPE_t m, DTYPE_t M,
-        DTYPE_t*acc_grad_mu, DTYPE_t*acc_grad_sigma, bool iteration_verbose_flag
+        DTYPE_t*acc_grad_mu, DTYPE_t*acc_grad_sigma, bool iteration_verbose_flag, bool verbose_gradients
 )  nogil:
     '''
     Update the model on a batch of data
@@ -1414,11 +1416,11 @@ cdef float train_batch(
             _accumulate_update(i + center_index * N, dmui, dsigmai,
                                mu_ptr, sigma_ptr, covariance_type,
                                fac, eta, C, m, M, acc_grad_mu, acc_grad_sigma,
-                               N, K)
+                               N, K, verbose_gradients)
             _accumulate_update(j + (1 - center_index) * N, dmuj, dsigmaj,
                                mu_ptr, sigma_ptr, covariance_type,
                                fac, eta, C, m, M, acc_grad_mu, acc_grad_sigma,
-                               N, K)
+                               N, K, verbose_gradients)
 
 
     free(work)
@@ -1429,7 +1431,7 @@ cdef void _accumulate_update(
         DTYPE_t* mu_ptr, DTYPE_t* sigma_ptr, uint32_t covariance_type,
         DTYPE_t fac, LearningRates*eta, DTYPE_t C, DTYPE_t m, DTYPE_t M,
         DTYPE_t* acc_grad_mu, DTYPE_t* acc_grad_sigma,
-        size_t N, size_t K
+        size_t N, size_t K, bool verbose_gradients
 ) nogil:
     # accumulate the gradients and update
     cdef size_t i
@@ -1454,9 +1456,10 @@ cdef void _accumulate_update(
         local_eta = (eta_min if local_eta < eta_min else local_eta)
         # finally update mu
         mu_ptr[k * K + i] -= fac * local_eta * dmu[i]
-        with gil:
-            x = fac * local_eta * dmu[i]
-            print "mu - %s, mu grad = %s" %(mu_ptr[k * K + i], x)
+        if verbose_gradients:
+            with gil:
+                x = fac * local_eta * dmu[i]
+                print "mu - %s, mu grad = %s" %(mu_ptr[k * K + i], x)
         # accumulate L2 norm of mu for regularization
         l2_mu += mu_ptr[k * K + i] * mu_ptr[k * K + i]
     l2_mu = sqrt(l2_mu)
@@ -1494,9 +1497,10 @@ cdef void _accumulate_update(
             local_eta = (eta_min if local_eta < eta_min else local_eta)
             # finally update sigma
             sigma_ptr[k * K + i] -= fac * local_eta * dsigma[i]
-            with gil:
-                x = fac * local_eta * dsigma[i]
-                print "sigma = %s sigma grad = %s" %(sigma_ptr[k * K + i], x)
+            if verbose_gradients:
+                with gil:
+                    x = fac * local_eta * dsigma[i]
+                    print "sigma = %s sigma grad = %s" %(sigma_ptr[k * K + i], x)
             # bound sigma between m and M
             # note: the ternary operator instead of if statment
             #   allows cython to generate code that gcc will vectorize
