@@ -330,8 +330,12 @@ def main_script():
     epoch_rev_KL_spears = []
     epoch_cos_pears = []
     epoch_cos_spears = []
+    epoch_times = []
+
+    train_time_start = time.time()
 
     for e in range(args.num_epochs):
+        epoch_start = time.time()
         print("---------- EPOCH {} ----------".format(e+1))
         if args.MWE == 1:
             with open('w_and_p.txt', 'r') as corpus:
@@ -352,6 +356,9 @@ def main_script():
                 else:
                     epoch_losses.append(embed.train(iter_pairs(corpus, vocab, dynamic_window_size=args.dynamic_window_size, batch_size=batch_size, nsamples=args.neg_samples, window=window),
                                     n_workers=args.num_threads, verbose_pairs=verbose_pairs, report_interval=args.report_schedule))
+
+        epoch_end = time.time()
+        epoch_times.append(round(epoch_end - epoch_start,2))
 
         if args.save==True:
             print("Epoch {} complete. Saving model.".format(e+1))
@@ -388,6 +395,9 @@ def main_script():
         epoch_cos_pears.append(pear_r_cos)
         epoch_cos_spears.append(spear_r_cos)
 
+    train_time_end = time.time()
+    training_time = round(train_time_end - train_time_start,2)
+
     print("\n\n\nEPOCH LOSSES : {}".format(epoch_losses))
     print("EPOCH fwd KL Pearson R : {}".format(epoch_fwd_KL_pears))
     print("EPOCH fwd KL Spearman R : {}".format(epoch_fwd_KL_spears))
@@ -395,7 +405,7 @@ def main_script():
     print("EPOCH rev KL Spearman R : {}".format(epoch_rev_KL_spears))
     print("EPOCH cosine Pearson R : {}".format(epoch_cos_pears))
     print("EPOCH cosine Spearman R : {}".format(epoch_cos_spears))
-
+    print("TOTAL TRAININT TIME = {} secs".format(training_time))
     if print_final_embeddings:
         print("---------- FINAL EMBEDDING MEANS ----------")
         print(embed.mu)
@@ -494,9 +504,9 @@ def main_script():
         spear_r_rev_list = ['Epoch {} rev KL Spearman R'.format(i+1) for i in range(args.num_epochs)]
         pear_r_cos_list = ['Epoch {} cosine Pearson R'.format(i+1) for i in range(args.num_epochs)]
         spear_r_cos_list = ['Epoch {} cosine Spearman R'.format(i+1) for i in range(args.num_epochs)]
+        time_list = ['Epoch {} Time'.format(i+1) for i in range(args.num_epochs)]
 
-
-        header_list = hyperparameter_list + epoch_list + pear_r_fwd_list + spear_r_fwd_list + pear_r_rev_list + spear_r_rev_list + pear_r_cos_list + spear_r_cos_list
+        header_list = hyperparameter_list + epoch_list + pear_r_fwd_list + spear_r_fwd_list + pear_r_rev_list + spear_r_rev_list + pear_r_cos_list + spear_r_cos_list + time_list
 
         if os.path.exists(f_results):
             append_write = 'a' # append if already exists
@@ -510,7 +520,7 @@ def main_script():
         with open(f_results, append_write) as file:
             writer = csv.writer(file)
             hyperparameter_values = [args.num_threads, args.dim, args.neg_samples, args.eta, args.Closs]
-            values_list = hyperparameter_values + epoch_losses + epoch_fwd_KL_pears + epoch_fwd_KL_spears + epoch_rev_KL_pears + epoch_rev_KL_spears + epoch_cos_pears + epoch_cos_spears
+            values_list = hyperparameter_values + epoch_losses + epoch_fwd_KL_pears + epoch_fwd_KL_spears + epoch_rev_KL_pears + epoch_rev_KL_spears + epoch_cos_pears + epoch_cos_spears + epoch_times
             writer.writerow(values_list)
 
 if __name__ == '__main__':
