@@ -1456,7 +1456,7 @@ cdef void _accumulate_update(
         mu_ptr[k * K + i] -= fac * local_eta * dmu[i]
         with gil:
             x = fac * local_eta * dmu[i]
-            print x
+            print "mu - %s, mu grad = %s" %(mu_ptr[k * K + i], x)
         # accumulate L2 norm of mu for regularization
         l2_mu += mu_ptr[k * K + i] * mu_ptr[k * K + i]
     l2_mu = sqrt(l2_mu)
@@ -1494,6 +1494,9 @@ cdef void _accumulate_update(
             local_eta = (eta_min if local_eta < eta_min else local_eta)
             # finally update sigma
             sigma_ptr[k * K + i] -= fac * local_eta * dsigma[i]
+            with gil:
+                x = fac * local_eta * dsigma[i]
+                print "sigma = %s sigma grad = %s" %(sigma_ptr[k * K + i], x)
             # bound sigma between m and M
             # note: the ternary operator instead of if statment
             #   allows cython to generate code that gcc will vectorize
