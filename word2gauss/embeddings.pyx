@@ -1377,7 +1377,7 @@ cdef float train_batch(
             continue
         else:
             total_loss += loss
-            if iteration_verbose_flag and k%1000==0:
+            if iteration_verbose_flag and k%1==0:
                 with gil:
                     LOGGER.info("thread = %s, k = %d, loss = %f, total loss = %f"
                         % (thread, k, loss, total_loss))
