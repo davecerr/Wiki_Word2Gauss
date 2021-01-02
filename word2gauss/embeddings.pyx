@@ -865,10 +865,10 @@ cdef class GaussianEmbedding:
         lock = Lock()
         def _worker(k):
             i=0
-            batch_loss = 0
             while True:
                 i += 1
                 pairs = jobs.get()
+                batch_loss = 0
                 if pairs is None:
                     # no more data
                     break
