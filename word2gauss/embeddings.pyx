@@ -1455,7 +1455,8 @@ cdef void _accumulate_update(
         # finally update mu
         mu_ptr[k * K + i] -= fac * local_eta * dmu[i]
         x = fac * local_eta * dmu[i]
-        print x
+        with gil:
+            print x
         # accumulate L2 norm of mu for regularization
         l2_mu += mu_ptr[k * K + i] * mu_ptr[k * K + i]
     l2_mu = sqrt(l2_mu)
