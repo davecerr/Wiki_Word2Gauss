@@ -484,9 +484,9 @@ def main_script():
     ############################################################################
 
     if args.csv:
-        f_results = 'CSVs/grid_search_results_threads={}_epochs={}.csv'.format(args.num_threads, args.num_epochs)
+        f_results = 'CSVs/grid_search_results_epochs={}.csv'.format(args.num_threads, args.num_epochs)
 
-        hyperparameter_list = ["Dimension","Neg samples", "Eta", "Closs"]
+        hyperparameter_list = ["Threads", "Dimension", "Neg samples", "Eta", "Closs"]
         epoch_list = ['Epoch {} Loss'.format(i+1) for i in range(args.num_epochs)]
         pear_r_fwd_list = ['Epoch {} fwd KL Pearson R'.format(i+1) for i in range(args.num_epochs)]
         spear_r_fwd_list = ['Epoch {} fwd KL Spearman R'.format(i+1) for i in range(args.num_epochs)]
@@ -509,7 +509,7 @@ def main_script():
 
         with open(f_results, append_write) as file:
             writer = csv.writer(file)
-            hyperparameter_values = [args.dim, args.neg_samples, args.eta, args.Closs]
+            hyperparameter_values = [args.num_threads, args.dim, args.neg_samples, args.eta, args.Closs]
             values_list = hyperparameter_values + epoch_losses + epoch_fwd_KL_pears + epoch_fwd_KL_spears + epoch_rev_KL_pears + epoch_rev_KL_spears + epoch_cos_pears + epoch_cos_spears
             writer.writerow(values_list)
 
