@@ -179,6 +179,7 @@ cdef class GaussianEmbedding:
     # the Closs in max-margin function
     cdef DTYPE_t Closs
     cdef float epoch_loss
+    cdef float batch_loss
 
     # boolean for printing loss each batch or each iteration
     cdef bool iteration_verbose_flag
@@ -202,7 +203,7 @@ cdef class GaussianEmbedding:
                       'sigma_std0': 1.0
                   },
                   eta=0.1, Closs=0.1,
-                  mu=None, sigma=None, epoch_loss = 0.0,
+                  mu=None, sigma=None, epoch_loss = 0.0, batch_loss = 0.0
                   iteration_verbose_flag=False):
         '''
         N = number of distributions (e.g. number of words)
@@ -258,6 +259,7 @@ cdef class GaussianEmbedding:
         self.mu_max = mu_max
         self.Closs = Closs
         self.epoch_loss = epoch_loss
+        self.batch_loss = batch_loss
         self.iteration_verbose_flag = iteration_verbose_flag
 
         if isinstance(eta, dict):
@@ -859,7 +861,7 @@ cdef class GaussianEmbedding:
 
         # reset the loss for this epoch
         self.epoch_loss = 0.0
-        batch_loss = 0
+        self.batch_loss = 0
 
         processed = [0, report_interval, report_interval]
         t1 = time.time()
@@ -880,7 +882,7 @@ cdef class GaussianEmbedding:
 
                 #with lock:
                 loss = self.train_batch(k, pairs)
-                batch_loss += loss
+                self.batch_loss += loss
                 self.epoch_loss += loss
 
                 if verbose_pairs:
@@ -894,8 +896,8 @@ cdef class GaussianEmbedding:
                     if processed[1] and processed[0] >= processed[1]:
                         t2 = time.time()
                         LOGGER.info(">>>>>>>>>> Batch %s/%s, Batch Loss %f, Epoch Loss %f, elapsed time: %s <<<<<<<<<<"
-                                    % (processed[0], total_num_examples, batch_loss, self.epoch_loss, t2 - t1))
-                        batch_loss = 0
+                                    % (processed[0], total_num_examples, self.batch_loss, self.epoch_loss, t2 - t1))
+                        self.batch_loss = 0
                         processed[1] = processed[0] + processed[2]
                         if reporter:
                             reporter(self, processed[0])
