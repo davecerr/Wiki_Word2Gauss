@@ -152,6 +152,8 @@ def parse_args():
     # debugging
     parser.add_argument('--iteration_verbose_flag', type=str2bool, default=False,
                         help='Verbose losses')
+    parser.add_argument('--verbose_gradients', type=str2bool, default=False,
+                        help='Verbose gradients')
     args = parser.parse_args()
     return args
 
@@ -304,7 +306,8 @@ def main_script():
                   'sigma_mean0': sigma_mean0,
                   'sigma_std0': sigma_std0},
               eta=args.eta, Closs=args.Closs,
-              iteration_verbose_flag=args.iteration_verbose_flag)
+              iteration_verbose_flag=args.iteration_verbose_flag,
+              verbose_gradients=args.verbose_gradients)
 
 
 
