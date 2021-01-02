@@ -1370,7 +1370,7 @@ cdef float train_batch(
 
         if loss < 1.0e-14:
             # loss for this sample is 0, nothing to update
-            if iteration_verbose_flag and k%1000==0:
+            if iteration_verbose_flag and k%1==0:
                 with gil:
                     LOGGER.info("thread = %s, k = %d, loss = 0, actual loss = %f, total loss = %f"
                         % (thread, k, loss, total_loss))
