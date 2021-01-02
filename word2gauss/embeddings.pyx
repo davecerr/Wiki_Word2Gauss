@@ -1454,8 +1454,8 @@ cdef void _accumulate_update(
         local_eta = (eta_min if local_eta < eta_min else local_eta)
         # finally update mu
         mu_ptr[k * K + i] -= fac * local_eta * dmu[i]
-        x = fac * local_eta * dmu[i]
         with gil:
+            x = fac * local_eta * dmu[i]
             print x
         # accumulate L2 norm of mu for regularization
         l2_mu += mu_ptr[k * K + i] * mu_ptr[k * K + i]
