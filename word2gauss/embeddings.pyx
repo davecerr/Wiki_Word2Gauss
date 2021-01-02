@@ -1497,7 +1497,7 @@ cdef void _accumulate_update(
             sigma_ptr[k * K + i] -= fac * local_eta * dsigma[i]
 
             sigma_up = fac * local_eta * dsigma[i]
-            print "sigma = %s sigma grad = %s" %(sigma_up)
+            print "sigma grad = %s" %(sigma_up)
 
             # bound sigma between m and M
             # note: the ternary operator instead of if statment
