@@ -203,7 +203,7 @@ cdef class GaussianEmbedding:
                       'sigma_std0': 1.0
                   },
                   eta=0.1, Closs=0.1,
-                  mu=None, sigma=None, epoch_loss = 0.0, batch_loss = 0.0
+                  mu=None, sigma=None, epoch_loss = 0.0, batch_loss = 0.0,
                   iteration_verbose_flag=False):
         '''
         N = number of distributions (e.g. number of words)
