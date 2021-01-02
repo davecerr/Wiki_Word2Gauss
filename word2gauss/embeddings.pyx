@@ -859,6 +859,7 @@ cdef class GaussianEmbedding:
 
         # reset the loss for this epoch
         self.epoch_loss = 0.0
+        batch_loss = 0
 
         processed = [0, report_interval, report_interval]
         t1 = time.time()
@@ -868,7 +869,7 @@ cdef class GaussianEmbedding:
             while True:
                 i += 1
                 pairs = jobs.get()
-                batch_loss = 0
+
                 if pairs is None:
                     # no more data
                     break
@@ -894,6 +895,7 @@ cdef class GaussianEmbedding:
                         t2 = time.time()
                         LOGGER.info(">>>>>>>>>> Batch %s/%s, Batch Loss %f, Epoch Loss %f, elapsed time: %s <<<<<<<<<<"
                                     % (processed[0], total_num_examples, batch_loss, self.epoch_loss, t2 - t1))
+                        batch_loss = 0
                         processed[1] = processed[0] + processed[2]
                         if reporter:
                             reporter(self, processed[0])
