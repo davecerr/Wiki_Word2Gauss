@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
-
+import os
+import csv
 
 
 def cosine(a, b, normalize=True):
@@ -74,10 +75,29 @@ def KL_Multivariate_Gaussians(mu1, Sigma1, mu2, Sigma2):
 
 
 
+
+def fisher_dist(mu1, Sigma1, mu2, Sigma2):
+    '''
+    see eqn 20 of https://reader.elsevier.com/reader/sd/pii/S0166218X14004211?token=F35D5419800D2CC5C0E38D81D39228C93E23043D197A45EA1E160B1E11FCF7F448FF088B7E1FB3A406674C942DBFDB89
+    '''
+    n = len(mu1)
+
+    summation = 0
+    for i in range(n):
+        term1 = np.linalg.norm(np.array([ (mu1[i]-mu2[i])/sqrt(2), Sigma1[i]+Sigma2[i] ]))
+        term2 = np.linalg.norm(np.array([ (mu1[i]-mu2[i])/sqrt(2), Sigma1[i]-Sigma2[i] ]))
+
+        summation += ( np.log( (term1+term2)/(term1-term2) ) )**2
+
+    return np.sqrt(2 * summation)
+
+
+
 def get_predictions(val_path, model, vocab, is_round=False):
     actual = []
     pred_KL_fwd = []
     pred_KL_rev = []
+    pred_fisher = []
     pred_cos = []
 
     # iterate over full dataset
@@ -97,18 +117,22 @@ def get_predictions(val_path, model, vocab, is_round=False):
 
         mu_src = model.mu[src_idx]
         Sigma_src = np.diag(model.sigma[src_idx])
+        sigma_src = model.sigma[src_idx]
         mu_dst = model.mu[dst_idx]
         Sigma_dst = np.diag(model.sigma[dst_idx])
+        sigma_dst = model.sigma[dst_idx]
 
         # predict similarity
         try:
             pred_fwd_KL_sim = float(KL_Multivariate_Gaussians(mu_src, Sigma_src, mu_dst, Sigma_dst))
             pred_rev_KL_sim = float(KL_Multivariate_Gaussians(mu_dst, Sigma_dst, mu_src, Sigma_src))
+            pred_fisher_sim = float(fisher_dist(mu_src, sigma_src, mu_dst, Sigma_dst))
             pred_cos_sim = float(cosine_between_vecs(mu_src,mu_dst))
 
             if is_round:
                 pred_fwd_KL_sim = np.round(pred_fwd_KL_sim)
                 pred_rev_KL_sim = np.round(pred_rev_KL_sim)
+                pred_fisher_sim = np.round(pred_fisher_sim)
                 pred_cos_sim = np.round(pred_cos_sim)
         except KeyError:
             missing_records_count += 1
@@ -118,12 +142,13 @@ def get_predictions(val_path, model, vocab, is_round=False):
         actual.append(act_sim)
         pred_KL_fwd.append(pred_fwd_KL_sim)
         pred_KL_rev.append(pred_rev_KL_sim)
+        pred_fisher.append(pred_fisher_sim)
         pred_cos.append(pred_cos_sim)
 
 
         f_results = 'CSVs/preds.csv'
 
-        header_list = ['srcWikiTitle','dstWikiTitle','relatedness','fwd KL','rev KL','cosine']
+        header_list = ['srcWikiTitle','dstWikiTitle','relatedness','fwd KL','rev KL','fisher','cosine']
 
         if os.path.exists(f_results):
             append_write = 'a' # append if already exists
@@ -137,7 +162,7 @@ def get_predictions(val_path, model, vocab, is_round=False):
         with open(f_results, append_write) as file:
             writer = csv.writer(file)
             for i in range(len(actual)):
-                writer.writerow([src,dst,act_sim,pred_KL_fwd,pred_KL_rev,pred_cos])
+                writer.writerow([src,dst,act_sim,pred_fwd_KL_sim,pred_rev_KL_sim,pred_fisher_sim,pred_cos_sim])
 
     assert missing_records_count == 0
     #print("Missing records = {}/{}".format(missing_records_count,total_records))
