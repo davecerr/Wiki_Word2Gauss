@@ -36,7 +36,7 @@ sigma_std0 = 1.0
 
 # Gaussian bounds (avoid e.g. massive sigmas to get good overlap)
 mu_max = 10.0
-sigma_min = 0.01
+sigma_min = 0.2
 sigma_max = 5
 
 # training properties
