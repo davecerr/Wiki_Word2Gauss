@@ -93,7 +93,7 @@ def fisher_dist(mu1, Sigma1, mu2, Sigma2):
 
 
 
-def get_predictions(val_path, model, vocab, is_round=False):
+def get_predictions(val_path, epoch, model, vocab, is_round=False):
     actual = []
     pred_KL_fwd = []
     pred_KL_rev = []
@@ -146,7 +146,7 @@ def get_predictions(val_path, model, vocab, is_round=False):
         pred_cos.append(pred_cos_sim)
 
 
-        f_results = 'CSVs/preds.csv'
+        f_results = 'CSVs/preds_epoch={}.csv'.format(epoch)
 
         header_list = ['srcWikiTitle','dstWikiTitle','relatedness','fwd KL','rev KL','fisher','cosine']
 

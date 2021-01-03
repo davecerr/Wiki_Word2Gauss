@@ -154,6 +154,8 @@ def parse_args():
                         help='Verbose losses')
     parser.add_argument('--verbose_gradients', type=str2bool, default=False,
                         help='Verbose gradients')
+    parser.add_argument('--csv_validation_predictions', type=str2bool, default=False,
+                        help='Store validation set predictions to csv file')
     args = parser.parse_args()
     return args
 
@@ -369,9 +371,9 @@ def main_script():
             embed.save('model_MWE={}_d={}_e={}_neg={}_eta={}_C={}_epoch={}'.format(args.MWE,args.dim,args.num_epochs,args.neg_samples,args.eta,args.Closs,e+1), vocab=vocab.id2word, full=True)
             os.chdir('..')
 
-
-        print("MEASURING EMBEDDING PERFORMANCE ON VALIDATION DATA")
-        actual, pred_KL_fwd, pred_KL_rev, pred_cos = get_predictions(validation_path, embed, vocab, is_round=False)
+        if args.csv_validation_predictions==True:
+            print("MEASURING EMBEDDING PERFORMANCE ON VALIDATION DATA")
+            actual, pred_KL_fwd, pred_KL_rev, pred_cos = get_predictions(validation_path, e, embed, vocab, is_round=False)
 
         ### forward KL predictions ###
         pear_r_fwd, _ = pearsonr(actual, pred_KL_fwd)
