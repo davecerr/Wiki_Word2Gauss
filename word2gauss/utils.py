@@ -146,23 +146,15 @@ def get_predictions(val_path, epoch, model, vocab, is_round=False):
         pred_cos.append(pred_cos_sim)
 
 
-        f_results = 'CSVs/preds_epoch={}.csv'.format(epoch)
+    f_results = 'CSVs/preds_epoch={}.csv'.format(epoch)
 
-        header_list = ['srcWikiTitle','dstWikiTitle','relatedness','fwd KL','rev KL','fisher','cosine']
+    header_list = ['srcWikiTitle','dstWikiTitle','relatedness','fwd KL','rev KL','fisher','cosine']
 
-        if os.path.exists(f_results):
-            append_write = 'a' # append if already exists
-        else:
-            # write header
-            with open(f_results, 'w') as file:
-                writer = csv.writer(file)
-                writer.writerow(header_list)
-            append_write = 'a' # make a new file if not
-
-        with open(f_results, append_write) as file:
-            writer = csv.writer(file)
-            for i in range(len(actual)):
-                writer.writerow([src,dst,act_sim,pred_fwd_KL_sim,pred_rev_KL_sim,pred_fisher_sim,pred_cos_sim])
+    with open(f_results, 'w') as file:
+        writer = csv.writer(file)
+        writer.writerow(header_list)
+        for i in range(len(actual)):
+            writer.writerow([src[i],dst[i],actual[i],pred_KL_fwd[i],pred_KL_rev[i],pred_fisher[i],pred_cos[i]])
 
     assert missing_records_count == 0
     #print("Missing records = {}/{}".format(missing_records_count,total_records))
