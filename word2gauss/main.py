@@ -390,8 +390,8 @@ def main_script():
         print("Pearson R: {},  Spearman R: {}".format(pear_r_rev, spear_r_rev))
 
         ### fisher predictions ###
-        pear_fisher = pearsonr(actual, pred_fisher)
-        spear_fisher = spearmanr(actual, pred_fisher)
+        pear_fisher, _ = pearsonr(actual, pred_fisher)
+        spear_fisher, _ = spearmanr(actual, pred_fisher)
         print("------ Epoch: {} FISHER DISTANCE ------".format(e+1))
         print("Pearson R: {},  Spearman R: {}".format(pear_fisher, spear_fisher))
 
