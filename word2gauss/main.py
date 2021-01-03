@@ -333,6 +333,8 @@ def main_script():
     epoch_fwd_KL_spears = []
     epoch_rev_KL_pears = []
     epoch_rev_KL_spears = []
+    epoch_fisher_pears = []
+    epoch_fisher_spears = []
     epoch_cos_pears = []
     epoch_cos_spears = []
     epoch_times = []
@@ -373,7 +375,7 @@ def main_script():
 
         if args.csv_validation_predictions==True:
             print("MEASURING EMBEDDING PERFORMANCE ON VALIDATION DATA")
-            actual, pred_KL_fwd, pred_KL_rev, pred_cos = get_predictions(validation_path, e, embed, vocab, is_round=False)
+            actual, pred_KL_fwd, pred_KL_rev, pred_fisher, pred_cos = get_predictions(validation_path, e, embed, vocab, is_round=False)
 
         ### forward KL predictions ###
         pear_r_fwd, _ = pearsonr(actual, pred_KL_fwd)
@@ -387,6 +389,12 @@ def main_script():
         print("------ Epoch: {} REVERSE KL SIMILARITY KL[dst||src] ------".format(e+1))
         print("Pearson R: {},  Spearman R: {}".format(pear_r_rev, spear_r_rev))
 
+        ### fisher predictions ###
+        pear_fisher = pearsonr(actual, pred_fisher)
+        spear_fisher = spearmanr(actual, pred_fisher)
+        print("------ Epoch: {} FISHER DISTANCE ------".format(e+1))
+        print("Pearson R: {},  Spearman R: {}".format(pear_fisher, spear_fisher))
+
         ### cosine predictions ###
         pear_r_cos, _ = pearsonr(actual, pred_cos)
         spear_r_cos, _ = spearmanr(actual, pred_cos)
@@ -397,6 +405,8 @@ def main_script():
         epoch_fwd_KL_spears.append(spear_r_fwd)
         epoch_rev_KL_pears.append(pear_r_rev)
         epoch_rev_KL_spears.append(spear_r_rev)
+        epoch_fisher_pears.append(pear_fisher)
+        epoch_fisher_spears.append(spear_fisher)
         epoch_cos_pears.append(pear_r_cos)
         epoch_cos_spears.append(spear_r_cos)
 
@@ -408,6 +418,8 @@ def main_script():
     print("EPOCH fwd KL Spearman R : {}".format(epoch_fwd_KL_spears))
     print("EPOCH rev KL Pearson R : {}".format(epoch_rev_KL_pears))
     print("EPOCH rev KL Spearman R : {}".format(epoch_rev_KL_spears))
+    print("EPOCH Fisher Pearson R : {}".format(epoch_fisher_pears))
+    print("EPOCH Fisher Spearman R : {}".format(epoch_fisher_spears))
     print("EPOCH cosine Pearson R : {}".format(epoch_cos_pears))
     print("EPOCH cosine Spearman R : {}".format(epoch_cos_spears))
     print("TOTAL TRAININT TIME = {} secs".format(training_time))
