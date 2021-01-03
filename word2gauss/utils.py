@@ -133,7 +133,7 @@ def get_predictions(val_path, epoch, model, vocab, is_round=False):
         try:
             pred_fwd_KL_sim = float(KL_Multivariate_Gaussians(mu_src, Sigma_src, mu_dst, Sigma_dst))
             pred_rev_KL_sim = float(KL_Multivariate_Gaussians(mu_dst, Sigma_dst, mu_src, Sigma_src))
-            pred_fisher_sim = float(fisher_dist(mu_src, sigma_src, mu_dst, Sigma_dst))
+            pred_fisher_sim = float(fisher_dist(mu_src, sigma_src, mu_dst, sigma_dst))
             pred_cos_sim = float(cosine_between_vecs(mu_src,mu_dst))
 
             if is_round:
