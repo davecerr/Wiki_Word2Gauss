@@ -84,8 +84,8 @@ def fisher_dist(mu1, Sigma1, mu2, Sigma2):
 
     summation = 0
     for i in range(n):
-        term1 = np.linalg.norm(np.array([ (mu1[i]-mu2[i])/sqrt(2), Sigma1[i]+Sigma2[i] ]))
-        term2 = np.linalg.norm(np.array([ (mu1[i]-mu2[i])/sqrt(2), Sigma1[i]-Sigma2[i] ]))
+        term1 = np.linalg.norm(np.array([ (mu1[i]-mu2[i])/np.sqrt(2), Sigma1[i]+Sigma2[i] ]))
+        term2 = np.linalg.norm(np.array([ (mu1[i]-mu2[i])/np.sqrt(2), Sigma1[i]-Sigma2[i] ]))
 
         summation += ( np.log( (term1+term2)/(term1-term2) ) )**2
 
