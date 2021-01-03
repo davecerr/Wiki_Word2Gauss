@@ -120,6 +120,26 @@ def get_predictions(val_path, model, vocab, is_round=False):
         pred_KL_rev.append(pred_rev_KL_sim)
         pred_cos.append(pred_cos_sim)
 
+
+        f_results = 'CSVs/preds.csv'
+
+        header_list = ['srcWikiTitle','dstWikiTitle','relatedness','fwd KL','rev KL','cosine']
+
+        if os.path.exists(f_results):
+            append_write = 'a' # append if already exists
+        else:
+            # write header
+            with open(f_results, 'w') as file:
+                writer = csv.writer(file)
+                writer.writerow(header_list)
+            append_write = 'a' # make a new file if not
+
+        with open(f_results, append_write) as file:
+            writer = csv.writer(file)
+            for i in range(len(actual)):
+                writer.writerow([src,dst,act_sim,pred_KL_fwd,pred_KL_rev,pred_cos])
+
     assert missing_records_count == 0
     #print("Missing records = {}/{}".format(missing_records_count,total_records))
+
     return np.array(actual), np.array(pred_KL_fwd), np.array(pred_KL_rev), np.array(pred_cos)
