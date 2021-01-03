@@ -35,9 +35,9 @@ sigma_mean0 = 0.5
 sigma_std0 = 1.0
 
 # Gaussian bounds (avoid e.g. massive sigmas to get good overlap)
-mu_max = 2.0
-sigma_min = 0.7
-sigma_max = 1.5
+mu_max = 10.0
+sigma_min = 0.01
+sigma_max = 5
 
 # training properties
 verbose_pairs=0
