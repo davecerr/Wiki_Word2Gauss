@@ -104,6 +104,7 @@ def get_predictions(val_path, epoch, model, vocab, is_round=False):
     print("Validation data loaded successfully")
 
     total_records = len(df_val.index)
+    print("Total records = {}".format(total_records))
     missing_records_count = 0
 
     for _, record in df_val.iterrows():
@@ -165,5 +166,5 @@ def get_predictions(val_path, epoch, model, vocab, is_round=False):
 
     assert missing_records_count == 0
     #print("Missing records = {}/{}".format(missing_records_count,total_records))
-
+    print("Length results = {}".format(len(actual)))
     return np.array(actual), np.array(pred_KL_fwd), np.array(pred_KL_rev), np.array(pred_fisher), np.array(pred_cos)
