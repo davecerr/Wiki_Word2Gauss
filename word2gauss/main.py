@@ -39,9 +39,6 @@ mu_max = 10.0
 sigma_min = 0.2
 sigma_max = 5
 
-# training properties
-verbose_pairs=0
-
 # additional parameters if dynamic_window_size = False
 window=5
 batch_size=10
@@ -151,9 +148,12 @@ def parse_args():
 
     # debugging
     parser.add_argument('--verbose_loss', type=str2bool, default=False,
-                        help='Verbose losses')
+                        help='Print losses')
     parser.add_argument('--verbose_gradients', type=str2bool, default=False,
-                        help='Verbose gradients')
+                        help='Print gradients')
+    parser.add_argument('--verbose_pairs', type=str2bool, default=False,
+                        help='Print positive and negative pairs for each update')
+
     args = parser.parse_args()
     return args
 
@@ -347,20 +347,20 @@ def main_script():
                 total_num_examples = len(open('w_and_p.txt').readlines(  ))
                 if args.dynamic_window_size:
                     epoch_losses.append(embed.train_dynamic(iter_pairs(corpus, vocab, dynamic_window_size=args.dynamic_window_size, batch_size=batch_size, nsamples=args.neg_samples, window=window),
-                                    n_workers=args.num_threads, total_num_examples=total_num_examples, verbose_pairs=verbose_pairs, report_interval=args.report_schedule))
+                                    n_workers=args.num_threads, total_num_examples=total_num_examples, verbose_pairs=args.verbose_pairs, report_interval=args.report_schedule))
                 else:
                     epoch_losses.append(embed.train(iter_pairs(corpus, vocab, dynamic_window_size=args.dynamic_window_size, batch_size=batch_size, nsamples=args.neg_samples, window=window),
-                                    n_workers=args.num_threads, verbose_pairs=verbose_pairs, report_interval=args.report_schedule))
+                                    n_workers=args.num_threads, verbose_pairs=args.verbose_pairs, report_interval=args.report_schedule))
 
         else:
             with open('wikipedia.txt', 'r') as corpus:
                 total_num_examples = len(open('wikipedia.txt').readlines(  ))
                 if args.dynamic_window_size:
                     epoch_losses.append(embed.train_dynamic(iter_pairs(corpus, vocab, dynamic_window_size=args.dynamic_window_size, batch_size=batch_size, nsamples=args.neg_samples, window=window),
-                                    n_workers=args.num_threads, total_num_examples=total_num_examples, verbose_pairs=verbose_pairs, report_interval=args.report_schedule))
+                                    n_workers=args.num_threads, total_num_examples=total_num_examples, verbose_pairs=args.verbose_pairs, report_interval=args.report_schedule))
                 else:
                     epoch_losses.append(embed.train(iter_pairs(corpus, vocab, dynamic_window_size=args.dynamic_window_size, batch_size=batch_size, nsamples=args.neg_samples, window=window),
-                                    n_workers=args.num_threads, verbose_pairs=verbose_pairs, report_interval=args.report_schedule))
+                                    n_workers=args.num_threads, verbose_pairs=args.verbose_pairs, report_interval=args.report_schedule))
 
         epoch_end = time.time()
         epoch_times.append(round(epoch_end - epoch_start,2))
