@@ -118,7 +118,7 @@ def parse_args():
 
     # minimum working example or full Wikipedia
     parser.add_argument('--MWE', type=int, required=True,
-                        help='MWE=0: full Wikipedia, MWE=1: War & Peace, MWE=2: single Wikipedia file')
+                        help='MWE=0: full Wikipedia, MWE=1: War & Peace, MWE=2: single Wikipedia file, MWE=4: WiRe items')
 
     # training details
     parser.add_argument('--num_threads', type=int, required=True,
@@ -231,8 +231,19 @@ def main_script():
             files = [os.path.join("data/page_dist_training_data/", f) for f in files]
             data_list = []
             for i, file in tqdm(enumerate(files)):
-                sentences = list(_open_file(file))
-                data_list += sentences
+                if args.MWE == 4:
+                    wire_vocab = set()
+                    df_wire = pd.read_csv(val_path)
+                    for _, record in df_wire.iterrows():
+                        wire_vocab.append(record["srcWikiTitle"])
+                        wire_vocab.append(record["dstWikiTitle"])
+                    print("WiRe vocab loaded successfully")
+                    sentences = list(_open_file(file))
+                    print(sentences)
+                    data_list += sentences
+                else:
+                    sentences = list(_open_file(file))
+                    data_list += sentences
             # pickle_out = open("data_list.pkl","wb")
             # pkl.dump(data_list, pickle_out)
             # pickle_out.close()
