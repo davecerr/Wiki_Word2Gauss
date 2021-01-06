@@ -150,12 +150,10 @@ def parse_args():
                         help='Record training results in csv file')
 
     # debugging
-    parser.add_argument('--iteration_verbose_flag', type=str2bool, default=False,
+    parser.add_argument('--verbose_loss', type=str2bool, default=False,
                         help='Verbose losses')
     parser.add_argument('--verbose_gradients', type=str2bool, default=False,
                         help='Verbose gradients')
-    parser.add_argument('--csv_validation_predictions', type=str2bool, default=False,
-                        help='Store validation set predictions to csv file')
     args = parser.parse_args()
     return args
 
@@ -308,7 +306,7 @@ def main_script():
                   'sigma_mean0': sigma_mean0,
                   'sigma_std0': sigma_std0},
               eta=args.eta, Closs=args.Closs,
-              iteration_verbose_flag=args.iteration_verbose_flag,
+              verbose_loss=args.verbose_loss,
               verbose_gradients=args.verbose_gradients)
 
 

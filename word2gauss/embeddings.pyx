@@ -182,7 +182,7 @@ cdef class GaussianEmbedding:
     cdef float batch_loss
 
     # boolean for printing loss each batch or each iteration
-    cdef bool iteration_verbose_flag
+    cdef bool verbose_loss
     cdef bool verbose_gradients
 
     # energy and gradient functions
@@ -205,7 +205,7 @@ cdef class GaussianEmbedding:
                   },
                   eta=0.1, Closs=0.1,
                   mu=None, sigma=None, epoch_loss = 0.0, batch_loss = 0.0,
-                  iteration_verbose_flag=False,
+                  verbose_loss=False,
                   verbose_gradients=False):
         '''
         N = number of distributions (e.g. number of words)
@@ -262,7 +262,7 @@ cdef class GaussianEmbedding:
         self.Closs = Closs
         self.epoch_loss = epoch_loss
         self.batch_loss = batch_loss
-        self.iteration_verbose_flag = iteration_verbose_flag
+        self.verbose_loss = verbose_loss
         self.verbose_gradients = verbose_gradients
 
         if isinstance(eta, dict):
@@ -942,7 +942,7 @@ cdef class GaussianEmbedding:
                         self.N, self.K,
                         &self.eta, self.Closs,
                         self.mu_max, self.sigma_min, self.sigma_max,
-                        self.acc_grad_mu_ptr, self.acc_grad_sigma_ptr, self.iteration_verbose_flag, self.verbose_gradients)
+                        self.acc_grad_mu_ptr, self.acc_grad_sigma_ptr, self.verbose_loss, self.verbose_gradients)
 
     def energy(self, i, j, func=None):
         '''
@@ -1330,7 +1330,7 @@ cdef float train_batch(
         DTYPE_t*mu_ptr, DTYPE_t*sigma_ptr, uint32_t covariance_type,
         size_t N, size_t K,
         LearningRates*eta, DTYPE_t Closs, DTYPE_t C, DTYPE_t m, DTYPE_t M,
-        DTYPE_t*acc_grad_mu, DTYPE_t*acc_grad_sigma, bool iteration_verbose_flag, bool verbose_gradients
+        DTYPE_t*acc_grad_mu, DTYPE_t*acc_grad_sigma, bool verbose_loss, bool verbose_gradients
 )  nogil:
     '''
     Update the model on a batch of data
@@ -1377,14 +1377,14 @@ cdef float train_batch(
 
         if loss < 1.0e-14:
             # loss for this sample is 0, nothing to update
-            if iteration_verbose_flag and k%1==0:
+            if verbose_loss and k%1==0:
                 with gil:
                     LOGGER.info("thread = %s, k = %d, loss = 0, actual loss = %f, total loss = %f"
                         % (thread, k, loss, total_loss))
             continue
         else:
             total_loss += loss
-            if iteration_verbose_flag and k%1==0:
+            if verbose_loss and k%1==0:
                 with gil:
                     LOGGER.info("thread = %s, k = %d, loss = %f, total loss = %f"
                         % (thread, k, loss, total_loss))
