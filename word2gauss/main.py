@@ -234,7 +234,7 @@ def main_script():
             for i, file in tqdm(enumerate(files)):
                 if args.MWE == 3:
                     wire_vocab = set()
-                    df_wire = pd.read_csv(val_path)
+                    df_wire = pd.read_csv(validation_path)
                     for _, record in df_wire.iterrows():
                         wire_vocab.append(record["srcWikiTitle"])
                         wire_vocab.append(record["dstWikiTitle"])
