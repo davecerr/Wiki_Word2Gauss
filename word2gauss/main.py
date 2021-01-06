@@ -241,7 +241,7 @@ def main_script():
                     print("WiRe vocab loaded successfully")
                     wire_vocab = list(wire_vocab)
                     sentences = list(_open_file(file))
-                    for i ,sentence in enumearte(sentences):
+                    for i ,sentence in enumerate(sentences):
                         print(i)
                         if any(item in sentences for item in wire_vocab):
                             print(sentence)
