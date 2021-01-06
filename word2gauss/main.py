@@ -118,7 +118,7 @@ def parse_args():
 
     # minimum working example or full Wikipedia
     parser.add_argument('--MWE', type=int, required=True,
-                        help='MWE=0: full Wikipedia, MWE=1: War & Peace, MWE=2: single Wikipedia file, MWE=4: WiRe items')
+                        help='MWE=0: full Wikipedia, MWE=1: War & Peace, MWE=2: single Wikipedia file, MWE=3: WiRe items')
 
     # training details
     parser.add_argument('--num_threads', type=int, required=True,
@@ -163,8 +163,8 @@ def main_script():
     print("save = {}".format(args.save))
     print("csv = {}".format(args.csv))
 
-    if args.MWE not in [0,1,2]:
-        sys.exit('MWE must be 0,1 or 2')
+    if args.MWE not in [0,1,2,3]:
+        sys.exit('MWE must be 0,1,2 or 3')
     if args.num_threads <= 0:
         sys.exit('num_threads must be a positive integer')
     if args.num_epochs <= 0:
@@ -231,7 +231,7 @@ def main_script():
             files = [os.path.join("data/page_dist_training_data/", f) for f in files]
             data_list = []
             for i, file in tqdm(enumerate(files)):
-                if args.MWE == 4:
+                if args.MWE == 3:
                     wire_vocab = set()
                     df_wire = pd.read_csv(val_path)
                     for _, record in df_wire.iterrows():
