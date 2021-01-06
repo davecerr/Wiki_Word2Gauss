@@ -240,8 +240,10 @@ def main_script():
                         wire_vocab.add(record["dstWikiTitle"])
                     print("WiRe vocab loaded successfully")
                     sentences = list(_open_file(file))
-                    print(sentences[0])
-                    data_list += sentences
+                    for sentence in sentences:
+                        if any(item in sentences for item in wire_vocab):
+                            print(sentence)
+                            data_list += sentence
                 else:
                     sentences = list(_open_file(file))
                     data_list += sentences
