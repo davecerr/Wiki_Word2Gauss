@@ -239,6 +239,7 @@ def main_script():
                         wire_vocab.add(record["srcWikiTitle"])
                         wire_vocab.add(record["dstWikiTitle"])
                     print("WiRe vocab loaded successfully")
+                    print(wire_vocab)
                     sentences = list(_open_file(file))
                     for sentence in sentences:
                         if any(item in sentences for item in wire_vocab):
