@@ -240,7 +240,7 @@ def main_script():
                         wire_vocab.add(record["dstWikiTitle"])
                     print("WiRe vocab loaded successfully")
                     sentences = list(_open_file(file))
-                    print(sentences)
+                    print(sentences[0])
                     data_list += sentences
                 else:
                     sentences = list(_open_file(file))
