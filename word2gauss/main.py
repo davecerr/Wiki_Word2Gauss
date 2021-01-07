@@ -269,7 +269,7 @@ def main_script():
         print("STRING WRITTEN TO TEXT FILE")
         data = tokenizer_MWE0(data_string)
         print("STRING TOKENIZED")
-        print(data[:2])
+        #print(data[:2])
 
     #print(corpus)
     #print(data)
@@ -280,6 +280,7 @@ def main_script():
     entity_2_idx = defaultdict(lambda: len(entity_2_idx))
     counter = Counter()
     dataset = []
+    print(dataset[:2])
 
     print("WRITING ENTITY2IDX DICT")
     for entity in tqdm(data):
