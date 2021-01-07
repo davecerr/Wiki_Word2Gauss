@@ -224,7 +224,7 @@ def main_script():
             print("loading from gzip files")
             files = []
             for _, _, fs in os.walk("data/", topdown=False):
-                if args.MWE == 2 or args.MWE == 3:
+                if args.MWE == 2:
                     files += [f for f in fs if f.endswith("00000.gz")]
                 else:
                     files += [f for f in fs if f.endswith(".gz")]
@@ -243,25 +243,35 @@ def main_script():
 
 
         if args.MWE == 3:
-            wire_vocab = set()
-            df_wire = pd.read_csv(validation_path)
-            for _, record in df_wire.iterrows():
-                wire_vocab.add(record["srcWikiTitle"])
-                wire_vocab.add(record["dstWikiTitle"])
-            wire_vocab = list(wire_vocab)
-            print("WiRe vocab loaded successfully")
+            if os.path.exists("wire_data_list.pkl"):
+                start = time.time()
+                print("loading from existing pickle")
+                pickle_in = open("data_list.pkl","rb")
+                data_list = pkl.load(pickle_in)
+                end = time.time()
+                print("loaded in {} secs".format(round(end - start,2)))
+            else:
+                wire_vocab = set()
+                df_wire = pd.read_csv(validation_path)
+                for _, record in df_wire.iterrows():
+                    wire_vocab.add(record["srcWikiTitle"])
+                    wire_vocab.add(record["dstWikiTitle"])
+                wire_vocab = list(wire_vocab)
+                print("WiRe vocab loaded successfully")
 
-            original_data_length = len(data_list)
-            new_list = []
-            for i, page in enumerate(data_list):
-                if i % 10000 == 0:
-                    print("{}/{}".format(i,original_data_length))
-                if any(item in page for item in wire_vocab):
-                    new_list.append(page)
+                original_data_length = len(data_list)
+                new_list = []
+                for i, page in enumerate(data_list):
+                    if i % 10000 == 0:
+                        print("{}/{}".format(i,original_data_length))
+                    if any(item in page for item in wire_vocab):
+                        new_list.append(page)
 
-            print("Original data length = {}".format(original_data_length))
-            print("Reduced data length = {}".format(len(new_list)))
-            print(new_list[:5])
+                print("Original data length = {}".format(original_data_length))
+                print("Reduced data length = {}".format(len(new_list)))
+                pickle_out = open("wire_data_list.pkl","wb")
+                pkl.dump(data_list, pickle_out)
+                pickle_out.close()
 
 
         print("WRITING DATA")
