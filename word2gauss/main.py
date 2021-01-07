@@ -252,16 +252,16 @@ def main_script():
             print("WiRe vocab loaded successfully")
 
             original_data_length = len(data_list)
+            new_list = []
             for i, page in enumerate(data_list):
                 if i % 10000 == 0:
                     print("{}/{}".format(i,original_data_length))
                 if any(item in page for item in wire_vocab):
-                    continue
-                else:
-                    data_list.remove(page)
-            print("Original data length = {}".format(original_data_length))
-            print("Reduced data length = {}".format(len(data_list)))
+                    new_list.append(page)
 
+            print("Original data length = {}".format(original_data_length))
+            print("Reduced data length = {}".format(len(new_list)))
+            print(new_list[:5])
 
 
         print("WRITING DATA")
