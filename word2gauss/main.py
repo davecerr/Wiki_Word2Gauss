@@ -246,7 +246,7 @@ def main_script():
             if os.path.exists("wire_data_list.pkl"):
                 start = time.time()
                 print("loading from existing pickle")
-                pickle_in = open("data_list.pkl","rb")
+                pickle_in = open("wire_data_list.pkl","rb")
                 data_list = pkl.load(pickle_in)
                 end = time.time()
                 print("loaded in {} secs".format(round(end - start,2)))
@@ -270,7 +270,7 @@ def main_script():
                 print("Original data length = {}".format(original_data_length))
                 print("Reduced data length = {}".format(len(new_list)))
                 pickle_out = open("wire_data_list.pkl","wb")
-                pkl.dump(data_list, pickle_out)
+                pkl.dump(new_list, pickle_out)
                 pickle_out.close()
 
 
