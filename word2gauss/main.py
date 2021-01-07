@@ -241,6 +241,26 @@ def main_script():
         #if args.MWE == 2:
             #data_list = data_list[20]
 
+
+        if args.MWE == 3:
+            wire_vocab = set()
+            df_wire = pd.read_csv(validation_path)
+            for _, record in df_wire.iterrows():
+                wire_vocab.add(record["srcWikiTitle"])
+                wire_vocab.add(record["dstWikiTitle"])
+            wire_vocab = list(wire_vocab)
+            print("WiRe vocab loaded successfully")
+
+            for i, page in enumerate(data_list):
+                print(i)
+                if any(item in page for item in wire_vocab):
+                    continue
+                else:
+                    data_list.remove(page)
+
+
+
+
         print("WRITING DATA")
         lst = []
         for entities in tqdm(data_list):
