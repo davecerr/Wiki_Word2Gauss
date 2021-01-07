@@ -232,21 +232,6 @@ def main_script():
             files = [os.path.join("data/page_dist_training_data/", f) for f in files]
             data_list = []
             for i, file in tqdm(enumerate(files)):
-                if args.MWE == 3:
-                    wire_vocab = set()
-                    df_wire = pd.read_csv(validation_path)
-                    for _, record in df_wire.iterrows():
-                        wire_vocab.add(record["srcWikiTitle"])
-                        wire_vocab.add(record["dstWikiTitle"])
-                    print("WiRe vocab loaded successfully")
-                    wire_vocab = list(wire_vocab)
-                    sentences = list(_open_file(file))
-                    for i ,sentence in enumerate(sentences):
-                        print(i)
-                        if any(item in sentences for item in wire_vocab):
-                            print(sentence)
-                            data_list += sentence
-                else:
                     sentences = list(_open_file(file))
                     data_list += sentences
             # pickle_out = open("data_list.pkl","wb")
@@ -297,7 +282,7 @@ def main_script():
     #print("\n\n")
     #print(counter)
     #print("\n\n")
-    print(dataset[:2])
+    #print(dataset[:2])
     dataset_length = len(dataset)
     print("Dataset length = {}".format(dataset_length))
 
