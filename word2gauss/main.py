@@ -251,13 +251,15 @@ def main_script():
             wire_vocab = list(wire_vocab)
             print("WiRe vocab loaded successfully")
 
+            original_data_length = len(data_list)
             for i, page in enumerate(data_list):
-                print(i)
+                if i % 10000 == 0:
+                    print("{}/{}".format(i,original_data_length))
                 if any(item in page for item in wire_vocab):
                     continue
                 else:
                     data_list.remove(page)
-
+            print("Reduced data length = {}".format(len(data_list)))
 
 
 
