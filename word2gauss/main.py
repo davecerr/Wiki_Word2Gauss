@@ -280,7 +280,7 @@ def main_script():
     entity_2_idx = defaultdict(lambda: len(entity_2_idx))
     counter = Counter()
     dataset = []
-    print(dataset[:2])
+
 
     print("WRITING ENTITY2IDX DICT")
     for entity in tqdm(data):
@@ -297,7 +297,7 @@ def main_script():
     #print("\n\n")
     #print(counter)
     #print("\n\n")
-    #print(dataset)
+    print(dataset[:2])
     dataset_length = len(dataset)
     print("Dataset length = {}".format(dataset_length))
 
