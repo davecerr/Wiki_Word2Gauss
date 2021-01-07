@@ -259,6 +259,7 @@ def main_script():
                     continue
                 else:
                     data_list.remove(page)
+            print("Original data length = {}".format(original_data_length))
             print("Reduced data length = {}".format(len(data_list)))
 
 
