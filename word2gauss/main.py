@@ -264,7 +264,9 @@ def main_script():
                 for i, page in enumerate(data_list):
                     if i % 10000 == 0:
                         print("{}/{}".format(i,original_data_length))
-                    if any(item in page for item in wire_vocab):
+                    c = sum(item in page for item in wire_vocab)
+                    # only include Wikipedia pages that mention at least 2 WiRe elements
+                    if c>=2:
                         new_list.append(page)
 
                 print("Original data length = {}".format(original_data_length))
