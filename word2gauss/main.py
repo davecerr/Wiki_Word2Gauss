@@ -269,9 +269,11 @@ def main_script():
 
                 print("Original data length = {}".format(original_data_length))
                 print("Reduced data length = {}".format(len(new_list)))
-                pickle_out = open("wire_data_list.pkl","wb")
-                pkl.dump(new_list, pickle_out)
-                pickle_out.close()
+
+                with gzip.open('wirezip.gz', 'a') as zip:
+                    for page in new_list:
+                        zip.write(page.encode())
+                zip.close()
 
 
         print("WRITING DATA")
