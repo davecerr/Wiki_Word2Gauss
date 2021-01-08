@@ -274,7 +274,7 @@ def main_script():
 
                 with gzip.open('wirezip.gz', 'a') as zip:
                     for page in new_list:
-                        zip.write(page.encode())
+                        zip.write(page)
                 zip.close()
 
 
