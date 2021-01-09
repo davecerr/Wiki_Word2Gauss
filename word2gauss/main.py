@@ -240,6 +240,7 @@ def main_script():
             for i, file in tqdm(enumerate(files)):
                     sentences = list(_open_file(file))
                     data_list += sentences
+            data_list = data_list[:1000]
             original_data_length = len(data_list)
 
             new_list = []
