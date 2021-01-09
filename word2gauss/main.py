@@ -223,12 +223,10 @@ def main_script():
         #print(data)
 
     elif args.MWE == 3:
-        if os.path.exists("wire.pkl"):
-            #print("loading from pkl file")
-            #file = "out.gz"
-            #data_list = list(_open_file(file))[0]
-            data_list = pkl.load( open( "wire.pkl", "rb" ) )
-            #print("post save list")
+        if os.path.exists("out.gz"):
+            print("loading from gzip files")
+            file = "out.gz"
+            data_list = list(_open_file(file))[0]
             #print(data_list)
         else:
             wire_vocab = set()
@@ -252,28 +250,24 @@ def main_script():
             original_data_length = len(data_list)
 
             new_list = []
-            print(data_list)
             for i, page in enumerate(data_list):
                 if i % 10000 == 0:
                     print("{}/{}".format(i,original_data_length))
                 c = sum(item in page for item in wire_vocab)
                 # only include Wikipedia pages that mention at least 2 WiRe elements
                 if c>=2:
-                    new_list.append(page)
+                    decoded_page = [x.encode('ascii','ignore') for x in page]
+                    new_list.append(decoded_page)
 
             data_list = new_list
-            print(data_list)
-            print("pre save new list")
-            #print(new_list)
+
             print("Original data length = {}".format(original_data_length))
             print("Reduced data length = {}".format(len(new_list)))
+            
 
-            with open("wire.pkl", 'wb') as pfile:
-                pkl.dump(new_list, pfile, protocol=pkl.HIGHEST_PROTOCOL)
-
-            #with gzip.open("out.gz", "w") as tfz:
-            #    tfz.write(json.dumps(new_list))
-            #tfz.close()
+            with gzip.open("out.gz", "w") as tfz:
+                tfz.write(json.dumps(new_list))
+            tfz.close()
             #    for page in new_list:
             #        ascii_page = listToString(page,args.MWE)
             #        tfz.write(" ".join([str(entity) for entity in ascii_page]))
@@ -293,7 +287,7 @@ def main_script():
             lst.append(listToString(entities, args.MWE))
             lst.append("\n")
         data_string = listToString(lst, args.MWE)
-        #print(data_string)
+        print(data_string)
         print("STRING CREATED")
         text_file = open("wire.txt", "w")
         text_file.write(data_string)
@@ -322,13 +316,12 @@ def main_script():
 
             files = [os.path.join("data/page_dist_training_data/", f) for f in files]
             data_list = []
-            #with gzip.open(files[0],'rt') as f:
-            #    for line in f:
-            #        print(line)
+            with gzip.open(files[0],'rt') as f:
+                for line in f:
+                    print(line)
             for i, file in tqdm(enumerate(files)):
                     sentences = list(_open_file(file))
                     data_list += sentences
-
             # pickle_out = open("data_list.pkl","wb")
             # pkl.dump(data_list, pickle_out)
             # pickle_out.close()
@@ -342,7 +335,7 @@ def main_script():
             lst.append(listToString(entities, args.MWE))
             lst.append("\n")
         data_string = listToString(lst, args.MWE)
-        #print(data_string)
+        print(data_string)
         print("STRING CREATED")
         text_file = open("wikipedia.txt", "w")
         text_file.write(data_string)
@@ -374,7 +367,7 @@ def main_script():
     print("num_tokens = {}".format(num_tokens))
 
 
-    print(entity_2_idx)
+    #print(entity_2_idx)
     #print("\n\n")
     #print(counter)
     #print("\n\n")
