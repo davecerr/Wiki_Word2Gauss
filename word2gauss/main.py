@@ -323,9 +323,9 @@ def main_script():
 
             files = [os.path.join("data/page_dist_training_data/", f) for f in files]
             data_list = []
-            with gzip.open(files[0],'rt') as f:
-                for line in f:
-                    print(line)
+            #with gzip.open(files[0],'rt') as f:
+            #    for line in f:
+            #        print(line)
             for i, file in tqdm(enumerate(files)):
                     sentences = list(_open_file(file))
                     data_list += sentences
