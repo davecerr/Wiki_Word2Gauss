@@ -223,9 +223,9 @@ def main_script():
         #print(data)
 
     elif args.MWE == 3:
-        if os.path.exists("wirezip.gz"):
+        if os.path.exists("out.gz"):
             print("loading from gzip files")
-            file = "wirezip.gz"
+            file = "out.gz"
             data_list = []
             sentences = list(_open_file(file))
             data_list += sentences
@@ -265,13 +265,20 @@ def main_script():
             print("Original data length = {}".format(original_data_length))
             print("Reduced data length = {}".format(len(new_list)))
 
-            with gzip.open('wirezip.gz', 'a') as zip:
+
+            with gzip.open("out.gz", "w") as tfz:
                 for page in new_list:
                     ascii_page = listToString(page,args.MWE)
-                    for entity in ascii_page:
-                        zip.write(entity)
-                    zip.write("\n")
-            zip.close()
+                    tfz.write(" ".join([str(entity) for entity in ascii_page]))
+            tfz.close()
+
+            #with gzip.open('wirezip.gz', 'a') as zip:
+            #    for page in new_list:
+            #        ascii_page = listToString(page,args.MWE)
+            #        for entity in ascii_page:
+            #            zip.write(entity)
+            #        zip.write("\n")
+            #zip.close()
 
             print("WRITING DATA")
             lst = []
