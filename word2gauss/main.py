@@ -243,6 +243,7 @@ def main_script():
 
 
         if args.MWE == 3:
+            data_list = dat_list[:100]
             if os.path.exists("wire_data_list.pkl"):
                 start = time.time()
                 print("loading from existing pickle")
