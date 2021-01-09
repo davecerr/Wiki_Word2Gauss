@@ -224,12 +224,6 @@ def main_script():
 
     elif args.MWE == 3:
         if os.path.exists("wirezip.gz"):
-            input = gzip.open('wirezip.gz', 'rb')
-            for l in unpickler(input):
-                print(l)
-            with gzip.open('wirezip.gz','rt') as f:
-                for line in f:
-                    print(line)
             print("loading from gzip files")
             file = "wirezip.gz"
             data_list = []
@@ -254,7 +248,7 @@ def main_script():
             for i, file in tqdm(enumerate(files)):
                     sentences = list(_open_file(file))
                     data_list += sentences
-            data_list = data_list[:1000]
+            data_list = data_list[:10]
             original_data_length = len(data_list)
 
             new_list = []
@@ -273,17 +267,13 @@ def main_script():
 
             output = gzip.open('wirezip.gz', 'wb', compresslevel=9)
 
-            for page in new_list:
-                ascii_page = listToString(page,args.MWE)
-                output.write(pkl.dumps(ascii_page) + '\n\n')
-            output.close()
-            #with gzip.open('wirezip.gz', 'a') as zip:
-            #    for page in new_list:
-            #        ascii_page = listToString(page,args.MWE)
-            #        for entity in ascii_page:
-            #            zip.write(entity)
-            #        zip.write("\n")
-            #zip.close()
+            with gzip.open('wirezip.gz', 'a') as zip:
+                for page in new_list:
+                    ascii_page = listToString(page,args.MWE)
+                    for entity in ascii_page:
+                        zip.write(entity)
+                    zip.write("\n")
+            zip.close()
 
             print("WRITING DATA")
             lst = []
