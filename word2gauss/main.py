@@ -213,6 +213,9 @@ def main_script():
 
     elif args.MWE == 3:
         if os.path.exists("wirezip.gz"):
+            with gzip.open('wirezip.gz','rt') as f:
+                for line in f:
+                    print('got line', line)
             print("loading from gzip files")
             file = "wirezip.gz"
             data_list = []
