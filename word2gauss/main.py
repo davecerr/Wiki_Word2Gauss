@@ -259,11 +259,10 @@ def main_script():
                 c = sum(item in page for item in wire_vocab)
                 # only include Wikipedia pages that mention at least 2 WiRe elements
                 if c>=2:
-
-                    decoded_page = [x.encode('ascii','ignore') for x in page]
-                    new_list.append(decoded_page)
+                    new_list.append(page)
 
             data_list = new_list
+            print(data_list)
             print("pre save new list")
             #print(new_list)
             print("Original data length = {}".format(original_data_length))
@@ -294,7 +293,7 @@ def main_script():
             lst.append(listToString(entities, args.MWE))
             lst.append("\n")
         data_string = listToString(lst, args.MWE)
-        print(data_string)
+        #print(data_string)
         print("STRING CREATED")
         text_file = open("wire.txt", "w")
         text_file.write(data_string)
@@ -343,7 +342,7 @@ def main_script():
             lst.append(listToString(entities, args.MWE))
             lst.append("\n")
         data_string = listToString(lst, args.MWE)
-        print(data_string)
+        #print(data_string)
         print("STRING CREATED")
         text_file = open("wikipedia.txt", "w")
         text_file.write(data_string)
