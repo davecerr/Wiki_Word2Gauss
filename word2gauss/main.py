@@ -275,7 +275,8 @@ def main_script():
 
                 with gzip.open('wirezip.gz', 'a') as zip:
                     for page in new_list:
-                        for entity in page:
+                        ascii_page = page.encode('ascii', 'ignore')
+                        for entity in ascii_page:
                             zip.write(entity)
                         zip.write("\n")
                 zip.close()
