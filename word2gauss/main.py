@@ -224,7 +224,7 @@ def main_script():
             print("loading from gzip files")
             files = []
             for _, _, fs in os.walk("data/", topdown=False):
-                if args.MWE == 2:
+                if args.MWE == 2 or args.MWE == 3:
                     files += [f for f in fs if f.endswith("00000.gz")]
                 else:
                     files += [f for f in fs if f.endswith(".gz")]
@@ -274,7 +274,9 @@ def main_script():
 
                 with gzip.open('wirezip.gz', 'a') as zip:
                     for page in new_list:
-                        zip.write(page)
+                        for entity in page:
+                            zip.write(entity)
+                        zip.write("\n")
                 zip.close()
 
 
