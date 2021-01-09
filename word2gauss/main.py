@@ -227,7 +227,6 @@ def main_script():
             print("loading from gzip files")
             file = "out.gz"
             data_list = list(_open_file(file))
-            data_list += sentences
             print(data_list)
         else:
             wire_vocab = set()
