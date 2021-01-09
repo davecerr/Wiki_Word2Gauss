@@ -256,7 +256,9 @@ def main_script():
                 c = sum(item in page for item in wire_vocab)
                 # only include Wikipedia pages that mention at least 2 WiRe elements
                 if c>=2:
-                    new_list.append(page)
+                    ascii_page = listToString(page,args.MWE)
+                    ascii_page_list = [ascii_page.split()]
+                    new_list.append(ascii_page_list)
 
             data_list = new_list
 
