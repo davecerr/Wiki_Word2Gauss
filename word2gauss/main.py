@@ -265,6 +265,19 @@ def main_script():
                     zip.write("\n")
             zip.close()
 
+            print("WRITING DATA")
+            lst = []
+            for entities in tqdm(data_list):
+                lst.append(listToString(entities, args.MWE))
+                lst.append("\n")
+            data_string = listToString(lst, args.MWE)
+            print("STRING CREATED")
+            text_file = open("wikipedia.txt", "w")
+            text_file.write(data_string)
+            text_file.close()
+            print("STRING WRITTEN TO TEXT FILE")
+            data = tokenizer_MWE0(data_string)
+            print("STRING TOKENIZED")
 
     else:
         print("\n\n----------- LOADING DATA ----------")
@@ -295,10 +308,6 @@ def main_script():
 
         #if args.MWE == 2:
             #data_list = data_list[20]
-
-
-
-
 
         print("WRITING DATA")
         lst = []
