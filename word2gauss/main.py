@@ -265,8 +265,6 @@ def main_script():
             print("Original data length = {}".format(original_data_length))
             print("Reduced data length = {}".format(len(new_list)))
 
-            output = gzip.open('wirezip.gz', 'wb', compresslevel=9)
-
             with gzip.open('wirezip.gz', 'a') as zip:
                 for page in new_list:
                     ascii_page = listToString(page,args.MWE)
