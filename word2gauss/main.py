@@ -252,18 +252,20 @@ def main_script():
             original_data_length = len(data_list)
 
             new_list = []
+            print(data_list)
             for i, page in enumerate(data_list):
                 if i % 10000 == 0:
                     print("{}/{}".format(i,original_data_length))
                 c = sum(item in page for item in wire_vocab)
                 # only include Wikipedia pages that mention at least 2 WiRe elements
                 if c>=2:
+
                     decoded_page = [x.encode('ascii','ignore') for x in page]
                     new_list.append(decoded_page)
 
             data_list = new_list
             print("pre save new list")
-            print(new_list)
+            #print(new_list)
             print("Original data length = {}".format(original_data_length))
             print("Reduced data length = {}".format(len(new_list)))
 
