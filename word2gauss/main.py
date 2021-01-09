@@ -228,7 +228,8 @@ def main_script():
             #file = "out.gz"
             #data_list = list(_open_file(file))[0]
             data_list = pkl.load( open( "wire.pkl", "rb" ) )
-            #print(data_list)
+            print("post save list")
+            print(data_list)
         else:
             wire_vocab = set()
             df_wire = pd.read_csv(validation_path)
@@ -261,7 +262,8 @@ def main_script():
                     new_list.append(decoded_page)
 
             data_list = new_list
-
+            print("pre save new list")
+            print(new_list)
             print("Original data length = {}".format(original_data_length))
             print("Reduced data length = {}".format(len(new_list)))
 
