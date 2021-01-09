@@ -223,9 +223,9 @@ def main_script():
         #print(data)
 
     elif args.MWE == 3:
-        if os.path.exists("out.gz"):
+        if os.path.exists("wire_2match.gz"):
             print("loading from gzip files")
-            file = "out.gz"
+            file = "wire_2match.gz"
             data_list = list(_open_file(file))[0]
             #print(data_list)
         else:
@@ -239,7 +239,7 @@ def main_script():
 
             files = []
             for _, _, fs in os.walk("data/", topdown=False):
-                files += [f for f in fs if f.endswith("00000.gz")]
+                files += [f for f in fs if f.endswith(".gz")]
 
             files = [os.path.join("data/page_dist_training_data/", f) for f in files]
             data_list = []
@@ -265,7 +265,7 @@ def main_script():
             print("Reduced data length = {}".format(len(new_list)))
 
 
-            with gzip.open("out.gz", "w") as tfz:
+            with gzip.open("wire_2match.gz", "w") as tfz:
                 tfz.write(json.dumps(new_list))
             tfz.close()
             #    for page in new_list:
@@ -287,7 +287,7 @@ def main_script():
             lst.append(listToString(entities, args.MWE))
             lst.append("\n")
         data_string = listToString(lst, args.MWE)
-        print(data_string)
+        #print(data_string)
         print("STRING CREATED")
         text_file = open("wire.txt", "w")
         text_file.write(data_string)
