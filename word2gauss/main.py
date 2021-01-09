@@ -270,6 +270,8 @@ def main_script():
                     if c>=2:
                         new_list.append(page)
 
+                data_list = new_list
+                
                 print("Original data length = {}".format(original_data_length))
                 print("Reduced data length = {}".format(len(new_list)))
 
