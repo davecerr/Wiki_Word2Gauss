@@ -329,7 +329,7 @@ def main_script():
             for i, file in tqdm(enumerate(files)):
                     sentences = list(_open_file(file))
                     data_list += sentences
-            print(data_list[:1000])
+
             # pickle_out = open("data_list.pkl","wb")
             # pkl.dump(data_list, pickle_out)
             # pickle_out.close()
@@ -343,7 +343,7 @@ def main_script():
             lst.append(listToString(entities, args.MWE))
             lst.append("\n")
         data_string = listToString(lst, args.MWE)
-        #print(data_string)
+        print(data_string)
         print("STRING CREATED")
         text_file = open("wikipedia.txt", "w")
         text_file.write(data_string)
