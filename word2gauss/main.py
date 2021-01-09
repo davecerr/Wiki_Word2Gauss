@@ -256,7 +256,7 @@ def main_script():
                 c = sum(item in page for item in wire_vocab)
                 # only include Wikipedia pages that mention at least 2 WiRe elements
                 if c>=2:
-                    decoded_page = [x.encode('UTF8') for x in page]
+                    decoded_page = [x.encode('ascii','ignore') for x in page]
                     new_list.append(decoded_page)
 
             data_list = new_list
