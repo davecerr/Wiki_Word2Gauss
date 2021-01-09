@@ -226,7 +226,7 @@ def main_script():
         if os.path.exists("out.gz"):
             print("loading from gzip files")
             file = "out.gz"
-            data_list = _open_file(file)
+            data_list = list(_open_file(file))[0]
             print(data_list)
         else:
             wire_vocab = set()
