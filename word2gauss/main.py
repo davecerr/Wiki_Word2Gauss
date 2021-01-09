@@ -267,10 +267,12 @@ def main_script():
 
 
             with gzip.open("out.gz", "w") as tfz:
-                for page in new_list:
-                    ascii_page = listToString(page,args.MWE)
-                    tfz.write(" ".join([str(entity) for entity in ascii_page]))
+                tfz.write(json.dumps(new_list))
             tfz.close()
+            #    for page in new_list:
+            #        ascii_page = listToString(page,args.MWE)
+            #        tfz.write(" ".join([str(entity) for entity in ascii_page]))
+            #tfz.close()
 
             #with gzip.open('wirezip.gz', 'a') as zip:
             #    for page in new_list:
