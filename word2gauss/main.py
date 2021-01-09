@@ -51,7 +51,7 @@ batch_size=10
 validation_path = "data/WiRe.csv"
 
 # calculation/printing controls
-print_init_embeddings = False
+print_init_embeddings = True
 print_final_embeddings = False
 calc_general_and_specific = False
 calc_similarity_example = True
@@ -246,7 +246,7 @@ def main_script():
             for i, file in tqdm(enumerate(files)):
                     sentences = list(_open_file(file))
                     data_list += sentences
-            #data_list = data_list[:10]
+            data_list = data_list[:10]
             original_data_length = len(data_list)
 
             new_list = []
