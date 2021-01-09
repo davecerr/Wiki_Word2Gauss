@@ -329,6 +329,7 @@ def main_script():
             for i, file in tqdm(enumerate(files)):
                     sentences = list(_open_file(file))
                     data_list += sentences
+            print(data_list[:1000])
             # pickle_out = open("data_list.pkl","wb")
             # pkl.dump(data_list, pickle_out)
             # pickle_out.close()
