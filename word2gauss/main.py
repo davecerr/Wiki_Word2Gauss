@@ -223,10 +223,11 @@ def main_script():
         #print(data)
 
     elif args.MWE == 3:
-        if os.path.exists("out.gz"):
-            print("loading from gzip files")
-            file = "out.gz"
-            data_list = list(_open_file(file))[0]
+        if os.path.exists("wire.pkl"):
+            #print("loading from pkl file")
+            #file = "out.gz"
+            #data_list = list(_open_file(file))[0]
+            data_list = pkl.load( open( "wire.pkl", "rb" ) )
             #print(data_list)
         else:
             wire_vocab = set()
@@ -264,10 +265,12 @@ def main_script():
             print("Original data length = {}".format(original_data_length))
             print("Reduced data length = {}".format(len(new_list)))
 
+            with open("wire.pkl", 'wb') as pfile:
+                pkl.dump(new_list, pfile, protocol=pickle.HIGHEST_PROTOCOL)
 
-            with gzip.open("out.gz", "w") as tfz:
-                tfz.write(json.dumps(new_list))
-            tfz.close()
+            #with gzip.open("out.gz", "w") as tfz:
+            #    tfz.write(json.dumps(new_list))
+            #tfz.close()
             #    for page in new_list:
             #        ascii_page = listToString(page,args.MWE)
             #        tfz.write(" ".join([str(entity) for entity in ascii_page]))
