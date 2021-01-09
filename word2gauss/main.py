@@ -211,6 +211,47 @@ def main_script():
         print("STRING TOKENIZED")
         #print(data)
 
+    elif args.MWE == 3:
+        if os.path.exists("wirezip.gz"):
+            print("loading from gzip files")
+            file = "wirezip.gz"
+            data_list = []
+            sentences = list(_open_file(file))
+            data_list += sentences
+            print(data_list)
+        else:
+            wire_vocab = set()
+            df_wire = pd.read_csv(validation_path)
+            for _, record in df_wire.iterrows():
+                wire_vocab.add(record["srcWikiTitle"])
+                wire_vocab.add(record["dstWikiTitle"])
+            wire_vocab = list(wire_vocab)
+            print("WiRe vocab loaded successfully")
+
+            original_data_length = len(data_list)
+            new_list = []
+            for i, page in enumerate(data_list):
+                if i % 10000 == 0:
+                    print("{}/{}".format(i,original_data_length))
+                c = sum(item in page for item in wire_vocab)
+                # only include Wikipedia pages that mention at least 2 WiRe elements
+                if c>=2:
+                    new_list.append(page)
+
+            data_list = new_list
+
+            print("Original data length = {}".format(original_data_length))
+            print("Reduced data length = {}".format(len(new_list)))
+
+            with gzip.open('wirezip.gz', 'a') as zip:
+                for page in new_list:
+                    ascii_page = listToString(page,args.MWE)
+                    for entity in ascii_page:
+                        zip.write(entity)
+                    zip.write("\n")
+            zip.close()
+
+
     else:
         print("\n\n----------- LOADING DATA ----------")
         if os.path.exists("data_list.pkl"):
@@ -224,7 +265,7 @@ def main_script():
             print("loading from gzip files")
             files = []
             for _, _, fs in os.walk("data/", topdown=False):
-                if args.MWE == 2 or args.MWE == 3:
+                if args.MWE == 2:
                     files += [f for f in fs if f.endswith("00000.gz")]
                 else:
                     files += [f for f in fs if f.endswith(".gz")]
@@ -242,46 +283,7 @@ def main_script():
             #data_list = data_list[20]
 
 
-        if args.MWE == 3:
-            data_list = data_list[:100]
-            if os.path.exists("wire_data_list.pkl"):
-                start = time.time()
-                print("loading from existing pickle")
-                pickle_in = open("wire_data_list.pkl","rb")
-                data_list = pkl.load(pickle_in)
-                end = time.time()
-                print("loaded in {} secs".format(round(end - start,2)))
-            else:
-                wire_vocab = set()
-                df_wire = pd.read_csv(validation_path)
-                for _, record in df_wire.iterrows():
-                    wire_vocab.add(record["srcWikiTitle"])
-                    wire_vocab.add(record["dstWikiTitle"])
-                wire_vocab = list(wire_vocab)
-                print("WiRe vocab loaded successfully")
 
-                original_data_length = len(data_list)
-                new_list = []
-                for i, page in enumerate(data_list):
-                    if i % 10000 == 0:
-                        print("{}/{}".format(i,original_data_length))
-                    c = sum(item in page for item in wire_vocab)
-                    # only include Wikipedia pages that mention at least 2 WiRe elements
-                    if c>=2:
-                        new_list.append(page)
-
-                #data_list = new_list
-
-                print("Original data length = {}".format(original_data_length))
-                print("Reduced data length = {}".format(len(new_list)))
-
-                with gzip.open('wirezip.gz', 'a') as zip:
-                    for page in new_list:
-                        ascii_page = listToString(page,args.MWE)
-                        for entity in ascii_page:
-                            zip.write(entity)
-                        zip.write("\n")
-                zip.close()
 
 
         print("WRITING DATA")
