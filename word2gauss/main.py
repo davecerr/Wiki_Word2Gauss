@@ -51,7 +51,7 @@ batch_size=10
 validation_path = "data/WiRe.csv"
 
 # calculation/printing controls
-print_init_embeddings = True
+print_init_embeddings = False
 print_final_embeddings = False
 calc_general_and_specific = False
 calc_similarity_example = True
