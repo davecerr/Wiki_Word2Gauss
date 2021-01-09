@@ -231,11 +231,21 @@ def main_script():
             wire_vocab = list(wire_vocab)
             print("WiRe vocab loaded successfully")
 
-            #original_data_length = len(data_list)
+            files = []
+            for _, _, fs in os.walk("data/", topdown=False):
+                files += [f for f in fs if f.endswith("00000.gz")]
+
+            files = [os.path.join("data/page_dist_training_data/", f) for f in files]
+            data_list = []
+            for i, file in tqdm(enumerate(files)):
+                    sentences = list(_open_file(file))
+                    data_list += sentences
+            original_data_length = len(data_list)
+
             new_list = []
             for i, page in enumerate(data_list):
                 if i % 10000 == 0:
-                    print("{}".format(i))
+                    print("{}/{}".format(i,original_data_length))
                 c = sum(item in page for item in wire_vocab)
                 # only include Wikipedia pages that mention at least 2 WiRe elements
                 if c>=2:
