@@ -266,7 +266,7 @@ def main_script():
             print("Reduced data length = {}".format(len(new_list)))
 
             with open("wire.pkl", 'wb') as pfile:
-                pkl.dump(new_list, pfile, protocol=pickle.HIGHEST_PROTOCOL)
+                pkl.dump(new_list, pfile, protocol=pkl.HIGHEST_PROTOCOL)
 
             #with gzip.open("out.gz", "w") as tfz:
             #    tfz.write(json.dumps(new_list))
