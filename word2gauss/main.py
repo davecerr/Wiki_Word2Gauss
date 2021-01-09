@@ -227,7 +227,7 @@ def main_script():
             print("loading from gzip files")
             file = "out.gz"
             data_list = list(_open_file(file))[0]
-            print(data_list)
+            #print(data_list)
         else:
             wire_vocab = set()
             df_wire = pd.read_csv(validation_path)
@@ -287,8 +287,9 @@ def main_script():
             lst.append(listToString(entities, args.MWE))
             lst.append("\n")
         data_string = listToString(lst, args.MWE)
+        print(data_string)
         print("STRING CREATED")
-        text_file = open("wikipedia.txt", "w")
+        text_file = open("wire.txt", "w")
         text_file.write(data_string)
         text_file.close()
         print("STRING WRITTEN TO TEXT FILE")
