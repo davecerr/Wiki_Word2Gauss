@@ -78,6 +78,17 @@ def _open_file(filename):
             yield json.loads(line)
     #print("Maximum list length = {}".format(max_len))
     #print("Maximum list = {}".format(max_list))
+
+
+def unpickler(input):
+    partial = []
+    for line in input:
+        partial.append(line)
+        if line == '\n':
+            obj = ''.join(partial)
+            partial = []
+            yield pkl.loads(obj)
+
 def tokenizer_MWE1(s):
     '''
     Whitespace tokenizer
@@ -213,6 +224,9 @@ def main_script():
 
     elif args.MWE == 3:
         if os.path.exists("wirezip.gz"):
+            input = gzip.open('wirezip.gz', 'rb')
+            for l in unpickler(input):
+                print(l)
             with gzip.open('wirezip.gz','rt') as f:
                 for line in f:
                     print(line)
@@ -257,13 +271,19 @@ def main_script():
             print("Original data length = {}".format(original_data_length))
             print("Reduced data length = {}".format(len(new_list)))
 
-            with gzip.open('wirezip.gz', 'a') as zip:
-                for page in new_list:
-                    ascii_page = listToString(page,args.MWE)
-                    for entity in ascii_page:
-                        zip.write(entity)
-                    zip.write("\n")
-            zip.close()
+            output = gzip.open('wirezip.gz', 'wb', compresslevel=9)
+
+            for page in new_list:
+                ascii_page = listToString(page,args.MWE)
+                output.write(pkl.dumps(ascii_page) + '\n\n')
+            output.close()
+            #with gzip.open('wirezip.gz', 'a') as zip:
+            #    for page in new_list:
+            #        ascii_page = listToString(page,args.MWE)
+            #        for entity in ascii_page:
+            #            zip.write(entity)
+            #        zip.write("\n")
+            #zip.close()
 
             print("WRITING DATA")
             lst = []
