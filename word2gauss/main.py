@@ -268,6 +268,9 @@ def main_script():
             print("Original data length = {}".format(original_data_length))
             print("Reduced data length = {}".format(len(new_list)))
 
+            with open("wire.pkl", 'wb') as pfile:
+                pkl.dump(new_list, pfile, protocol=pkl.HIGHEST_PROTOCOL)
+
             #with gzip.open("out.gz", "w") as tfz:
             #    tfz.write(json.dumps(new_list))
             #tfz.close()
@@ -284,20 +287,20 @@ def main_script():
             #        zip.write("\n")
             #zip.close()
 
-        print("WRITING DATA")
-        lst = []
-        for entities in tqdm(data_list):
-            lst.append(listToString(entities, args.MWE))
-            lst.append("\n")
-        data_string = listToString(lst, args.MWE)
-        #print(data_string)
-        print("STRING CREATED")
-        text_file = open("wire.txt", "w")
-        text_file.write(data_string)
-        text_file.close()
-        print("STRING WRITTEN TO TEXT FILE")
-        data = tokenizer_MWE0(data_string)
-        print("STRING TOKENIZED")
+            print("WRITING DATA")
+            lst = []
+            for entities in tqdm(data_list):
+                lst.append(listToString(entities, args.MWE))
+                lst.append("\n")
+            data_string = listToString(lst, args.MWE)
+            #print(data_string)
+            print("STRING CREATED")
+            text_file = open("wire.txt", "w")
+            text_file.write(data_string)
+            text_file.close()
+            print("STRING WRITTEN TO TEXT FILE")
+            data = tokenizer_MWE0(data_string)
+            print("STRING TOKENIZED")
 
     else:
         print("\n\n----------- LOADING DATA ----------")
