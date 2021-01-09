@@ -231,11 +231,11 @@ def main_script():
             wire_vocab = list(wire_vocab)
             print("WiRe vocab loaded successfully")
 
-            original_data_length = len(data_list)
+            #original_data_length = len(data_list)
             new_list = []
             for i, page in enumerate(data_list):
                 if i % 10000 == 0:
-                    print("{}/{}".format(i,original_data_length))
+                    print("{}".format(i))
                 c = sum(item in page for item in wire_vocab)
                 # only include Wikipedia pages that mention at least 2 WiRe elements
                 if c>=2:
