@@ -228,8 +228,8 @@ def main_script():
             #file = "out.gz"
             #data_list = list(_open_file(file))[0]
             data_list = pkl.load( open( "wire.pkl", "rb" ) )
-            print("post save list")
-            print(data_list)
+            #print("post save list")
+            #print(data_list)
         else:
             wire_vocab = set()
             df_wire = pd.read_csv(validation_path)
@@ -287,20 +287,20 @@ def main_script():
             #        zip.write("\n")
             #zip.close()
 
-            print("WRITING DATA")
-            lst = []
-            for entities in tqdm(data_list):
-                lst.append(listToString(entities, args.MWE))
-                lst.append("\n")
-            data_string = listToString(lst, args.MWE)
-            #print(data_string)
-            print("STRING CREATED")
-            text_file = open("wire.txt", "w")
-            text_file.write(data_string)
-            text_file.close()
-            print("STRING WRITTEN TO TEXT FILE")
-            data = tokenizer_MWE0(data_string)
-            print("STRING TOKENIZED")
+        print("WRITING DATA")
+        lst = []
+        for entities in tqdm(data_list):
+            lst.append(listToString(entities, args.MWE))
+            lst.append("\n")
+        data_string = listToString(lst, args.MWE)
+        #print(data_string)
+        print("STRING CREATED")
+        text_file = open("wire.txt", "w")
+        text_file.write(data_string)
+        text_file.close()
+        print("STRING WRITTEN TO TEXT FILE")
+        data = tokenizer_MWE0(data_string)
+        print("STRING TOKENIZED")
 
     else:
         print("\n\n----------- LOADING DATA ----------")
@@ -374,7 +374,7 @@ def main_script():
     print("num_tokens = {}".format(num_tokens))
 
 
-    #print(entity_2_idx)
+    print(entity_2_idx)
     #print("\n\n")
     #print(counter)
     #print("\n\n")
