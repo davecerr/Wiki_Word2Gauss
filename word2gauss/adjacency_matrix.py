@@ -3,6 +3,7 @@ import gzip
 import time
 import tqdm
 import json
+import os
 
 def _open_file(filename):
     max_len = 0
