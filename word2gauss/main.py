@@ -610,7 +610,7 @@ def main_script():
     ############################################################################
 
     if args.csv:
-        f_results = 'CSVs/grid_search_results_epochs={}.csv'.format(args.num_epochs)
+        f_results = 'CSVs/grid_search_results_epochs={}_MWE={}.csv'.format(args.num_epochs,args.MWE)
 
         hyperparameter_list = ["Threads", "Dimension", "Neg samples", "Eta", "Closs"]
         epoch_list = ['Epoch {} Loss'.format(i+1) for i in range(args.num_epochs)]
