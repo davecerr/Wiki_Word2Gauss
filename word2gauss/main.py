@@ -223,9 +223,9 @@ def main_script():
         #print(data)
 
     elif args.MWE == 3:
-        if os.path.exists("wire_2match.gz"):
+        if os.path.exists("wire_3match.gz"):
             print("loading from gzip files")
-            file = "wire_2match.gz"
+            file = "wire_3match.gz"
             data_list = list(_open_file(file))[0]
             #print(data_list)
         else:
@@ -255,7 +255,7 @@ def main_script():
                     print("{}/{}".format(i,original_data_length))
                 c = sum(item in page for item in wire_vocab)
                 # only include Wikipedia pages that mention at least 2 WiRe elements
-                if c>=2:
+                if c>=3:
                     decoded_page = [x.encode('ascii','ignore') for x in page]
                     new_list.append(decoded_page)
 
@@ -265,7 +265,7 @@ def main_script():
             print("Reduced data length = {}".format(len(new_list)))
 
 
-            with gzip.open("wire_2match.gz", "w") as tfz:
+            with gzip.open("wire_3match.gz", "w") as tfz:
                 tfz.write(json.dumps(new_list))
             tfz.close()
             #    for page in new_list:
@@ -445,7 +445,7 @@ def main_script():
 
         elif args.MWE == 3:
             with open('wire.txt', 'r') as corpus:
-                total_num_examples = len(open('wikipedia.txt').readlines(  ))
+                total_num_examples = len(open('wire.txt').readlines(  ))
                 if args.dynamic_window_size:
                     epoch_losses.append(embed.train_dynamic(iter_pairs(corpus, vocab, dynamic_window_size=args.dynamic_window_size, batch_size=batch_size, nsamples=args.neg_samples, window=window),
                                     n_workers=args.num_threads, total_num_examples=total_num_examples, verbose_pairs=args.verbose_pairs, report_interval=args.report_schedule))
