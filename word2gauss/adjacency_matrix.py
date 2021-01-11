@@ -28,6 +28,6 @@ with gzip.open(files[0], 'r') as fin:        # 4. gzip
     json_bytes = fin.read()                  # 3. bytes (i.e. UTF-8)
 
 json_str = json_bytes.decode('utf-8')       # 2. string (i.e. JSON)
-data = json.loads(json_str)                      # 1. data
-
-print(data)
+for line in json_str.split('\n'):
+    data = json.loads(line)                 # 1. data
+    print(data)
