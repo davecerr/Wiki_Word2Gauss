@@ -613,7 +613,7 @@ def main_script():
     ############################################################################
 
     if args.csv:
-        f_results = 'grid_search_results_MWE={}_threads={}_epochs={}_d={}_neg={}_eta={}_C={}_mu0={}_sig0={}_sigstd0={}_mumax={}_sigmax={}_sigmin={}.csv'.format(args.MWE,args.num_threads,args.num_epochs,args.dim,args.neg_samples,args.eta,args.Closs,mu0,sigma_mean0,sigma_std0,mu_max,sigma_max,sigma_min)
+        f_results = 'grid_search_results_MWE={}_threads={}_epochs={}_d={}_neg={}_eta={}_C={}_mu0={}_sig0={}_sigstd0={}_mumax={}_sigmax={}_sigmin={}_windowweighting={}.csv'.format(args.MWE,args.num_threads,args.num_epochs,args.dim,args.neg_samples,args.eta,args.Closs,mu0,sigma_mean0,sigma_std0,mu_max,sigma_max,sigma_min,args.grad_weight_by_Npairs)
 
         hyperparameter_list = ["Threads", "Dimension", "Neg samples", "Eta", "Closs"]
         epoch_list = ['Epoch {} Loss'.format(i+1) for i in range(args.num_epochs)]
