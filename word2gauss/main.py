@@ -151,6 +151,8 @@ def parse_args():
                         help='Learning rate')
     parser.add_argument('--Closs', type=float, required=True,
                         help='Margin size in Hinge Loss')
+    parser.add_argument('--grad_weight_by_Npairs', type=str2bool, required=True,
+                        help='Downweight gradient updates by number of entities on page')
 
     # saving model/results
     parser.add_argument('--save', type=str2bool, required=True,
@@ -390,7 +392,7 @@ def main_script():
     # embed = GaussianEmbedding(num_tokens, dimension,
     #     covariance_type=cov_type, energy_type=E_type)
 
-    embed = GaussianEmbedding(N=num_tokens, size=args.dim,
+    embed = GaussianEmbedding(N=num_tokens, neg_samples=arg.neg_samples, size=args.dim,
               covariance_type=cov_type, energy_type=E_type,
               mu_max=mu_max, sigma_min=sigma_min, sigma_max=sigma_max,
               init_params={'mu0': mu0,
@@ -398,7 +400,8 @@ def main_script():
                   'sigma_std0': sigma_std0},
               eta=args.eta, Closs=args.Closs,
               verbose_loss=args.verbose_loss,
-              verbose_gradients=args.verbose_gradients)
+              verbose_gradients=args.verbose_gradients,
+              grad_weight_by_Npairs=args.grad_weight_by_Npairs)
 
 
 
