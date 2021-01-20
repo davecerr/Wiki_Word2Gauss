@@ -392,7 +392,7 @@ def main_script():
     # embed = GaussianEmbedding(num_tokens, dimension,
     #     covariance_type=cov_type, energy_type=E_type)
 
-    embed = GaussianEmbedding(N=num_tokens, neg_samples=arg.neg_samples, size=args.dim,
+    embed = GaussianEmbedding(N=num_tokens, neg_samples=args.neg_samples, size=args.dim,
               covariance_type=cov_type, energy_type=E_type,
               mu_max=mu_max, sigma_min=sigma_min, sigma_max=sigma_max,
               init_params={'mu0': mu0,
