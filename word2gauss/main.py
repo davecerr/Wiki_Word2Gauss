@@ -4,6 +4,7 @@ import pickle as pkl
 import time
 import gzip
 import json
+import glob
 import sys
 import csv
 import logging
@@ -33,7 +34,7 @@ E_type = 'KL'
 # Gaussian initialisation (random noise is added to these)
 mu0 = 0.1
 sigma_mean0 = 0.5
-sigma_std0 = 1.0
+sigma_std0 = 0.25
 
 # Gaussian bounds (avoid e.g. massive sigmas to get good overlap)
 mu_max = 10.0
@@ -105,7 +106,7 @@ def listToString(s,MWE):
     # initialize an empty string
     str1 = " "
     # return string
-    if MWE == 1:
+    if MWE == 1 or MWE == 3 or MWE == 4:
         return str1.join(s)
     else:
         return str1.join(s).encode('ascii', 'ignore')
@@ -177,8 +178,8 @@ def main_script():
     print("save = {}".format(args.save))
     print("csv = {}".format(args.csv))
 
-    if args.MWE not in [0,1,2,3]:
-        sys.exit('MWE must be 0,1,2 or 3')
+    if args.MWE not in [0,1,2,3,4]:
+        sys.exit('MWE must be 0,1,2,3 or 4')
     if args.num_threads <= 0:
         sys.exit('num_threads must be a positive integer')
     if args.num_epochs <= 0:
@@ -270,24 +271,13 @@ def main_script():
             with gzip.open("wire_3match.gz", "w") as tfz:
                 tfz.write(json.dumps(new_list))
             tfz.close()
-            #    for page in new_list:
-            #        ascii_page = listToString(page,args.MWE)
-            #        tfz.write(" ".join([str(entity) for entity in ascii_page]))
-            #tfz.close()
-
-            #with gzip.open('wirezip.gz', 'a') as zip:
-            #    for page in new_list:
-            #        ascii_page = listToString(page,args.MWE)
-            #        for entity in ascii_page:
-            #            zip.write(entity)
-            #        zip.write("\n")
-            #zip.close()
 
         print("WRITING DATA")
         lst = []
         for entities in tqdm(data_list):
             lst.append(listToString(entities, args.MWE))
             lst.append("\n")
+        #print(lst)
         data_string = listToString(lst, args.MWE)
         #print(data_string)
         print("STRING CREATED")
@@ -297,6 +287,71 @@ def main_script():
         print("STRING WRITTEN TO TEXT FILE")
         data = tokenizer_MWE0(data_string)
         print("STRING TOKENIZED")
+
+    elif args.MWE == 4:
+        if os.path.exists("wire_video_3match.gz"):
+            print("loading from gzip files")
+            file = "wire_video_3match.gz"
+            data_list = list(_open_file(file))[0]
+            #print(data_list)
+        else:
+            # load wire vocab
+            wire_vocab = set()
+            df_wire = pd.read_csv(validation_path)
+            for _, record in df_wire.iterrows():
+                wire_vocab.add(record["srcWikiTitle"])
+                wire_vocab.add(record["dstWikiTitle"])
+            wire_vocab = list(wire_vocab)
+            print("WiRe vocab loaded successfully. Length = {} entities".format(len(wire_vocab)))
+
+            # load video vocab
+            video_vocab = set()
+            path = 'data/wikipedias'
+            for i, file in enumerate(glob.glob(os.path.join(path, '*.json'))): #only process .JSON files in folder.
+                with open(file, encoding='utf-8', mode='r') as f:
+                    json_object = json.load(f)
+                    for dic in json_object:
+                        entity=dic['name']
+                        video_vocab.add(entity)
+            video_vocab = list(video_vocab)
+            print("Video vocab loaded successfully. Length = {} entities".format(len(video_vocab)))
+
+            # create combined vocab
+            wire_video_vocab = wire_vocab + video_vocab
+            print("Combined vocab loaded successfully. Length = {} entities".format(len(wire_video_vocab)))
+
+            # filter wikipedia files with combined vocab
+            files = []
+            for _, _, fs in os.walk("data/", topdown=False):
+                files += [f for f in fs if f.endswith(".gz")]
+
+            files = [os.path.join("data/page_dist_training_data/", f) for f in files]
+            data_list = []
+            for i, file in tqdm(enumerate(files)):
+                    sentences = list(_open_file(file))
+                    data_list += sentences
+
+            original_data_length = len(data_list)
+
+            new_list = []
+            for i, page in enumerate(data_list):
+                if i % 10000 == 0:
+                    print("{}/{}".format(i,original_data_length))
+                c = sum(item in page for item in wire_video_vocab)
+                # only include Wikipedia pages that mention at least 2 WiRe elements
+                if c>=3:
+                    decoded_page = [x.encode('ascii','ignore') for x in page]
+                    new_list.append(decoded_page)
+
+            data_list = new_list
+
+            print("Original data length = {}".format(original_data_length))
+            print("Reduced data length = {}".format(len(new_list)))
+
+
+            with gzip.open("wire_video_3match.gz", "w") as tfz:
+                tfz.write(json.dumps(new_list))
+            tfz.close()
 
     else:
         print("\n\n----------- LOADING DATA ----------")
@@ -375,6 +430,7 @@ def main_script():
     #print("\n\n")
     #print(dataset[:2])
     dataset_length = len(dataset)
+    print(dataset)
     print("Dataset length = {}".format(dataset_length))
 
 
@@ -436,6 +492,8 @@ def main_script():
     for e in range(args.num_epochs):
         epoch_start = time.time()
         print("---------- EPOCH {} ----------".format(e+1))
+        #print(embed.mu[:10])
+        #print(embed.sigma[:10])
         if args.MWE == 1:
             with open('w_and_p.txt', 'r') as corpus:
                 total_num_examples = len(open('w_and_p.txt').readlines(  ))
