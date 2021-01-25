@@ -296,29 +296,31 @@ def main_script():
             #print(data_list)
         else:
             # load wire vocab
-            wire_vocab = set()
-            df_wire = pd.read_csv(validation_path)
-            for _, record in df_wire.iterrows():
-                wire_vocab.add(record["srcWikiTitle"])
-                wire_vocab.add(record["dstWikiTitle"])
-            wire_vocab = list(wire_vocab)
-            print("WiRe vocab loaded successfully. Length = {} entities".format(len(wire_vocab)))
-
-            # load video vocab
-            video_vocab = set()
-            path = 'data/wikipedias'
-            for i, file in enumerate(glob.glob(os.path.join(path, '*.json'))): #only process .JSON files in folder.
-                with open(file, encoding='utf-8', mode='r') as f:
-                    json_object = json.load(f)
-                    for dic in json_object:
-                        entity=dic['name']
-                        video_vocab.add(entity)
-            video_vocab = list(video_vocab)
-            print("Video vocab loaded successfully. Length = {} entities".format(len(video_vocab)))
-
-            # create combined vocab
-            wire_video_vocab = wire_vocab + video_vocab
-            print("Combined vocab loaded successfully. Length = {} entities".format(len(wire_video_vocab)))
+            if os.path.exists("wire_video_vocab.pkl"):
+                wire_video_vocab = pkl.load(open('wire_video_vocab.pkl', 'rb'))
+            else:
+                wire_vocab = set()
+                df_wire = pd.read_csv(validation_path)
+                for _, record in df_wire.iterrows():
+                    wire_vocab.add(record["srcWikiTitle"])
+                    wire_vocab.add(record["dstWikiTitle"])
+                wire_vocab = list(wire_vocab)
+                print("WiRe vocab loaded successfully. Length = {} entities".format(len(wire_vocab)))
+                # load video vocab
+                video_vocab = set()
+                path = 'data/wikipedias'
+                for i, file in enumerate(glob.glob(os.path.join(path, '*.json'))): #only process .JSON files in folder.
+                    with open(file, encoding='utf-8', mode='r') as f:
+                        json_object = json.load(f)
+                        for dic in json_object:
+                            entity=dic['name']
+                            video_vocab.add(entity)
+                video_vocab = list(video_vocab)
+                print("Video vocab loaded successfully. Length = {} entities".format(len(video_vocab)))
+                # create combined vocab
+                wire_video_vocab = wire_vocab + video_vocab
+                pkl.dump(wire_video_vocab, open('wire_video_vocab.pkl', 'wb'))
+                print("Combined vocab loaded successfully. Length = {} entities".format(len(wire_video_vocab)))
 
             # filter wikipedia files with combined vocab
             files = []
