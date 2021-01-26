@@ -298,6 +298,7 @@ def main_script():
             # load wire vocab
             if os.path.exists("wire_video_vocab.pkl"):
                 wire_video_vocab = pkl.load(open('wire_video_vocab.pkl', 'rb'))
+                print("WiRe + Video vocab loaded from pickle file successfully")
             else:
                 wire_vocab = set()
                 df_wire = pd.read_csv(validation_path)
@@ -313,13 +314,14 @@ def main_script():
                     with open(file, encoding='utf-8', mode='r') as f:
                         json_object = json.load(f)
                         for dic in json_object:
-                            entity=dic['name']
-                            video_vocab.add(entity)
+                            if dic['lang'] == 'en': # add only English entities
+                                entity=dic['name']
+                                video_vocab.add(entity)
                 video_vocab = list(video_vocab)
                 print("Video vocab loaded successfully. Length = {} entities".format(len(video_vocab)))
                 # create combined vocab
                 wire_video_vocab = wire_vocab + video_vocab
-                pkl.dump(wire_video_vocab, open('wire_video_vocab.pkl', 'wb'))
+                pkl.dump(wire_video_vocab, open('wire_video_vocab.pkl', 'wb'), protocol=pkl.HIGHEST_PROTOCOL)
                 print("Combined vocab loaded successfully. Length = {} entities".format(len(wire_video_vocab)))
 
             # filter wikipedia files with combined vocab
